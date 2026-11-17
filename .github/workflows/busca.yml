@@ -4,12 +4,18 @@ on:
     branches: [main]
     paths: ["packages/search/**", "eval/perguntas/**", ".github/workflows/busca.yml"]
   workflow_dispatch:
+    inputs:
+      modelo:
+        description: "Modelo de embeddings (transformers.js)"
+        default: "Xenova/multilingual-e5-small"
 permissions:
   contents: read
   issues: write
 jobs:
   hibrida:
     runs-on: ubuntu-latest
+    env:
+      EMBED_MODELO: ${{ inputs.modelo || 'Xenova/multilingual-e5-small' }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -22,7 +28,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules/.pnpm/@huggingface+transformers*/node_modules/@huggingface/transformers/.cache
-          key: e5-small-q8-v1
+          key: emb-${{ inputs.modelo || 'Xenova/multilingual-e5-small' }}-q8-v1
       - name: Gera vetores
         run: pnpm --filter @reforma/search vetores
       - name: Avalia (léxica × híbrida, nos dois conjuntos)
@@ -44,7 +50,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           {
-            echo "### 🤖 Avaliação da busca — $(date -u +%F' '%H:%MZ) · [execução](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            echo "### 🤖 Avaliação da busca (\`$EMBED_MODELO\`) — $(date -u +%F' '%H:%MZ) · [execução](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
             echo; cat data/vetores.json 2>/dev/null | head -5 | sed 's/^/    /'; echo
             for m in eval/resultados/*.md; do echo; echo "<details><summary>$(head -1 "$m" | sed 's/^# //')</summary>"; echo; tail -n +2 "$m"; echo; echo "</details>"; done
             echo; echo "#### Resumo"; echo; echo "| Conjunto | Modo | Top-1 | Top-3 | Top-5 | ms/consulta |"; echo "|---|---|---|---|---|---|"
