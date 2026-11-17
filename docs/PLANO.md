@@ -68,13 +68,15 @@ sequenceDiagram
 Cada etapa é uma **Milestone** no GitHub e cada item é uma **Issue**.
 
 ### Semana 1 — Motor no ar e base de busca (17 a 23/11)
-- [ ] Monorepo TypeScript (pnpm workspaces, lint, CI básico)
-- [ ] Motor: build local validado (Flyway gera o SQLite, o JAR sobe no perfil `offline`)
-- [ ] Motor: deploy no Cloud Run (`southamerica-east1`, min 0, máx. 2 instâncias, *startup CPU boost*)
-- [ ] ETL: baixar NCM, NBS, cClassTrib, NCM/NBS aplicáveis e fundamentações pelos endpoints `/dados-abertos/*` → `data/*.json`
-- [ ] Busca híbrida + 50 consultas de teste ("arroz", "cerveja", "mensalidade escolar", "remédio para pressão"...)
+- [x] Monorepo TypeScript (pnpm workspaces, Prettier, CI básico). ESLint fica para a Semana 2
+- [x] Motor: build validado no CI (subida em ~11 s, 330 MiB, exemplo oficial bate com a documentação) e imagem em `ghcr.io/nicolasdev-web/rtc-engine:1.6.1`
+- [ ] Motor: deploy no Cloud Run. **Precisa da conta Google**: rodar `engine/gcp/setup.sh` e depois o workflow `deploy-motor`
+- [x] ETL: gera o SQLite oficial direto dos scripts SQL (sem Maven) e exporta 11.435 códigos, 190 classificações e fundamentações → `data/*.json`
+- [x] Busca + 50 consultas de teste + 40 "não vistas" (resultados na [ADR-003](adr/ADR-003-busca-hibrida-local.md))
 
 **Pronto quando:** `curl` no Cloud Run calcula o exemplo oficial, e a busca acerta o NCM em pelo menos 80% das 50 consultas (top-3).
+
+> **Status em 17/11:** busca ✅ (100% no gabarito principal; 72,5% → 80% no não visto com e5-base). Motor ✅ no CI e no GHCR, ⏳ aguardando o projeto GCP para o Cloud Run.
 
 ### Semana 2 — Ferramentas, guardrails e conector MCP (24 a 30/11)
 - [ ] `packages/core`: cliente tipado do motor (zod) e montagem da operação

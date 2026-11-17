@@ -30,26 +30,57 @@ for (const c of casos) {
   const r = hibrida ? await busca.buscarHibrida(c.q, { tipo: "auto" }) : busca.buscar(c.q, { tipo: "auto" });
   const ms = performance.now() - t;
   const pos = r.candidatos.findIndex((x) => c.aceita.some((a) => x.codigo.startsWith(a)));
-  linhas.push({ ...c, pos: pos === -1 ? null : pos + 1, ms, confianca: r.nivelConfianca, ambiguo: r.ambiguo,
-    top: r.candidatos.slice(0, 3).map((x) => `${x.codigo} ${x.descricao.slice(0, 40)}`) });
+  linhas.push({
+    ...c,
+    pos: pos === -1 ? null : pos + 1,
+    ms,
+    confianca: r.nivelConfianca,
+    ambiguo: r.ambiguo,
+    top: r.candidatos.slice(0, 3).map((x) => `${x.codigo} ${x.descricao.slice(0, 40)}`),
+  });
 }
 
 const taxa = (k: number) => linhas.filter((l) => l.pos !== null && l.pos <= k).length / linhas.length;
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
-const resumo = { modo: hibrida ? "hibrida" : "lexica", arquivo: basename(arquivo), casos: linhas.length, top1: taxa(1), top3: taxa(3), top5: taxa(5),
-  msMedio: linhas.reduce((s, l) => s + l.ms, 0) / linhas.length, msCarga: tCarga };
+const resumo = {
+  modo: hibrida ? "hibrida" : "lexica",
+  arquivo: basename(arquivo),
+  casos: linhas.length,
+  top1: taxa(1),
+  top3: taxa(3),
+  top5: taxa(5),
+  msMedio: linhas.reduce((s, l) => s + l.ms, 0) / linhas.length,
+  msCarga: tCarga,
+};
 
 const md = [
-  `# Avaliação da busca (${resumo.modo}): ${resumo.arquivo}`, "",
-  `Data: ${new Date().toISOString().slice(0, 10)} · ${resumo.casos} consultas · carga do índice ${tCarga.toFixed(0)} ms · consulta média ${resumo.msMedio.toFixed(1)} ms`, "",
-  "| Métrica | Resultado |", "|---|---|",
-  `| Top-1 | **${pct(resumo.top1)}** |`, `| Top-3 | **${pct(resumo.top3)}** (meta ${pct(meta)}) |`, `| Top-5 | ${pct(resumo.top5)} |`, "",
-  "## Erros (fora do top-3)", "",
-  "| Consulta | Esperado | Posição | Top-3 retornado |", "|---|---|---|---|",
-  ...linhas.filter((l) => l.pos === null || l.pos > 3)
+  `# Avaliação da busca (${resumo.modo}): ${resumo.arquivo}`,
+  "",
+  `Data: ${new Date().toISOString().slice(0, 10)} · ${resumo.casos} consultas · carga do índice ${tCarga.toFixed(0)} ms · consulta média ${resumo.msMedio.toFixed(1)} ms`,
+  "",
+  "| Métrica | Resultado |",
+  "|---|---|",
+  `| Top-1 | **${pct(resumo.top1)}** |`,
+  `| Top-3 | **${pct(resumo.top3)}** (meta ${pct(meta)}) |`,
+  `| Top-5 | ${pct(resumo.top5)} |`,
+  "",
+  "## Erros (fora do top-3)",
+  "",
+  "| Consulta | Esperado | Posição | Top-3 retornado |",
+  "|---|---|---|---|",
+  ...linhas
+    .filter((l) => l.pos === null || l.pos > 3)
     .map((l) => `| ${l.q} | ${l.aceita.join(", ")} | ${l.pos ?? "—"} | ${l.top.join("<br>")} |`),
-  ...(detalhe ? ["", "## Todas", "", "| Consulta | Posição | Confiança | Ambíguo | Top-1 |", "|---|---|---|---|---|",
-    ...linhas.map((l) => `| ${l.q} | ${l.pos ?? "—"} | ${l.confianca} | ${l.ambiguo ? "sim" : ""} | ${l.top[0] ?? ""} |`)] : []),
+  ...(detalhe
+    ? [
+        "",
+        "## Todas",
+        "",
+        "| Consulta | Posição | Confiança | Ambíguo | Top-1 |",
+        "|---|---|---|---|---|",
+        ...linhas.map((l) => `| ${l.q} | ${l.pos ?? "—"} | ${l.confianca} | ${l.ambiguo ? "sim" : ""} | ${l.top[0] ?? ""} |`),
+      ]
+    : []),
 ].join("\n");
 
 const dir = join(RAIZ, "eval/resultados");
@@ -58,5 +89,8 @@ const nome = `busca-${basename(arquivo, ".yaml")}-${resumo.modo}`;
 writeFileSync(join(dir, `${nome}.md`), md + "\n");
 writeFileSync(join(dir, `${nome}.json`), JSON.stringify({ resumo, linhas }, null, 2));
 console.log(md.split("\n## Todas")[0]);
-if (resumo.top3 < meta) { console.error(`\n✗ top-3 ${pct(resumo.top3)} abaixo da meta ${pct(meta)}`); process.exit(1); }
+if (resumo.top3 < meta) {
+  console.error(`\n✗ top-3 ${pct(resumo.top3)} abaixo da meta ${pct(meta)}`);
+  process.exit(1);
+}
 console.log(`\n✓ top-3 ${pct(resumo.top3)} ≥ meta ${pct(meta)}`);

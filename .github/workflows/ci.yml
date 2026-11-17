@@ -13,6 +13,7 @@ jobs:
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - run: pnpm typecheck
+      - run: pnpm format:check
       - name: ETL (gera o banco oficial e exporta os dados)
         run: pnpm --filter @reforma/search etl
       - name: Busca léxica — gabarito principal (falha abaixo de 80% no top-3)

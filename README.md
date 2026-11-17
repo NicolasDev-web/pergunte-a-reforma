@@ -3,7 +3,7 @@
 > Pergunte em português, receba o valor do imposto, a explicação e o artigo da **LC 214/2025**.
 > A conta é sempre feita pelo **motor oficial da Receita Federal**, nunca pela IA.
 
-**Status:** 🟡 planejamento concluído, implementação começando (Bloco 2 · Projeto 1). Plano completo em [`docs/PLANO.md`](docs/PLANO.md) e tarefas nas [Issues](../../issues) e [Milestones](../../milestones).
+**Status:** 🟢 Semana 1 quase concluída: motor oficial buildando e testado no CI, ETL e busca de NCM/NBS prontos (Bloco 2 · Projeto 1). Plano completo em [`docs/PLANO.md`](docs/PLANO.md) e tarefas nas [Issues](../../issues) e [Milestones](../../milestones).
 
 ---
 
@@ -63,6 +63,16 @@ Mais detalhes em [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md).
 3. **Na dúvida, pergunta.** Se o produto cabe em duas classificações, o agente pergunta em vez de chutar.
 4. **Simulação, não consultoria.** O aviso aparece em toda resposta. A partir de 2027 as alíquotas são cenários configuráveis e isso fica explícito.
 5. **Medido, não prometido.** A taxa de acerto é medida contra os casos de teste oficiais do repositório da Receita ([`docs/AVALIACAO.md`](docs/AVALIACAO.md)).
+
+## Rodando localmente
+
+```bash
+pnpm install --ignore-scripts
+pnpm --filter @reforma/search etl        # clona a calculadora oficial (1.6.1), gera o banco e exporta data/*.json
+pnpm --filter @reforma/search avaliar     # mede a busca no gabarito (top-1/3/5)
+docker run -p 8080:8080 ghcr.io/nicolasdev-web/rtc-engine:1.6.1   # motor oficial
+engine/smoke.sh                           # confere o exemplo oficial da Receita
+```
 
 ## Estrutura do repositório
 

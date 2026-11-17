@@ -10,8 +10,7 @@ import { z } from "zod";
 // Tipos base
 // ---------------------------------------------------------------------------
 
-export const AVISO_SIMULACAO =
-  "Simulação educativa com o motor oficial da Receita Federal. Não é consultoria tributária.";
+export const AVISO_SIMULACAO = "Simulação educativa com o motor oficial da Receita Federal. Não é consultoria tributária.";
 
 export const Cenario = z.object({
   /** Nome exibido ao usuário, ex.: "teste-2026", "referencia-estimada", "personalizado". */
@@ -42,6 +41,14 @@ export const Local = z.object({
 export const BuscarProdutoInput = z.object({
   texto: z.string().min(2).describe('Como a pessoa descreveu, ex.: "arroz", "mensalidade escolar"'),
   tipo: z.enum(["mercadoria", "servico", "auto"]).default("auto"),
+  termosTecnicos: z
+    .array(z.string())
+    .max(3)
+    .optional()
+    .describe(
+      "Até 3 reformulações no vocabulário técnico da NCM/NBS (ex.: 'batom' → 'produtos de maquiagem para os lábios'; " +
+        "'advogado' → 'serviços jurídicos'). Melhora muito a busca quando o nome popular difere do nome oficial.",
+    ),
 });
 
 export const CandidatoProduto = z.object({

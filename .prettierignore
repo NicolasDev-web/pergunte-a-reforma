@@ -1,0 +1,4 @@
+data/
+.cache/
+pnpm-lock.yaml
+eval/resultados/

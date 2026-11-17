@@ -1,6 +1,6 @@
 # Avaliação da busca (lexica): busca.yaml
 
-Data: 2026-11-17 · 50 consultas · carga do índice 928 ms · consulta média 1.0 ms
+Data: 2026-11-17 · 50 consultas · carga do índice 907 ms · consulta média 1.6 ms
 
 | Métrica | Resultado |
 |---|---|

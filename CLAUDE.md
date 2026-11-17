@@ -21,6 +21,17 @@
 ## Stack
 pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + Vercel AI SDK · transformers.js (embeddings locais) · Cloud Run (motor) · Vercel (site + MCP) · Upstash (limite de uso)
 
+## Comandos
+- `pnpm install --ignore-scripts` (o postinstall do onnxruntime precisa de internet livre; no CI roda normal)
+- `pnpm --filter @reforma/search etl` → `.cache/` (clone oficial + SQLite) e `data/*.json`
+- `pnpm --filter @reforma/search avaliar [arquivo.yaml] [--hibrida] [--detalhe]`
+- `pnpm typecheck` · `pnpm format:check`
+- Workflows: `ci` (sempre), `motor` (engine/**, comenta na issue #2), `busca` (embeddings + avaliação, comenta na #5), `deploy-motor` (manual)
+
+## Achados nos dados oficiais
+- `NBS_APLICAVEL.NBSA_ANXO_ID` aponta para itens de anexo deslocados (ensino fundamental → "Ensino Infantil"). O cClassTrib está certo. O ETL ignora o texto do item para NBS.
+- Imposto Seletivo só vigora a partir de 2027-01-01. O ETL inclui regras "não encerradas" (inclusive futuras), e a data da operação é aplicada no cálculo.
+
 ## Ambiente
 - Motor local: `docker run -p 8080:8080 rtc-engine` → `RTC_ENGINE_URL=http://localhost:8080/api`
 - Swagger do motor: `http://localhost:8080/api/swagger-ui.html`

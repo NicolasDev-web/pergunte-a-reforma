@@ -60,7 +60,10 @@ async function gerar() {
   const tudo = new Float32Array(partes.length * dim);
   partes.forEach((v, i) => tudo.set(v, i * dim));
   writeFileSync(join(dir, "vetores.bin"), Buffer.from(tudo.buffer));
-  writeFileSync(join(dir, "vetores.json"), JSON.stringify({ modelo: MODELO, dim, n: partes.length, geradoEm: new Date().toISOString() }, null, 2));
+  writeFileSync(
+    join(dir, "vetores.json"),
+    JSON.stringify({ modelo: MODELO, dim, n: partes.length, geradoEm: new Date().toISOString() }, null, 2),
+  );
   console.log(`→ ${partes.length} vetores (${dim} dim) em ${((performance.now() - t0) / 1000).toFixed(0)} s`);
 }
 
