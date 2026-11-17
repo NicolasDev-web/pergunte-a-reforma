@@ -1,0 +1,13 @@
+{
+  "name": "pergunte-a-reforma",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Agente de IA que calcula CBS/IBS/IS com o motor oficial da Receita Federal e cita a LC 214/2025.",
+  "packageManager": "pnpm@9.15.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "typecheck": "pnpm -r typecheck",
+    "eval": "pnpm --filter eval run eval"
+  },
+  "license": "MIT"
+}
