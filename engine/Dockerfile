@@ -8,17 +8,17 @@
 ARG RTC_REF=1.6.1
 
 # ---------- 1) build: clona a versão fixada, gera o banco e compila ----------
+# Obs.: usamos o "mvn" da imagem; o mvnw quebra porque a imagem define MAVEN_CONFIG=/root/.m2.
 FROM maven:3.9-eclipse-temurin-21 AS build
 ARG RTC_REF
 RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 RUN git clone --depth 1 --branch "${RTC_REF}" \
       https://github.com/ReceitaFederal/calculadora-rtc-regime-regular /src
 WORKDIR /src
-RUN chmod +x mvnw \
- && mkdir -p calculadora/db \
- && ./mvnw -B -q flyway:migrate -Dflyway.configFiles=./flyway/flyway-pro.conf --errors \
+RUN mkdir -p calculadora/db \
+ && mvn -B -q flyway:migrate -Dflyway.configFiles=./flyway/flyway-pro.conf --errors \
  && ls -lah calculadora/db/calculadora-pro.db
-RUN ./mvnw -B -q -DskipTests package
+RUN mvn -B -q -DskipTests package
 
 # ---------- 2) runtime: só o JRE, o JAR e o banco ----------
 FROM eclipse-temurin:21-jre
