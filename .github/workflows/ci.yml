@@ -1,0 +1,21 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+jobs:
+  checagens:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm typecheck
+      - name: ETL (gera o banco oficial e exporta os dados)
+        run: pnpm --filter @reforma/search etl
+      - name: Busca léxica — gabarito principal (falha abaixo de 80% no top-3)
+        run: pnpm --filter @reforma/search avaliar
+      - name: Busca léxica — conjunto não visto (só relatório)
+        run: pnpm --filter @reforma/search avaliar ../../eval/perguntas/busca-nao-visto.yaml || true

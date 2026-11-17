@@ -11,3 +11,6 @@ eval/resultados/*.json
 # motor
 engine/calculadora/
 *.db
+
+# caches locais (clone do repo oficial, banco gerado, modelos)
+.cache/

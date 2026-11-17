@@ -1,0 +1,43 @@
+# Conjunto "não visto": produtos e frases que NÃO estão em packages/search/sinonimos.yaml.
+# Mede a busca sem o viés do dicionário. Gabarito montado consultando a tabela oficial (motor 1.6.1).
+# Regra: não adicionar sinônimos para fazer estes casos passarem; se precisar, criar um conjunto novo.
+- { q: "abacaxi", aceita: ["080430", "200820"] }
+- { q: "mamão papaia", aceita: ["080720"] }
+- { q: "cacho de uva", aceita: ["080610"] }
+- { q: "melancia", aceita: ["080711"] }
+- { q: "cenoura", aceita: ["070610"] }
+- { q: "pimentão verde", aceita: ["070960"] }
+- { q: "milho verde em lata", aceita: ["200580"] }
+- { q: "ervilha em conserva", aceita: ["200540"] }
+- { q: "pote de mel", aceita: ["0409"] }
+- { q: "amendoim torrado", aceita: ["200811", "1202"] }
+- { q: "castanha de caju", aceita: ["08013"] }
+- { q: "aveia em flocos", aceita: ["110412"] }
+- { q: "granola", aceita: ["190420"] }
+- { q: "pote de sorvete", aceita: ["2105"] }
+- { q: "ketchup", aceita: ["210320"] }
+- { q: "maionese", aceita: ["2103901"] }
+- { q: "vinagre de álcool", aceita: ["2209"] }
+- { q: "fermento biológico", aceita: ["210210"] }
+- { q: "erva-mate para chimarrão", aceita: ["0903"] }
+- { q: "palha de aço para lavar panela", aceita: ["732310"] }
+- { q: "batom", aceita: ["330410"] }
+- { q: "perfume", aceita: ["3303"] }
+- { q: "lâmina de barbear", aceita: ["821220"] }
+- { q: "pilha alcalina AA", aceita: ["8506"] }
+- { q: "lâmpada de led", aceita: ["85395"] }
+- { q: "ventilador de teto", aceita: ["841451"] }
+- { q: "forno micro-ondas", aceita: ["851650"] }
+- { q: "liquidificador", aceita: ["850940"] }
+- { q: "fone de ouvido bluetooth", aceita: ["851830"] }
+- { q: "pneu novo de carro", aceita: ["401110"] }
+- { q: "colchão de casal", aceita: ["94042"] }
+- { q: "caderno escolar", aceita: ["482020"] }
+- { q: "lápis de cor", aceita: ["9609"] }
+- { q: "boneca de brinquedo", aceita: ["950300"] }
+- { q: "advogado trabalhista", aceita: ["11301"], tipo: servico }
+- { q: "lavanderia", aceita: ["12601"], tipo: servico }
+- { q: "dedetização da casa", aceita: ["118032"], tipo: servico }
+- { q: "passagem de ônibus para outra cidade", aceita: ["1040211", "1040213"], tipo: servico }
+- { q: "internet banda larga", aceita: ["117022"], tipo: servico }
+- { q: "sessão de fisioterapia", aceita: ["123019200"], tipo: servico }

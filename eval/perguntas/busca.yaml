@@ -1,0 +1,53 @@
+# Gabarito da busca (Semana 1). Montado consultando a tabela NCM/NBS do motor fixado (1.6.1),
+# sem usar a busca do projeto. "aceita" = prefixos de código considerados corretos.
+# Meta da Semana 1: top-3 >= 80%.
+- { q: "arroz", aceita: ["1006"] }
+- { q: "feijão carioca", aceita: ["071333"] }
+- { q: "leite", aceita: ["0401", "0402"] }
+- { q: "café em pó", aceita: ["0901"] }
+- { q: "açúcar", aceita: ["1701"] }
+- { q: "farinha de mandioca", aceita: ["110620"] }
+- { q: "óleo de soja", aceita: ["1507"] }
+- { q: "manteiga", aceita: ["040510"] }
+- { q: "ovos de galinha", aceita: ["0407"] }
+- { q: "banana", aceita: ["0803"] }
+- { q: "tomate", aceita: ["0702"] }
+- { q: "batata inglesa", aceita: ["0701"] }
+- { q: "carne de boi", aceita: ["0201", "0202"] }
+- { q: "frango congelado", aceita: ["0207"] }
+- { q: "filé de tilápia", aceita: ["0302", "0303", "0304"] }
+- { q: "queijo muçarela", aceita: ["0406"] }
+- { q: "pão francês", aceita: ["190590"] }
+- { q: "macarrão", aceita: ["1902"] }
+- { q: "cerveja", aceita: ["2203"] }
+- { q: "refrigerante", aceita: ["220210", "220299"] }
+- { q: "vinho tinto", aceita: ["2204"] }
+- { q: "cachaça", aceita: ["220840"] }
+- { q: "cigarro", aceita: ["240220"] }
+- { q: "água mineral", aceita: ["2201"] }
+- { q: "chocolate", aceita: ["1806"] }
+- { q: "sabonete", aceita: ["340111", "340130"] }
+- { q: "pasta de dente", aceita: ["330610"] }
+- { q: "papel higiênico", aceita: ["481810"] }
+- { q: "xampu para cabelo", aceita: ["330510"] }
+- { q: "detergente de louça", aceita: ["3402"] }
+- { q: "fralda descartável", aceita: ["9619"] }
+- { q: "absorvente íntimo", aceita: ["9619"] }
+- { q: "remédio paracetamol comprimido", aceita: ["3004"] }
+- { q: "camisinha", aceita: ["401410"] }
+- { q: "cadeira de rodas", aceita: ["8713"] }
+- { q: "lentes de óculos de grau", aceita: ["900140", "900150", "9003", "9004"] }
+- { q: "aparelho auditivo", aceita: ["902140"] }
+- { q: "celular smartphone", aceita: ["851713"] }
+- { q: "notebook", aceita: ["847130"] }
+- { q: "geladeira", aceita: ["8418"] }
+- { q: "carro de passeio", aceita: ["8703"] }
+- { q: "gasolina", aceita: ["271012"] }
+- { q: "adubo ureia", aceita: ["310210"] }
+- { q: "ração para cachorro", aceita: ["230910"] }
+- { q: "mensalidade do ensino fundamental", aceita: ["122012"], tipo: servico }
+- { q: "consulta com clínico geral", aceita: ["1230121", "1230122"], tipo: servico }
+- { q: "corte de cabelo no barbeiro", aceita: ["126021"], tipo: servico }
+- { q: "corrida de táxi", aceita: ["104011"], tipo: servico }
+- { q: "conserto do carro na oficina", aceita: ["1200131"], tipo: servico }
+- { q: "diária de hotel", aceita: ["103031"], tipo: servico }

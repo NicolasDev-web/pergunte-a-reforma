@@ -1,0 +1,57 @@
+name: motor
+on:
+  push:
+    branches: [main]
+    paths: ["engine/**", ".github/workflows/motor.yml"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+  issues: write
+jobs:
+  build-e-teste:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build da imagem
+        run: |
+          T0=$(date +%s)
+          docker build -t rtc-engine:ci engine/
+          echo "BUILD_S=$(( $(date +%s) - T0 ))" >> "$GITHUB_ENV"
+          echo "TAMANHO=$(docker image ls rtc-engine:ci --format '{{.Size}}')" >> "$GITHUB_ENV"
+      - name: Sobe o motor (1 GiB, como no Cloud Run) e mede a subida
+        run: |
+          T0=$(date +%s%N)
+          docker run -d --name rtc -p 8080:8080 -e PORT=8080 --memory 1g --cpus 1 rtc-engine:ci
+          timeout 180 bash -c 'until curl -fsS localhost:8080/api/calculadora/dados-abertos/versao >/dev/null 2>&1; do sleep 0.5; done' \
+            || { docker logs rtc | tail -50; exit 1; }
+          echo "SUBIDA_MS=$(( ($(date +%s%N) - T0) / 1000000 ))" >> "$GITHUB_ENV"
+      - name: Teste de fumaça com o exemplo oficial
+        run: engine/smoke.sh 2>&1 | tee /tmp/smoke.log
+      - name: Memória após o cálculo
+        run: echo "MEMORIA=$(docker stats --no-stream --format '{{.MemUsage}}' rtc)" >> "$GITHUB_ENV"
+      - name: Publica no GHCR
+        if: github.ref == 'refs/heads/main'
+        run: |
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          REF=$(grep -m1 '^ARG RTC_REF=' engine/Dockerfile | cut -d= -f2)
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          for t in "$REF" latest; do docker tag rtc-engine:ci "ghcr.io/$OWNER/rtc-engine:$t"; docker push "ghcr.io/$OWNER/rtc-engine:$t"; done
+          echo "IMAGEM=ghcr.io/$OWNER/rtc-engine:$REF" >> "$GITHUB_ENV"
+      - name: Relatório na issue #2
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          {
+            echo "### 🤖 Build do motor — $(date -u +%F' '%H:%MZ) · [execução](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            echo
+            echo "| Item | Resultado |"; echo "|---|---|"
+            echo "| Build | ${BUILD_S:-?} s |"
+            echo "| Tamanho da imagem | ${TAMANHO:-?} |"
+            echo "| Subida até responder (1 vCPU, 1 GiB) | ${SUBIDA_MS:-?} ms |"
+            echo "| Memória após cálculo | ${MEMORIA:-?} |"
+            echo "| Imagem publicada | \`${IMAGEM:-não publicada}\` |"
+            echo; echo '```'; cat /tmp/smoke.log 2>/dev/null || echo "(teste de fumaça não rodou)"; echo '```'
+          } > /tmp/comentario.md
+          gh issue comment 2 --repo "${{ github.repository }}" --body-file /tmp/comentario.md

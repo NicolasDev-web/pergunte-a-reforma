@@ -1,0 +1,128 @@
+# Nomes populares → códigos NCM/NBS (prefixos).
+# A descrição oficial é técnica ("Cervejas de malte", "Dentifrícios"); aqui ligamos o jeito que as pessoas falam.
+# Regra: cada prefixo precisa existir na tabela oficial (o carregador avisa se não existir).
+# Atenção à avaliação: este dicionário foi escrito junto com eval/perguntas/busca.yaml,
+# então o conjunto "nao-visto" (Semana 2) é que mede a busca sem viés.
+
+# --- Alimentos básicos ---
+- { codigos: ["1006"], termos: [arroz, arroz branco, arroz integral, arroz parboilizado] }
+- { codigos: ["071333", "071339", "071331", "071332"], termos: [feijão, feijão carioca, feijão preto, feijão fradinho, feijão de corda] }
+- { codigos: ["0401"], termos: [leite, leite integral, leite desnatado, leite longa vida, leite de caixinha, creme de leite] }
+- { codigos: ["0402"], termos: [leite em pó, leite condensado] }
+- { codigos: ["0403"], termos: [iogurte, coalhada] }
+- { codigos: ["0405"], termos: [manteiga] }
+- { codigos: ["151710"], termos: [margarina] }
+- { codigos: ["0406"], termos: [queijo, muçarela, mussarela, queijo minas, requeijão, parmesão, queijo prato] }
+- { codigos: ["0407"], termos: [ovo, ovos, ovos de galinha, dúzia de ovos] }
+- { codigos: ["0901"], termos: [café, café em pó, café torrado, café em grão] }
+- { codigos: ["2101"], termos: [café solúvel, café instantâneo] }
+- { codigos: ["1701"], termos: [açúcar, açúcar cristal, açúcar refinado, açúcar mascavo] }
+- { codigos: ["110620", "110814"], termos: [farinha de mandioca, farinha de tapioca, polvilho, goma de tapioca] }
+- { codigos: ["1101"], termos: [farinha de trigo] }
+- { codigos: ["110220", "1104"], termos: [fubá, flocão, farinha de milho, cuscuz] }
+- { codigos: ["1507"], termos: [óleo de soja, óleo de cozinha] }
+- { codigos: ["1509"], termos: [azeite, azeite de oliva] }
+- { codigos: ["1902"], termos: [macarrão, massa, espaguete, miojo, lasanha] }
+- { codigos: ["190590"], termos: [pão, pão francês, pão de forma, pão de sal, bisnaguinha] }
+- { codigos: ["190531"], termos: [biscoito, bolacha, biscoito recheado] }
+- { codigos: ["1806"], termos: [chocolate, achocolatado, bombom, barra de chocolate] }
+- { codigos: ["2501"], termos: [sal, sal de cozinha] }
+- { codigos: ["0201", "0202"], termos: [carne, carne de boi, carne bovina, picanha, alcatra, patinho, acém, músculo] }
+- { codigos: ["0203"], termos: [carne de porco, carne suína, lombo, costela de porco] }
+- { codigos: ["0207"], termos: [frango, galinha, peito de frango, coxa de frango, asa de frango] }
+- { codigos: ["1601"], termos: [linguiça, salsicha, salame] }
+- { codigos: ["0302", "0303", "0304"], termos: [peixe, tilápia, filé de peixe, sardinha fresca, salmão, merluza] }
+- { codigos: ["1604"], termos: [sardinha em lata, atum em lata] }
+- { codigos: ["0803"], termos: [banana, banana prata, banana nanica] }
+- { codigos: ["080810"], termos: [maçã] }
+- { codigos: ["080510", "080521", "080522"], termos: [laranja, tangerina, mexerica] }
+- { codigos: ["0702"], termos: [tomate] }
+- { codigos: ["0701"], termos: [batata, batata inglesa] }
+- { codigos: ["070310"], termos: [cebola] }
+- { codigos: ["070320"], termos: [alho] }
+- { codigos: ["0705"], termos: [alface] }
+- { codigos: ["071410"], termos: [mandioca, macaxeira, aipim] }
+- { codigos: ["2009"], termos: [suco de fruta, suco natural, suco de laranja] }
+
+# --- Bebidas e fumo (Imposto Seletivo a partir de 2027) ---
+- { codigos: ["2201"], termos: [água mineral, água sem gás, galão de água] }
+- { codigos: ["220210", "220299"], termos: [refrigerante, refri, guaraná, coca-cola, energético, isotônico, água com gás saborizada] }
+- { codigos: ["2203"], termos: [cerveja, chope, latinha de cerveja, long neck] }
+- { codigos: ["2204"], termos: [vinho, vinho tinto, vinho branco, espumante] }
+- { codigos: ["220840"], termos: [cachaça, pinga, rum, caninha] }
+- { codigos: ["220860"], termos: [vodka, vodca] }
+- { codigos: ["220830"], termos: [uísque, whisky] }
+- { codigos: ["240220"], termos: [cigarro, maço de cigarro, carteira de cigarro] }
+- { codigos: ["2404"], termos: [vape, cigarro eletrônico, pod] }
+
+# --- Higiene e limpeza ---
+- { codigos: ["340111", "340130"], termos: [sabonete, sabonete líquido] }
+- { codigos: ["330610"], termos: [pasta de dente, creme dental] }
+- { codigos: ["330620"], termos: [fio dental] }
+- { codigos: ["960321"], termos: [escova de dente, escova dental] }
+- { codigos: ["481810"], termos: [papel higiênico] }
+- { codigos: ["330510"], termos: [xampu, shampoo] }
+- { codigos: ["330590"], termos: [condicionador, creme de cabelo] }
+- { codigos: ["330720"], termos: [desodorante] }
+- { codigos: ["3402"], termos: [detergente, detergente de louça, sabão em pó, lava-roupas, amaciante] }
+- { codigos: ["282890"], termos: [água sanitária, cloro] }
+- { codigos: ["9619"], termos: [fralda, fralda descartável, absorvente, absorvente íntimo, absorvente higiênico] }
+
+# --- Saúde ---
+- { codigos: ["3004"], termos: [remédio, medicamento, comprimido, dipirona, paracetamol, ibuprofeno, antibiótico, xarope] }
+- { codigos: ["300490"], termos: [remédio para pressão, remédio para diabetes] }
+- { codigos: ["401410"], termos: [camisinha, preservativo] }
+- { codigos: ["8713"], termos: [cadeira de rodas] }
+- { codigos: ["900140", "900150"], termos: [lente de óculos, lente de grau, lentes de óculos] }
+- { codigos: ["900130"], termos: [lente de contato] }
+- { codigos: ["9003"], termos: [armação de óculos] }
+- { codigos: ["9004"], termos: [óculos, óculos de grau, óculos de sol] }
+- { codigos: ["902140"], termos: [aparelho auditivo, aparelho de surdez] }
+- { codigos: ["9018"], termos: [seringa, termômetro clínico, aparelho de pressão] }
+
+# --- Eletrônicos, casa, veículos ---
+- { codigos: ["851713"], termos: [celular, smartphone, iphone] }
+- { codigos: ["847130"], termos: [notebook, laptop, computador portátil] }
+- { codigos: ["847141", "847149", "847150"], termos: [computador de mesa, desktop, pc] }
+- { codigos: ["852872"], termos: [televisão, tv, smart tv] }
+- { codigos: ["8418"], termos: [geladeira, refrigerador, freezer] }
+- { codigos: ["845011"], termos: [máquina de lavar, lavadora de roupa] }
+- { codigos: ["8415"], termos: [ar-condicionado, ar condicionado] }
+- { codigos: ["8703"], termos: [carro, automóvel, carro de passeio, suv] }
+- { codigos: ["8711"], termos: [moto, motocicleta] }
+- { codigos: ["8712"], termos: [bicicleta] }
+- { codigos: ["271012"], termos: [gasolina] }
+- { codigos: ["271019"], termos: [diesel, óleo diesel] }
+- { codigos: ["220710", "220720"], termos: [etanol, álcool combustível] }
+- { codigos: ["271119"], termos: [botijão de gás, gás de cozinha, glp] }
+
+# --- Agro, construção, vestuário ---
+- { codigos: ["310210"], termos: [ureia, adubo ureia] }
+- { codigos: ["3105"], termos: [adubo, fertilizante, npk] }
+- { codigos: ["230910"], termos: [ração para cachorro, ração para gato, ração de cachorro, ração pet] }
+- { codigos: ["2523"], termos: [cimento] }
+- { codigos: ["6402", "6403", "6404"], termos: [tênis, sapato, chinelo, sandália] }
+- { codigos: ["6109"], termos: [camiseta, camisa de malha, blusa] }
+- { codigos: ["6203", "6204"], termos: [calça jeans, calça, bermuda] }
+- { codigos: ["4901"], termos: [livro, livro didático] }
+
+# --- Serviços (NBS) ---
+- { codigos: ["122011"], termos: [creche, pré-escola, educação infantil] }
+- { codigos: ["122012"], termos: [mensalidade escolar, escola, ensino fundamental, colégio] }
+- { codigos: ["122013"], termos: [ensino médio] }
+- { codigos: ["12204"], termos: [faculdade, universidade, ensino superior, graduação] }
+- { codigos: ["1230121"], termos: [consulta médica, clínico geral, médico] }
+- { codigos: ["1230122"], termos: [médico especialista, consulta com especialista] }
+- { codigos: ["1230123"], termos: [dentista, consulta no dentista, odontológico] }
+- { codigos: ["1230111"], termos: [cirurgia] }
+- { codigos: ["1230193"], termos: [exame de sangue, exame laboratorial] }
+- { codigos: ["1230194"], termos: [raio-x, ultrassom, ressonância, tomografia] }
+- { codigos: ["1230198"], termos: [psicólogo, terapia, sessão de psicologia] }
+- { codigos: ["126021"], termos: [cabeleireiro, barbeiro, corte de cabelo, salão de beleza] }
+- { codigos: ["104011"], termos: [táxi, corrida de táxi, uber, aplicativo de transporte, corrida de aplicativo, ônibus urbano] }
+- { codigos: ["1200131"], termos: [oficina mecânica, conserto de carro, mecânico, revisão do carro] }
+- { codigos: ["103031"], termos: [hotel, diária de hotel, pousada, hospedagem] }
+- { codigos: ["103011"], termos: [restaurante, almoço em restaurante, jantar] }
+- { codigos: ["1170332"], termos: [streaming de vídeo, netflix, assinatura de filmes] }
+- { codigos: ["1170322"], termos: [streaming de música, spotify] }
+- { codigos: ["113022"], termos: [contador, contabilidade, serviço de contabilidade] }

@@ -1,0 +1,52 @@
+name: deploy-motor
+# Copia a imagem testada do GHCR para o Artifact Registry e publica no Cloud Run.
+# Pré-requisito: engine/gcp/setup.sh rodado uma vez + variáveis GCP_* no repositório.
+on:
+  workflow_dispatch:
+    inputs:
+      min_instancias:
+        description: "Instâncias mínimas (0 = paga só pelo uso; 1 = sem cold start, para gravar o vídeo)"
+        default: "0"
+permissions:
+  contents: read
+  id-token: write
+  packages: read
+  issues: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      REGIAO: ${{ vars.GCP_REGIAO }}
+      PROJETO: ${{ vars.GCP_PROJETO }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WIF_PROVIDER }}
+          service_account: ${{ vars.GCP_SA }}
+      - uses: google-github-actions/setup-gcloud@v2
+      - name: GHCR → Artifact Registry
+        run: |
+          REF=$(grep -m1 '^ARG RTC_REF=' engine/Dockerfile | cut -d= -f2)
+          ORIGEM="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/rtc-engine:$REF"
+          DESTINO="$REGIAO-docker.pkg.dev/$PROJETO/reforma/rtc-engine:$REF"
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          gcloud auth configure-docker "$REGIAO-docker.pkg.dev" --quiet
+          docker pull "$ORIGEM" && docker tag "$ORIGEM" "$DESTINO" && docker push "$DESTINO"
+          echo "DESTINO=$DESTINO" >> "$GITHUB_ENV"
+      - name: Cloud Run
+        run: |
+          gcloud run deploy rtc-engine --image "$DESTINO" --region "$REGIAO" \
+            --memory 1Gi --cpu 1 --cpu-boost --concurrency 40 \
+            --min-instances "${{ inputs.min_instancias }}" --max-instances 2 \
+            --allow-unauthenticated --quiet
+          echo "URL=$(gcloud run services describe rtc-engine --region "$REGIAO" --format 'value(status.url)')" >> "$GITHUB_ENV"
+      - name: Teste de fumaça no Cloud Run
+        run: engine/smoke.sh "$URL/api" 2>&1 | tee /tmp/smoke.log
+      - name: Relatório na issue #3
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          { echo "### 🤖 Deploy no Cloud Run — $(date -u +%F' '%H:%MZ)"; echo; echo "URL: ${URL:-falhou}"; echo; echo '```'; cat /tmp/smoke.log 2>/dev/null; echo '```'; } > /tmp/c.md
+          gh issue comment 3 --repo "${{ github.repository }}" --body-file /tmp/c.md

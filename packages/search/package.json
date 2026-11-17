@@ -1,0 +1,22 @@
+{
+  "name": "@reforma/search",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p .",
+    "etl": "node --experimental-strip-types --no-warnings src/etl.ts",
+    "avaliar": "node --experimental-strip-types --no-warnings src/avaliar.ts",
+    "vetores": "node --experimental-strip-types --no-warnings src/vetores.ts"
+  },
+  "dependencies": {
+    "minisearch": "^7.1.0",
+    "yaml": "^2.6.0",
+    "@huggingface/transformers": "^4.3.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0"
+  }
+}
