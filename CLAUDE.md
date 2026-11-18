@@ -25,6 +25,7 @@ pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + 
 - `pnpm install --ignore-scripts` (o postinstall do onnxruntime precisa de internet livre; no CI roda normal)
 - `pnpm --filter @reforma/search etl` → `.cache/` (clone oficial + SQLite) e `data/*.json`
 - `pnpm --filter @reforma/search avaliar [arquivo.yaml] [--hibrida] [--detalhe]`
+- `Iniciar Pergunte a Reforma.cmd` (Windows, dois cliques): clona/atualiza em `%USERPROFILE%\\pergunte-a-reforma`, instala via winget o que faltar, `local.mjs --producao --abrir`; atalho opcional em shell:startup (`--auto`, sem abrir o navegador)
 - `pnpm local` (ou `pnpm local:simulado`): baixa o motor da release, liga Java + site Next em http://localhost:3000 (motor roda na máquina do Nicolas; Render depois)
 - `pnpm typecheck` · `pnpm format:check` · `pnpm -r test` (core + MCP + chat do site, com respostas gravadas do motor e modelo simulado)
 - `PERGUNTE_MODELO_SIMULADO=1`: o chat do site usa um modelo simulado (demonstração e testes sem chave)
@@ -32,7 +33,7 @@ pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + 
 - `RTC_ENGINE_URL=... pnpm --filter @reforma/core fixtures` → regrava `packages/core/test/fixtures` (casos em `test/casos.ts`)
 - `RTC_ENGINE_URL=... pnpm --filter @reforma/mcp dev` → conector em `http://localhost:3333/mcp`
 - `pnpm --filter @reforma/eval gabarito` (lê os testes Java oficiais) · `RTC_ENGINE_URL=... pnpm --filter @reforma/eval oficiais`
-- Workflows: `ci` (sempre; job `integracao` roda os casos oficiais com o motor real e comenta na #12), `motor` (engine/**, comenta na #2 e publica a release), `busca` (embeddings + avaliação, comenta na #5), `deploy-motor` (manual)
+- Workflows: `ci` (sempre; job `integracao` roda os casos oficiais com o motor real e comenta na #12), `motor` (engine/**, comenta na #2 e publica a release), `busca` (embeddings + avaliação, comenta na #5), `deploy-motor` (manual), `dados` (publica os JSONs do ETL na release `dados-<tag>`, usada pelo `local.mjs`)
 
 ## Comportamento do motor que o core trata
 - Antes de 2027 o motor recusa `aliquotasNominais` (REG-036); a partir de 2027 exige (REG-037). `packages/core/src/cenarios.ts` decide.

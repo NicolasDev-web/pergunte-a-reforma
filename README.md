@@ -66,12 +66,15 @@ Mais detalhes em [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md).
 
 ## Rodando na sua máquina
 
-Precisa de **Node 22+**, **pnpm**, **Java 21** e **git**.
+**No Windows, sem terminal:** baixe o arquivo [`Iniciar Pergunte a Reforma.cmd`](Iniciar%20Pergunte%20a%20Reforma.cmd) e dê dois cliques. Na primeira vez ele baixa o projeto em `%USERPROFILE%\pergunte-a-reforma`, oferece instalar pelo winget o que faltar (Git, Node 22 e Java 21), baixa o motor oficial e compila o site. Depois abre `http://localhost:3000`. Ele também pergunta se o app deve ligar sozinho quando você entrar no Windows; para desfazer, apague o atalho em `shell:startup`. Fechar a janela desliga tudo.
+
+**Pelo terminal (qualquer sistema).** Precisa de **Node 22+**, **pnpm**, **Java 21** e **git**.
 
 ```bash
 pnpm install
 pnpm local              # baixa o motor oficial (só na 1ª vez), liga o motor e o site
 # ou: pnpm local:simulado  → o chat usa um modelo simulado, sem chave de IA
+# ou: node scripts/local.mjs --producao --abrir   → versão compilada (mais leve), abre o navegador
 ```
 
 Abra **http://localhost:3000**. A busca de produtos e o cálculo funcionam sem IA; para perguntas livres, informe a sua chave (Claude, OpenAI ou Gemini) na tela. Ela fica só na memória da aba. O conector MCP fica em `http://localhost:3000/mcp`.

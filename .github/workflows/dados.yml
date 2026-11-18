@@ -1,0 +1,33 @@
+name: dados
+# Publica os JSONs do ETL numa release `dados-<tag>`, para o `pnpm local` não precisar rodar o ETL.
+on:
+  push:
+    branches: [main]
+    paths: ["packages/search/src/etl.ts", "engine/Dockerfile", ".github/workflows/dados.yml"]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm --filter @reforma/search etl
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          REF=$(grep -m1 '^ARG RTC_REF=' engine/Dockerfile | cut -d= -f2)
+          TAG="dados-$REF"
+          cd data
+          ARQS="produtos.json classificacoes.json municipios.json erros.json meta.json"
+          sha256sum $ARQS > SHA256SUMS
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Dados abertos $REF" \
+            --notes "JSONs gerados pelo ETL (packages/search/src/etl.ts) a partir dos dados abertos da Calculadora RTC $REF. Usados pelo \`pnpm local\`; conferidos pelo SHA256SUMS."
+          gh release upload "$TAG" $ARQS SHA256SUMS --clobber
