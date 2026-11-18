@@ -26,6 +26,13 @@ pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + 
 - `pnpm --filter @reforma/search etl` → `.cache/` (clone oficial + SQLite) e `data/*.json`
 - `pnpm --filter @reforma/search avaliar [arquivo.yaml] [--hibrida] [--detalhe]`
 - `Iniciar Pergunte a Reforma.cmd` (Windows, dois cliques): clona/atualiza em `%USERPROFILE%\\pergunte-a-reforma`, instala via winget o que faltar, `local.mjs --producao --abrir`; atalho opcional em shell:startup (`--auto`, sem abrir o navegador)
+- `scripts/local.mjs` no Windows:
+  - tenta `pnpm install` 3× (EBUSY com o cache frio);
+  - download vai para `.part`, é conferido pelo SHA e ganha o selo `.motor/<tag>.ok`;
+  - encerra a árvore de processos com `taskkill /T`;
+  - códigos de saída: 0 ok, 1 erro, 3 sem Java 21;
+  - grava `.motor/versao-site.txt` só depois de um build que deu certo.
+- `.gitattributes` força LF (o `format:check` falha com CRLF); só `.cmd`/`.bat` ficam em CRLF.
 - `pnpm local` (ou `pnpm local:simulado`): baixa o motor da release, liga Java + site Next em http://localhost:3000 (motor roda na máquina do Nicolas; Render depois)
 - `pnpm typecheck` · `pnpm format:check` · `pnpm -r test` (core + MCP + chat do site, com respostas gravadas do motor e modelo simulado)
 - `PERGUNTE_MODELO_SIMULADO=1`: o chat do site usa um modelo simulado (demonstração e testes sem chave)

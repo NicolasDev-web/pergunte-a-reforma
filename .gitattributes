@@ -1,1 +1,5 @@
+# LF em tudo (o Prettier confere LF; no Windows o core.autocrlf=true poria CRLF no checkout).
+* text=auto eol=lf
+# O cmd.exe precisa de CRLF para goto e rótulos funcionarem.
 *.cmd text eol=crlf
+*.bat text eol=crlf

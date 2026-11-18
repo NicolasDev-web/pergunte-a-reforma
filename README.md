@@ -77,6 +77,13 @@ pnpm local              # baixa o motor oficial (só na 1ª vez), liga o motor e
 # ou: node scripts/local.mjs --producao --abrir   → versão compilada (mais leve), abre o navegador
 ```
 
+Se algo der errado, a mensagem diz o quê:
+- porta 8080 ou 3000 ocupada;
+- download que caiu, que é retomado e conferido pelo SHA-256 na próxima vez;
+- motor que não ligou, com detalhes em `.motor/motor.log`.
+
+Se o site já estiver no ar, um segundo início só abre o navegador. Fechar a janela, ou o site parar, desliga o motor junto.
+
 Abra **http://localhost:3000**. A busca de produtos e o cálculo funcionam sem IA; para perguntas livres, informe a sua chave (Claude, OpenAI ou Gemini) na tela. Ela fica só na memória da aba. O conector MCP fica em `http://localhost:3000/mcp`.
 
 Outros comandos úteis:
