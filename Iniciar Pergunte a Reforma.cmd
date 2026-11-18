@@ -13,7 +13,7 @@ rem ============================================================================
 setlocal EnableExtensions
 chcp 65001 >nul
 title Pergunte a Reforma
-set "REPO=https://github.com/NicolasDev-web/pergunte-a-reforma.git"
+set "REPO=https://github.com/luiiiznetoo/pergunte-a-reforma.git"
 
 rem Roda de uma copia em %TEMP%: o "git pull" pode atualizar este proprio arquivo.
 rem (Chamar outro .cmd sem "call" passa o controle para ele; este nao continua.)
