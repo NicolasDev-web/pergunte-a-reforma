@@ -25,7 +25,9 @@ pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + 
 - `pnpm install --ignore-scripts` (o postinstall do onnxruntime precisa de internet livre; no CI roda normal)
 - `pnpm --filter @reforma/search etl` → `.cache/` (clone oficial + SQLite) e `data/*.json`
 - `pnpm --filter @reforma/search avaliar [arquivo.yaml] [--hibrida] [--detalhe]`
-- `pnpm typecheck` · `pnpm format:check` · `pnpm -r test` (core + MCP, com respostas gravadas do motor)
+- `pnpm local` (ou `pnpm local:simulado`): baixa o motor da release, liga Java + site Next em http://localhost:3000 (motor roda na máquina do Nicolas; Render depois)
+- `pnpm typecheck` · `pnpm format:check` · `pnpm -r test` (core + MCP + chat do site, com respostas gravadas do motor e modelo simulado)
+- `PERGUNTE_MODELO_SIMULADO=1`: o chat do site usa um modelo simulado (demonstração e testes sem chave)
 - Motor sem Docker: JAR + banco na release `motor-1.6.1` (ver `apps/mcp/README.md`); `java -Dspring.profiles.active=offline -jar ...`
 - `RTC_ENGINE_URL=... pnpm --filter @reforma/core fixtures` → regrava `packages/core/test/fixtures` (casos em `test/casos.ts`)
 - `RTC_ENGINE_URL=... pnpm --filter @reforma/mcp dev` → conector em `http://localhost:3333/mcp`
@@ -38,6 +40,12 @@ pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + 
 - Valores chegam como string com 2 casas; `decimal.ts` soma com BigInt (nada de float).
 - Em 2026 o Imposto Seletivo não é calculado; em 2027+ itens com IS exigem o grupo `impostoSeletivo` (REG-013), fora do MVP.
 - Testes oficiais com `@Disabled` são ignorados no gabarito.
+
+## Site (apps/web)
+- Next 16 + React 19 + AI SDK 7. `@reforma/core/decimal` e `@reforma/core/contratos` são as únicas entradas do core usadas no navegador.
+- Cálculo sem IA: `/api/busca`, `/api/municipios`, `/api/calcular`. Chat: `/api/chat` (chave no cabeçalho `x-chave-ia`, nunca registrada). MCP: `/mcp` e `/saude` reaproveitam `apps/mcp/src/responder.ts`.
+- Cálculos rápidos entram na conversa como parte `data-calculo` (com um texto oculto para a IA ter contexto).
+- Visual: direção "Claro e vivo" (branco + azul #3B5BDB); âmbar só para "simulação". Canvas de referência no claude.ai ("Pergunte à Reforma — UX/UI").
 
 ## Achados nos dados oficiais
 - `NBS_APLICAVEL.NBSA_ANXO_ID` aponta para itens de anexo deslocados (ensino fundamental → "Ensino Infantil"). O cClassTrib está certo. O ETL ignora o texto do item para NBS.

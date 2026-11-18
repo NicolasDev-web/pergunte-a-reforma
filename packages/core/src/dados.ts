@@ -7,7 +7,7 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { MunicipioResolvido } from "./contracts.ts";
 
-const RAIZ = resolve(fileURLToPath(import.meta.url), "../../../..");
+const RAIZ = process.env.REFORMA_RAIZ ?? resolve(fileURLToPath(import.meta.url), "../../../..");
 
 export interface ClassificacaoDados {
   cClassTrib: string;
@@ -39,7 +39,7 @@ export interface Dados {
 }
 
 export function carregarDados(dir = join(RAIZ, "data")): Dados {
-  const ler = <T>(arq: string): T => JSON.parse(readFileSync(join(dir, arq), "utf8")) as T;
+  const ler = <T>(arq: string): T => JSON.parse(readFileSync(/*turbopackIgnore: true*/ join(dir, arq), "utf8")) as T;
   const classificacoes = ler<ClassificacaoDados[]>("classificacoes.json");
   const erros = ler<ErroCatalogo[]>("erros.json");
   return {

@@ -93,11 +93,14 @@ Cada etapa é uma **Milestone** no GitHub e cada item é uma **Issue**.
 > **Status em 18/11:** 30 testes automatizados; casos oficiais da Receita pelo caminho das ferramentas: 14 iguais ao gabarito, 6 tratados antes do motor, 0 divergentes, 15 fora do escopo do MVP (Imposto Seletivo e tributação regular).
 
 ### Semana 3 — Além do chat: painéis e site (01 a 07/12)
-- [ ] Painel **Memória de cálculo** (cascata: preço → base → redução → CBS → IBS → IS)
-- [ ] Painel **Raio-X do carrinho** (vários itens, quem tem redução, total de tributos)
-- [ ] Painel **Por que essa classificação** (texto → NCM → anexo → cClassTrib → artigo)
-- [ ] Site Next.js: seletor de provedor, BYOK e demo
-- [ ] Limite de uso e controle de custo da demo
+- [x] Site Next.js com as telas do canvas: Início (busca com autocomplete, atalhos, exemplos calculados), Resposta + painel, O que muda, Como funciona, Usar no seu chat
+- [x] Modo rápido sem IA: produto → valor, cidade e data → calculadora oficial
+- [x] Painel no site: **Como chegamos aqui** (alíquota → redução → efetiva → valor, 2026 × 2027), **A lei**, **Modo contador**
+- [x] **Raio-X** de vários itens e caminho **Por que essa regra** no painel
+- [x] Chat com IA: Claude, OpenAI ou Gemini com chave própria (só em memória) ou demo com limite diário; verificador de números no fim de cada resposta
+- [x] `pnpm local`: motor + site na máquina do Nicolas (Render fica para depois)
+- [ ] Painéis MCP Apps (`ui://memoria-calculo`, `ui://raio-x`, `ui://por-que`) dentro do Claude e do ChatGPT
+- [ ] Limite de uso persistente (Upstash) para quando o site for publicado
 
 **Pronto quando:** os painéis aparecem dentro do Claude e do ChatGPT e no site, com os mesmos componentes.
 

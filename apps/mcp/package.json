@@ -18,5 +18,9 @@
   "devDependencies": {
     "@types/node": "^22.0.0",
     "typescript": "^5.9.3"
+  },
+  "exports": {
+    ".": "./src/servidor.ts",
+    "./responder": "./src/responder.ts"
   }
 }

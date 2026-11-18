@@ -14,3 +14,11 @@ engine/calculadora/
 
 # caches locais (clone do repo oficial, banco gerado, modelos)
 .cache/
+
+# execução local
+.motor/
+apps/web/.next/
+apps/web/next-env.d.ts
+*.tsbuildinfo
+.env.local
+apps/web/.env.local

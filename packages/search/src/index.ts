@@ -95,7 +95,7 @@ export function tokens(t: string, { stop = true } = {}): string[] {
 // ---------------------------------------------------------------------------
 // Índice
 // ---------------------------------------------------------------------------
-const RAIZ = resolve(fileURLToPath(import.meta.url), "../../../..");
+const RAIZ = process.env.REFORMA_RAIZ ?? resolve(fileURLToPath(import.meta.url), "../../../..");
 const PENALIZAR = /semeadura|sementeira|reprodu[cç][aã]o|incuba[cç][aã]o|para fins industriais|uso veterin/i;
 
 interface Doc {
@@ -144,9 +144,9 @@ export class Busca {
     this.index.addAll(docs);
   }
 
-  static carregar(dir = join(RAIZ, "data")): Busca {
-    const produtos = JSON.parse(readFileSync(join(dir, "produtos.json"), "utf8")) as Produto[];
-    const sinonimos = YAML.parse(readFileSync(join(RAIZ, "packages/search/sinonimos.yaml"), "utf8"));
+  static carregar(dir = join(RAIZ, "data"), arquivoSinonimos = join(RAIZ, "packages/search/sinonimos.yaml")): Busca {
+    const produtos = JSON.parse(readFileSync(/*turbopackIgnore: true*/ join(dir, "produtos.json"), "utf8")) as Produto[];
+    const sinonimos = YAML.parse(readFileSync(/*turbopackIgnore: true*/ arquivoSinonimos, "utf8"));
     return new Busca(produtos, sinonimos);
   }
 

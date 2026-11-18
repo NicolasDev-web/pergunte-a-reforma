@@ -64,14 +64,24 @@ Mais detalhes em [`docs/ARQUITETURA.md`](docs/ARQUITETURA.md).
 4. **Simulação, não consultoria.** O aviso aparece em toda resposta. A partir de 2027 as alíquotas são cenários configuráveis e isso fica explícito.
 5. **Medido, não prometido.** A taxa de acerto é medida contra os casos de teste oficiais do repositório da Receita ([`docs/AVALIACAO.md`](docs/AVALIACAO.md)).
 
-## Rodando localmente
+## Rodando na sua máquina
+
+Precisa de **Node 22+**, **pnpm**, **Java 21** e **git**.
 
 ```bash
-pnpm install --ignore-scripts
-pnpm --filter @reforma/search etl        # clona a calculadora oficial (1.6.1), gera o banco e exporta data/*.json
-pnpm --filter @reforma/search avaliar     # mede a busca no gabarito (top-1/3/5)
-docker run -p 8080:8080 ghcr.io/nicolasdev-web/rtc-engine:1.6.1   # motor oficial
-engine/smoke.sh                           # confere o exemplo oficial da Receita
+pnpm install
+pnpm local              # baixa o motor oficial (só na 1ª vez), liga o motor e o site
+# ou: pnpm local:simulado  → o chat usa um modelo simulado, sem chave de IA
+```
+
+Abra **http://localhost:3000**. A busca de produtos e o cálculo funcionam sem IA; para perguntas livres, informe a sua chave (Claude, OpenAI ou Gemini) na tela. Ela fica só na memória da aba. O conector MCP fica em `http://localhost:3000/mcp`.
+
+Outros comandos úteis:
+
+```bash
+pnpm -r test                               # core, conector MCP e chat do site (motor simulado com respostas reais gravadas)
+pnpm --filter @reforma/search avaliar      # mede a busca no gabarito
+RTC_ENGINE_URL=http://localhost:8080/api pnpm --filter @reforma/eval oficiais   # casos oficiais da Receita
 ```
 
 ## Estrutura do repositório

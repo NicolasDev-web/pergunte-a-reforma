@@ -11,10 +11,15 @@
     "typecheck": "pnpm -r typecheck",
     "eval": "pnpm --filter @reforma/eval oficiais",
     "format": "prettier --write \"**/*.{ts,json,yaml,md}\"",
-    "format:check": "prettier --check \"packages/**/*.ts\" \"apps/**/*.ts\" \"eval/src/*.ts\""
+    "format:check": "prettier --check \"packages/**/*.ts\" \"apps/**/*.{ts,tsx}\" \"eval/src/*.ts\" \"scripts/*.mjs\"",
+    "local": "node scripts/local.mjs",
+    "local:simulado": "node scripts/local.mjs --simulado"
   },
   "license": "MIT",
   "devDependencies": {
     "prettier": "^3.10.1"
+  },
+  "dependencies": {
+    "server-only": "^0.0.1"
   }
 }

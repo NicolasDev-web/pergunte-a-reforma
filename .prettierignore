@@ -2,3 +2,5 @@ data/
 .cache/
 pnpm-lock.yaml
 eval/resultados/
+.next/
+.motor/

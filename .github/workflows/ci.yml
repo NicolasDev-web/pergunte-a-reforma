@@ -20,8 +20,11 @@ jobs:
         run: pnpm --filter @reforma/search avaliar
       - name: Busca léxica — conjunto não visto (só relatório)
         run: pnpm --filter @reforma/search avaliar ../../eval/perguntas/busca-nao-visto.yaml || true
-      - name: Testes do core e do servidor MCP (com respostas gravadas do motor)
+      - name: Testes do core, do servidor MCP e do chat do site (respostas gravadas do motor, modelo simulado)
         run: pnpm -r test
+      - name: Build do site (Next.js)
+        run: pnpm --filter @reforma/web build
+        env: { REFORMA_RAIZ: "${{ github.workspace }}", NEXT_TELEMETRY_DISABLED: "1" }
 
   # Ponta a ponta com o motor oficial de verdade: casos oficiais da Receita pelo caminho das ferramentas.
   integracao:
