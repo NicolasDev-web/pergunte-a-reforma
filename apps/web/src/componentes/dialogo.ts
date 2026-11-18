@@ -24,7 +24,8 @@ export function useDialogo(ref: RefObject<HTMLElement | null>, onFechar: () => v
         return;
       }
       if (e.key !== "Tab") return;
-      const focaveis = [...el.querySelectorAll<HTMLElement>(FOCAVEIS)].filter((x) => x.offsetParent !== null);
+      // Só o que o Tab alcança: visível e sem tabindex negativo (as orelhas do livro, por exemplo, ficam de fora).
+      const focaveis = [...el.querySelectorAll<HTMLElement>(FOCAVEIS)].filter((x) => x.offsetParent !== null && x.tabIndex >= 0);
       if (!focaveis.length) return e.preventDefault();
       const [ini, fim] = [focaveis[0]!, focaveis[focaveis.length - 1]!];
       if (e.shiftKey && document.activeElement === ini) {

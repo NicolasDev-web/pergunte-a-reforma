@@ -1,4 +1,5 @@
 "use client";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { IconeInfo, IconeLei } from "../Icones";
 import {
@@ -16,6 +17,9 @@ import {
   tributos,
   type Resultado,
 } from "./formatar";
+
+// A caixa (3D + motion) só carrega no navegador, e só quando aparece um Raio-X.
+const CaixaRaioX = dynamic(() => import("../caixa/CaixaRaioX"), { ssr: false });
 
 export function SeloAno({ r }: { r: Resultado }) {
   const ano = r.data.slice(0, 4);
@@ -163,6 +167,7 @@ export function RaioX({ r, onEscolher }: { r: Resultado; onEscolher: (i: number)
         </span>
       </div>
       <AvisoAno r={r} />
+      <CaixaRaioX r={r} />
       <div className="raiox-lista">
         {r.itens.map((it, i) => (
           <button key={i} type="button" className="raiox-linha" onClick={() => onEscolher(i)}>

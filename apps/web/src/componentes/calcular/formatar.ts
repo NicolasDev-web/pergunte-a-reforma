@@ -104,3 +104,48 @@ export function lerValor(texto: string): number | undefined {
   const n = t.includes(",") ? Number(t.replace(/\./g, "").replace(",", ".")) : Number(t);
   return Number.isFinite(n) && n > 0 ? n : undefined;
 }
+
+/** O papel que sai da caixa no Raio-X: só strings do motor e do core, formatadas para a tela. */
+export interface NotaSimulacao {
+  referencia: string;
+  /** "R$ 12,40": totais.vTributos. */
+  tributos: string;
+  /** "R$ 130,00": totais.vBC. */
+  compra: string;
+  /** "9,54%": totais.cargaSobreBase (quando o core calculou). */
+  carga?: string;
+  local: string;
+  data: string;
+  itens: { rotulo: string; valor: string; erro: boolean }[];
+  /** Itens que não couberam no papel ("+ N itens"). */
+  mais: number;
+  carimbo: { texto: string; tipo: "simulacao" | "teste" | "oficial" };
+  versaoMotor: string;
+}
+
+export const ITENS_NA_NOTA = 5;
+
+export function notaDaSimulacao(r: Resultado): NotaSimulacao {
+  const ano = r.data.slice(0, 4);
+  const carimbo: NotaSimulacao["carimbo"] = !r.cenario.oficial
+    ? { texto: "Simulação", tipo: "simulacao" }
+    : ano === "2026"
+      ? { texto: "2026 · teste", tipo: "teste" }
+      : { texto: `${ano} · oficial`, tipo: "oficial" };
+  return {
+    referencia: `Nº ${r.idCalculo.slice(0, 8).toUpperCase()}`,
+    tributos: reais(r.totais.vTributos),
+    compra: reais(r.totais.vBC),
+    ...(r.totais.cargaSobreBase ? { carga: porcento(r.totais.cargaSobreBase) } : {}),
+    local: `${r.local.nome}/${r.local.uf}`,
+    data: dataBR(r.data),
+    itens: r.itens.slice(0, ITENS_NA_NOTA).map((it) => ({
+      rotulo: it.rotulo,
+      valor: it.erros.length ? "não calculado" : reais(totalItem(it)),
+      erro: it.erros.length > 0,
+    })),
+    mais: Math.max(0, r.itens.length - ITENS_NA_NOTA),
+    carimbo,
+    versaoMotor: r.versaoMotor,
+  };
+}
