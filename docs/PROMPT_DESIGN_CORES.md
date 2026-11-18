@@ -82,6 +82,27 @@ Cores dos tributos, iguais em todo lugar (cartão, Raio-X, gráficos, painéis M
 
 Sempre com o rótulo escrito ao lado, nunca só a cor.
 
+## Fundo com formas (para não ficar um branco seco)
+
+Referência: os banners da página da Reforma Tributária da Fazenda, com papel claro texturizado, uma forma amarela em "seta" saindo da esquerda e formas azul e verde no canto direito. Use **só as formas e as cores**: sem ícones, sem textos e sem as cores puras do governo.
+
+- **Papel:** fundo `#F7F3EA` (entre o branco e a `--areia`) com uma textura de papel bem leve. Use um SVG com `feTurbulence` (`fractalNoise`, `baseFrequency` 0.9, opacidade de cerca de 9%), sem imagem externa.
+- **Formas:** cantos levemente arredondados e cores chapadas, sem gradiente e sem sombra.
+  - **Esquerda:** uma forma de seta saindo da borda, em mostarda `#E5A000` (gold-vivid-30).
+  - **Direita, em cima:** uma faixa inclinada em azul `#4A77B4` (blue-warm-50).
+  - **Direita, embaixo:** por cima da azul, uma faixa diagonal em oliva `#6F7A41` (green-warm-50) vindo do canto inferior.
+- **Onde usar:** só nas áreas de abertura, que são:
+  - o topo da tela inicial (busca);
+  - o topo de "O que muda" e de "Como funciona";
+  - a faixa de chamada (CTA).
+
+  **Nunca** atrás do resultado, do Raio-X, do chat ou de tabelas. Nessas áreas o fundo fica branco ou areia lisa, porque a conta precisa ser lida sem distração.
+- **Legibilidade:** o texto e os campos ficam numa área central livre (a partir de cerca de 28% da largura à esquerda, até cerca de 78%) e nunca encostam nas formas. Selos e campos sobre o papel têm fundo branco.
+- **Implementação:** um componente `FundoFormas` (SVG inline com `aria-hidden="true"`, `pointer-events: none`, `position: absolute`) usado como fundo do bloco. Ele usa `preserveAspectRatio="xMidYMid slice"` para as formas continuarem coladas nas bordas.
+- **Celular (< 640 px):** as formas encolhem para os cantos (seta pequena no canto superior esquerdo, azul e oliva no canto inferior direito) ou somem. A busca ocupa a largura toda.
+- **Variações:** na faixa CTA (`--noite`), as formas entram só no canto direito, em azul e oliva. Em "O que muda", a seta pode ser terracota `#BD5727` para variar. As cores das formas não têm significado: não confunda com as cores dos tributos, que valem só para dados.
+- **Conferência:** capturas de tela no desktop e no celular de cada tela com formas, com o texto passando no contraste.
+
 ## O que fazer
 
 1. Em `apps/web/app/globals.css`, troque os tokens antigos (`--azul*`, `--tinta*`, `--superficie`, bordas e âmbar) pelos novos. Mantenha nomes antigos como apelido só se isso evitar mexer em muitos arquivos. Anel de foco: `0 0 0 3px var(--ocre)`, como no DSGov.
@@ -93,7 +114,7 @@ Sempre com o rótulo escrito ao lado, nunca só a cor.
 
    Nos desenhos de "Como funciona", use primária, terracota e ocre com fundos em areia.
 3. Fontes: mantenha Inter e Manrope. **Não** use a Rawline. Também não copie a barra superior do gov.br, o logotipo, o brasão nem a combinação `#1351B4` com faixa `#071D41`. O site não é do governo e não pode parecer. Garanta que o rodapé diga: "Não é um site do governo. Usa a calculadora oficial da Receita Federal."
-4. Revise todos os estados: hover, ativo, foco, desabilitado, erro de item, erro de operação, motor fora do ar, carregando e o selo "Simulação".
+4. Crie o `FundoFormas` (seção acima) e aplique nas áreas de abertura. Revise todos os estados: hover, ativo, foco, desabilitado, erro de item, erro de operação, motor fora do ar, carregando e o selo "Simulação".
 5. Confira, com capturas de tela no desktop (1280 px) e no celular (390 px):
    - telas: Início, Resultado (abas Conta, Lei e Contador), Raio-X, O que muda, Como funciona e Usar no seu chat;
    - texto: nenhum abaixo de 4,5:1, ou 3:1 para texto grande e ícones (calcule, não estime).
