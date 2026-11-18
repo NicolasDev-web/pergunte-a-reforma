@@ -18,13 +18,7 @@ export function FundoFormas({
   return (
     <>
       {variante === "abertura" && (
-        <svg
-          className="formas formas-esq"
-          viewBox="0 0 400 520"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-          focusable="false"
-        >
+        <svg className="formas formas-esq" viewBox="0 0 400 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
           {/* Seta saindo da borda esquerda. O traço da mesma cor arredonda os cantos de leve. */}
           <polygon
             points="-120,130 230,130 340,260 230,390 -120,390"
@@ -35,13 +29,7 @@ export function FundoFormas({
           />
         </svg>
       )}
-      <svg
-        className="formas formas-dir"
-        viewBox="0 0 400 520"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-        focusable="false"
-      >
+      <svg className="formas formas-dir" viewBox="0 0 400 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
         {/* Faixa inclinada azul, em cima; por cima dela, a faixa oliva vindo do canto de baixo. */}
         <polygon
           points="150,-60 520,-60 520,250 60,120"
