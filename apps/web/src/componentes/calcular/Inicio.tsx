@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { BuscarProdutoOutput, CalcularTributosInput, MunicipioResolvido } from "@reforma/core/contratos";
+import { FundoFormas } from "../FundoFormas";
 import { IconeBusca } from "../Icones";
 import {
   contextoProduto,
@@ -128,8 +129,9 @@ export function Inicio(props: {
 
   return (
     <main>
-      <section className="inicio">
-        <div className="abertura">
+      <section className="faixa-abertura" aria-label="Busca">
+        <FundoFormas />
+        <div className="abertura faixa-conteudo">
           <p className="sobretitulo">
             Reforma tributária · <b>CBS e IBS</b>
           </p>
@@ -258,7 +260,9 @@ export function Inicio(props: {
             </div>
           )}
         </div>
+      </section>
 
+      <section className="inicio">
         {props.children}
 
         <section aria-labelledby="exemplos" className="secao-larga">

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FundoFormas } from "@/componentes/FundoFormas";
 import type { Metadata } from "next";
 import { Rodape } from "@/componentes/Rodape";
 
@@ -44,13 +45,16 @@ export default function OQueMuda() {
   return (
     <>
       <main className="conteudo">
-        <section className="conteudo-topo">
-          <span className="sobretitulo">O que muda · em 3 minutos</span>
-          <h1>Cinco impostos viram dois. E um terceiro para o que faz mal.</h1>
-          <p>
-            A reforma mexe nos impostos que já vêm no preço de tudo o que você compra. Eles não são novos: estão sendo trocados,
-            aos poucos, até 2033.
-          </p>
+        <section className="conteudo-topo faixa-abertura">
+          <FundoFormas seta="var(--terracota)" />
+          <div className="faixa-conteudo">
+            <span className="sobretitulo">O que muda · em 3 minutos</span>
+            <h1>Cinco impostos viram dois. E um terceiro para o que faz mal.</h1>
+            <p>
+              A reforma mexe nos impostos que já vêm no preço de tudo o que você compra. Eles não são novos: estão sendo trocados,
+              aos poucos, até 2033.
+            </p>
+          </div>
         </section>
 
         <section aria-labelledby="troca" className="secao-num">
@@ -128,7 +132,8 @@ export default function OQueMuda() {
           </div>
         </section>
 
-        <div className="cta">
+        <div className="cta faixa-abertura">
+          <FundoFormas variante="cta" />
           <div className="mensagem">
             <h2>Agora veja o seu caso</h2>
             <p>Digite o que você comprou. A calculadora oficial faz a conta.</p>

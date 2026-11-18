@@ -1,53 +1,78 @@
 /*
- * Pergunte à Reforma — direção "Papel e tinta" (ADR-005).
- * Jornalismo explicativo da nota fiscal: fundo de papel, tinta escura, fios finos em vez de sombras.
- * Azul só para ação, link e CBS. Âmbar só para "simulação".
- * Tipos: Newsreader (títulos, valores, lei) · IBM Plex Sans (interface) · IBM Plex Mono (códigos e metadados).
+ * Pergunte à Reforma — paleta "gov.br terroso" (ADR-006) sobre a composição editorial (ADR-005).
+ * Base branca, azul ardósia para ação/link/CBS; terra nos neutros e destaques; o fundo de simulação só no selo.
+ * Tipos: Newsreader (títulos, valor do imposto, lei) · IBM Plex Sans (interface) · IBM Plex Mono (códigos e metadados).
  */
 :root {
-  /* papel e tinta */
-  --papel: #faf8f3;
-  --papel-2: #f3efe6;
-  --papel-livro: #f3ecdd;
-  --cartao: #ffffff;
-  --tinta: #1d1b17;
-  --tinta-2: #5a554c;
-  --tinta-3: #6f685c;
-  --fio: #e6e0d4;
-  --fio-forte: #d3cbbb;
-  --fio-tinta: #1d1b17;
+  /*
+   * Paleta "gov.br terroso" (ADR-006, docs/PROMPT_DESIGN_CORES.md): só tokens das famílias quentes do
+   * DSGov. Base branca, azul ardósia como primária, terra nos neutros e nos destaques.
+   * O site NÃO é do governo: nada de #1351B4 com faixa #071D41, barra do gov.br, brasão ou Rawline.
+   */
+  --fundo: #ffffff; /* pure-0 */
+  --areia: #f5f0e6; /* gold-5: superfícies alternativas */
+  --areia-2: #f1e5cd; /* gold-10: hover de superfície, faixas suaves */
+  --papel-forma: #f7f3ea; /* papel das áreas de abertura (com textura e formas) */
+  --borda: #e6e6e2; /* gray-warm-10 */
+  --borda-forte: #929285; /* gray-warm-40: campos e controles (3,2:1) */
+  --tinta: #2e2e2a; /* gray-warm-80 */
+  --tinta-2: #5d5d52; /* gray-warm-60 */
+  --mudo: #76766a; /* gray-warm-50: legendas, só sobre branco */
+  --primaria: #345d96; /* blue-warm-60: botões, links, seleção, CBS */
+  --primaria-forte: #2f4668; /* blue-warm-70 */
+  --primaria-clara: #c5d4eb; /* blue-warm-20 */
+  --primaria-suave: #ecf1f7; /* blue-warm-5 */
+  --noite: #252f3e; /* blue-warm-80: faixa de chamada e rodapé, com texto branco */
+  --terracota: #bd5727; /* orange-warm-50: IBS estadual */
+  --terracota-forte: #914734; /* orange-warm-60: texto terracota sobre areia */
+  --ocre: #c2850c; /* gold-vivid-40: foco, IBS municipal (nunca em texto) */
+  --ocre-texto: #7a591a; /* gold-vivid-60 */
+  --argila: #805039; /* red-warm-60: Imposto Seletivo */
+  --oliva: #6f7a41; /* green-warm-50: sucesso, "alíquota zero" */
+  --oliva-suave: #f1f4d7; /* green-warm-5 */
+  --oliva-texto: #45472f;
+  --perigo: #d54309; /* red-warm-vivid-50 */
+  --perigo-forte: #9c3d10; /* red-warm-vivid-60 */
+  --perigo-suave: #fce1d4; /* red-warm-vivid-10 */
+  --simulacao-fundo: #fef0c8; /* gold-vivid-5: só o selo e a faixa "Simulação" */
+  --simulacao-texto: #5c410a; /* gold-vivid-70 */
 
-  /* azul: ação, link, CBS */
-  --azul: #3b5bdb;
-  --azul-escuro: #2f49b8;
-  --azul-medio: #7b93f0;
-  --azul-claro: #c2cefa;
-  --azul-suave: #e9edfb;
+  /* Formas das áreas de abertura (sem significado; não confundir com as cores dos tributos) */
+  --forma-mostarda: #e5a000; /* gold-vivid-30 */
+  --forma-azul: #4a77b4; /* blue-warm-50 */
+  --forma-oliva: var(--oliva);
 
-  /* semânticas */
-  --ambar-fundo: #fbf1e3;
-  --ambar-texto: #7a4a12;
-  --ambar-linha: #e2b878;
-  --erro-fundo: #fdecec;
-  --erro-texto: #9b1c1c;
+  /* Tributos: iguais em todo lugar, sempre com o rótulo escrito ao lado */
+  --cbs: var(--primaria);
+  --ibs-uf: var(--terracota);
+  --ibs-mun: var(--ocre);
+  --is: var(--argila);
 
-  /* tributos (barra, legenda, tabela) */
-  --cbs: var(--azul);
-  --ibs-uf: var(--azul-medio);
-  --ibs-mun: var(--azul-claro);
-  --is: var(--tinta);
-
-  /* nomes antigos, mantidos como apelidos */
-  --fundo: var(--papel);
-  --superficie: var(--papel-2);
-  --borda: var(--fio);
-  --borda-forte: var(--fio-forte);
-  --linha: #eee9de;
+  /* Nomes da direção anterior, mantidos como apelidos para não mexer em todos os componentes */
+  --papel: var(--fundo);
+  --papel-2: var(--areia);
+  --papel-livro: #f3ecdd; /* miolo dos livros (material, não interface) */
+  --cartao: var(--fundo);
+  --tinta-3: var(--mudo);
+  --fio: var(--borda);
+  --fio-forte: var(--borda-forte);
+  --fio-tinta: var(--tinta);
+  --linha: var(--borda);
+  --superficie: var(--areia);
+  --azul: var(--primaria);
+  --azul-escuro: var(--primaria-forte);
+  --azul-medio: var(--primaria);
+  --azul-claro: var(--primaria-clara);
+  --azul-suave: var(--primaria-suave);
+  --ambar-fundo: var(--simulacao-fundo);
+  --ambar-texto: var(--simulacao-texto);
+  --erro-fundo: var(--perigo-suave);
+  --erro-texto: var(--perigo-forte);
 
   /* forma */
   --raio: 12px;
   --raio-p: 6px;
-  --sombra-flutuante: 0 14px 36px rgba(29, 27, 23, 0.14);
+  --sombra-flutuante: 0 14px 36px rgba(46, 46, 42, 0.14);
   --largura: 1200px;
   --leitura: 66ch;
 
@@ -131,7 +156,7 @@ code {
   color: var(--tinta-2);
 }
 :focus-visible {
-  outline: 3px solid var(--azul-medio);
+  outline: 3px solid var(--ocre);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -249,12 +274,12 @@ code {
 .btn-pri {
   background: var(--azul);
   border-color: var(--azul);
-  color: #fff;
+  color: var(--fundo);
 }
 .btn-pri:hover {
   background: var(--azul-escuro);
   border-color: var(--azul-escuro);
-  color: #fff;
+  color: var(--fundo);
 }
 .btn-pri:disabled {
   opacity: 0.6;
@@ -989,7 +1014,7 @@ code {
   border: none;
   border-radius: var(--raio-p);
   background: var(--azul);
-  color: #fff;
+  color: var(--fundo);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -1664,4 +1689,139 @@ code {
 }
 .em-2027-rotulo {
   font-size: 13px;
+}
+
+/* ---------- áreas de abertura: papel texturizado e formas (FundoFormas) ---------- */
+html,
+body {
+  overflow-x: clip;
+}
+.faixa-abertura {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.3 0 0 0 0 0.2 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23p)' opacity='0.09'/></svg>"),
+    var(--papel-forma);
+}
+.formas {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+.formas-esq {
+  left: 0;
+  width: 24%;
+}
+.formas-dir {
+  right: 0;
+  width: 20%;
+}
+/* O conteúdo fica na faixa central livre: de ~28% a ~78% da largura. */
+.faixa-conteudo {
+  position: relative;
+  margin-left: max(24px, 28%);
+  width: min(720px, 50%);
+  padding: 64px 0 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.faixa-abertura .busca-caixa,
+.faixa-abertura .ficha,
+.faixa-abertura .chip,
+.faixa-abertura .sem-resultado {
+  background: var(--fundo);
+}
+/* Páginas de leitura: o topo sai do contêiner e ocupa a largura toda. */
+.conteudo > .conteudo-topo.faixa-abertura {
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: -56px;
+}
+
+/* Faixa de chamada: noite com texto branco; formas só no canto direito. */
+.cta.faixa-abertura {
+  background: var(--noite);
+  color: var(--fundo);
+  border: none;
+  border-radius: var(--raio);
+  padding: 32px clamp(20px, 4vw, 40px);
+}
+.cta.faixa-abertura .formas-dir {
+  width: 22%;
+}
+.cta.faixa-abertura h2 {
+  color: var(--fundo);
+}
+.cta.faixa-abertura p {
+  color: var(--borda);
+}
+.cta.faixa-abertura .btn-pri {
+  background: var(--fundo);
+  border-color: var(--fundo);
+  color: var(--noite);
+}
+.cta.faixa-abertura .btn-pri:hover {
+  background: var(--areia);
+}
+.cta .mensagem {
+  max-width: 70%;
+}
+
+/* Rodapé: noite, e deixa claro que não é site do governo. */
+.rodape {
+  background: var(--noite);
+  color: var(--borda);
+  border-top: none;
+}
+.rodape-dentro {
+  color: var(--borda);
+}
+.rodape-aviso {
+  color: var(--fundo);
+  font-weight: 500;
+}
+
+/* Estados com a paleta nova */
+.selo-zero {
+  background: var(--oliva-suave);
+  color: var(--oliva-texto);
+}
+.btn:disabled,
+.chip:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+@media (max-width: 640px) {
+  /* Celular: só uma seta pequena no canto de cima; a busca ocupa a largura toda. */
+  .formas-esq {
+    width: 64px;
+    height: 84px;
+  }
+  .formas-dir {
+    display: none;
+  }
+  .faixa-conteudo {
+    margin-left: 16px;
+    width: calc(100% - 32px);
+    padding: 96px 0 40px;
+  }
+  .cta.faixa-abertura .formas-dir {
+    display: none;
+  }
+  .cta .mensagem {
+    max-width: 100%;
+  }
+}
+
+.conteudo-topo.faixa-abertura {
+  max-width: none;
+  display: block;
+}
+.faixa-abertura + .inicio {
+  padding-top: 8px;
 }

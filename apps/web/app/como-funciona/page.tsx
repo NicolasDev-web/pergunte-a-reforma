@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FundoFormas } from "@/componentes/FundoFormas";
 import type { Metadata } from "next";
 import { Rodape } from "@/componentes/Rodape";
 
@@ -36,19 +37,28 @@ const CADEIA = [
 ];
 
 const FAIXAS = [
-  { nome: "Regra geral", regra: "alíquota cheia", base: 70, extra: 0, cor: "var(--azul)" },
-  { nome: "Saúde e educação", regra: "60% menos", base: 28, extra: 0, cor: "var(--azul-medio)" },
-  { nome: "Cesta básica", regra: "zero", base: 0, extra: 0, cor: "var(--azul-claro)" },
-  { nome: "Cigarro, bebida alcoólica", regra: "regra geral + Imposto Seletivo (2027)", base: 70, extra: 22, cor: "var(--azul)" },
+  { nome: "Regra geral", regra: "alíquota cheia", base: 70, extra: 0, cor: "var(--primaria)" },
+  { nome: "Saúde e educação", regra: "60% menos", base: 28, extra: 0, cor: "var(--primaria)" },
+  { nome: "Cesta básica", regra: "zero", base: 0, extra: 0, cor: "var(--primaria)" },
+  {
+    nome: "Cigarro, bebida alcoólica",
+    regra: "regra geral + Imposto Seletivo (2027)",
+    base: 70,
+    extra: 22,
+    cor: "var(--primaria)",
+  },
 ];
 
 export default function ComoFunciona() {
   return (
     <>
       <main className="conteudo" style={{ gap: 64 }}>
-        <section className="conteudo-topo">
-          <span className="sobretitulo">Como funciona · em 4 desenhos</span>
-          <h1>Do caixa do mercado até o governo</h1>
+        <section className="conteudo-topo faixa-abertura">
+          <FundoFormas />
+          <div className="faixa-conteudo">
+            <span className="sobretitulo">Como funciona · em 4 desenhos</span>
+            <h1>Do caixa do mercado até o governo</h1>
+          </div>
         </section>
 
         <section className="ilustrada" aria-labelledby="p1">
@@ -114,7 +124,7 @@ export default function ComoFunciona() {
             aria-label="O dinheiro do imposto se divide entre a União, o seu estado e a sua cidade"
             style={{ width: "100%", maxWidth: 520, justifySelf: "center" }}
           >
-            <circle cx="260" cy="48" r="32" fill="var(--azul-suave)" stroke="var(--azul)" strokeWidth="2" />
+            <circle cx="260" cy="48" r="32" fill="var(--areia)" stroke="var(--primaria)" strokeWidth="2" />
             <text
               x="260"
               y="55"
@@ -133,11 +143,11 @@ export default function ComoFunciona() {
               strokeWidth="2.5"
               strokeLinecap="round"
             />
-            <path d="M260 80 L 260 140" fill="none" stroke="var(--azul-medio)" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M260 80 L 260 140" fill="none" stroke="var(--ibs-uf)" strokeWidth="2.5" strokeLinecap="round" />
             <path
               d="M280 76 C 340 110, 410 110, 430 140"
               fill="none"
-              stroke="var(--azul-claro)"
+              stroke="var(--ibs-mun)"
               strokeWidth="2.5"
               strokeLinecap="round"
             />
@@ -145,11 +155,11 @@ export default function ComoFunciona() {
               <path d="M60 162 L90 146 L120 162 Z" />
               <path d="M64 166h52M68 170v24M80 170v24M100 170v24M112 170v24M60 198h60" />
             </g>
-            <g fill="none" stroke="var(--azul-medio)" strokeWidth="2" strokeLinejoin="round">
+            <g fill="none" stroke="var(--ibs-uf)" strokeWidth="2" strokeLinejoin="round">
               <rect x="236" y="152" width="48" height="44" rx="2" />
               <path d="M246 162h8M266 162h8M246 174h8M266 174h8M256 196v-12h8v12M260 152v-12l12 4-12 4" />
             </g>
-            <g fill="none" stroke="var(--azul-claro)" strokeWidth="2" strokeLinejoin="round">
+            <g fill="none" stroke="var(--ibs-mun)" strokeWidth="2" strokeLinejoin="round">
               <path d="M406 170 L430 150 L454 170 M410 168v28h40v-28M424 196v-14h12v14" />
             </g>
             <text x="90" y="222" textAnchor="middle" fontSize="14" fontWeight="600" fill="var(--tinta)">
@@ -257,7 +267,7 @@ export default function ComoFunciona() {
                 </div>
                 <div className="barra" style={{ height: 16, background: "var(--linha)" }} aria-hidden="true">
                   <div style={{ width: `${f.base}%`, background: f.cor }} />
-                  <div style={{ width: `${f.extra}%`, background: "var(--tinta)" }} />
+                  <div style={{ width: `${f.extra}%`, background: "var(--is)" }} />
                 </div>
               </div>
             ))}
@@ -267,7 +277,8 @@ export default function ComoFunciona() {
           </div>
         </section>
 
-        <div className="cta">
+        <div className="cta faixa-abertura">
+          <FundoFormas variante="cta" />
           <div className="mensagem">
             <h2>Agora veja o seu caso</h2>
             <p>Digite o que você comprou. A calculadora oficial faz a conta.</p>

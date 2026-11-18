@@ -14,7 +14,10 @@ export function Rodape({ versao }: { versao?: string }) {
           <span>Sua chave de IA nunca é guardada</span>
           <span>Funciona no Claude, ChatGPT e Gemini</span>
         </div>
-        <span>{AVISO_SIMULACAO}</span>
+        <div className="rodape-selos">
+          <span className="rodape-aviso">Não é um site do governo. Usa a calculadora oficial da Receita Federal.</span>
+          <span>{AVISO_SIMULACAO}</span>
+        </div>
       </div>
     </footer>
   );

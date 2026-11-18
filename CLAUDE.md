@@ -53,7 +53,13 @@ pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + 
 - Next 16 + React 19 + AI SDK 7. `@reforma/core/decimal` e `@reforma/core/contratos` são as únicas entradas do core usadas no navegador.
 - Cálculo sem IA: `/api/busca`, `/api/municipios`, `/api/calcular`. Chat: `/api/chat` (chave no cabeçalho `x-chave-ia`, nunca registrada). MCP: `/mcp` e `/saude` reaproveitam `apps/mcp/src/responder.ts`.
 - Cálculos rápidos entram na conversa como parte `data-calculo` (com um texto oculto para a IA ter contexto).
-- Visual: direção "Claro e vivo" (branco + azul #3B5BDB); âmbar só para "simulação". Canvas de referência no claude.ai ("Pergunte à Reforma — UX/UI").
+- Visual: paleta "gov.br terroso" (ADR-006) sobre a composição editorial da ADR-005.
+  - Base branca; azul ardósia #345D96 para ação, link e CBS; areia, terracota, ocre e oliva.
+  - O fundo de simulação só aparece no selo e na faixa "Simulação"; o foco é ocre.
+  - Tributos: CBS primária, IBS-UF terracota, IBS-Mun ocre, IS argila, sempre com rótulo.
+  - Papel com formas (`FundoFormas`) só nas aberturas, nunca atrás de resultado ou tabela.
+  - Newsreader + IBM Plex via `next/font`; toda cor por token em `app/globals.css`.
+  - Não parecer site do governo: nada de barra gov.br, brasão, Rawline ou #1351B4/#071D41.
 
 ## Achados nos dados oficiais
 - `NBS_APLICAVEL.NBSA_ANXO_ID` aponta para itens de anexo deslocados (ensino fundamental → "Ensino Infantil"). O cClassTrib está certo. O ETL ignora o texto do item para NBS.
