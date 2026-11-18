@@ -1,0 +1,50 @@
+name: motor-limites
+# Mede se o motor oficial sobe e calcula dentro dos limites de planos gratuitos sem cartão
+# (ex.: Render free = 512 MB de RAM e 0,1 de CPU). Manual.
+on:
+  workflow_dispatch:
+    inputs:
+      memoria:
+        description: "Limite de memória do contêiner"
+        default: "512m"
+      cpus:
+        description: "Limite de CPU do contêiner"
+        default: "0.1"
+permissions:
+  contents: read
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Baixa o JAR e o banco da release
+        run: |
+          REF=$(grep -m1 '^ARG RTC_REF=' engine/Dockerfile | cut -d= -f2)
+          mkdir -p /tmp/motor/calculadora/db
+          URL="https://github.com/${{ github.repository }}/releases/download/motor-$REF"
+          curl -fsSL -o /tmp/motor/app.jar "$URL/api-regime-geral-$REF.jar"
+          curl -fsSL -o /tmp/motor/calculadora/db/calculadora-pro.db "$URL/calculadora-pro-$REF.db"
+      - name: Sobe com limites (${{ inputs.memoria }}, ${{ inputs.cpus }} CPU)
+        run: |
+          T0=$(date +%s%N)
+          docker run -d --name rtc -p 8080:8080 --memory "${{ inputs.memoria }}" --cpus "${{ inputs.cpus }}" \
+            -v /tmp/motor:/app -w /app \
+            -e JAVA_TOOL_OPTIONS="-XX:MaxRAMPercentage=70 -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -Xss512k -XX:ReservedCodeCacheSize=32m" \
+            eclipse-temurin:21-jre sh -c 'exec java -Dspring.profiles.active=offline -Dserver.port=8080 -jar app.jar'
+          if timeout 600 bash -c 'until curl -fsS localhost:8080/api/calculadora/dados-abertos/versao >/dev/null 2>&1; do sleep 1; done'; then
+            echo "SUBIDA_S=$(( ($(date +%s%N) - T0) / 1000000000 ))" >> "$GITHUB_ENV"
+          else
+            docker logs rtc | tail -40; docker inspect rtc --format '{{.State.OOMKilled}} {{.State.Status}}'; exit 1
+          fi
+      - name: Exemplo oficial e uso de memória
+        run: |
+          T0=$(date +%s%N); engine/smoke.sh; MS=$(( ($(date +%s%N) - T0) / 1000000 ))
+          T1=$(date +%s%N); curl -fsS -X POST localhost:8080/api/calculadora/observabilidade/regime-geral -H 'content-type: application/json' -d @engine/exemplos/operacao-oficial.json >/dev/null; MS2=$(( ($(date +%s%N) - T1) / 1000000 ))
+          {
+            echo "### Motor com ${{ inputs.memoria }} e ${{ inputs.cpus }} CPU"
+            echo "| Medida | Valor |"; echo "|---|---|"
+            echo "| Subida até responder | ${SUBIDA_S} s |"
+            echo "| Primeiro cálculo (smoke, inclui aquecimento) | ${MS} ms |"
+            echo "| Cálculo seguinte | ${MS2} ms |"
+            echo "| Memória em uso | $(docker stats --no-stream --format '{{.MemUsage}}' rtc) |"
+          } | tee -a "$GITHUB_STEP_SUMMARY"
