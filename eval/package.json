@@ -1,0 +1,19 @@
+{
+  "name": "@reforma/eval",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gabarito": "node --experimental-strip-types --no-warnings src/extrair-gabarito.ts",
+    "oficiais": "node --experimental-strip-types --no-warnings src/oficiais.ts",
+    "typecheck": "tsc --noEmit -p ."
+  },
+  "dependencies": {
+    "@reforma/core": "workspace:*",
+    "@reforma/search": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3"
+  }
+}

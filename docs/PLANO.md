@@ -79,14 +79,18 @@ Cada etapa é uma **Milestone** no GitHub e cada item é uma **Issue**.
 > **Status em 17/11:** busca ✅ (100% no gabarito principal; 72,5% → 80% no não visto com e5-base). Motor ✅ no CI e no GHCR, ⏳ aguardando o projeto GCP para o Cloud Run.
 
 ### Semana 2 — Ferramentas, guardrails e conector MCP (24 a 30/11)
-- [ ] `packages/core`: cliente tipado do motor (zod) e montagem da operação
-- [ ] As 5 ferramentas do MVP
-- [ ] Cenários de alíquota: `teste-2026` (oficial) e cenários configuráveis para 2027 em diante
-- [ ] Guardrails: verificador de números, aviso obrigatório, detecção de ambiguidade
-- [ ] Servidor MCP remoto (Streamable HTTP) + passo a passo para conectar no Claude, ChatGPT e Gemini
-- [ ] Runner de avaliação v0
+- [x] `packages/core`: cliente tipado do motor (zod) e montagem da operação
+- [x] As 5 ferramentas do MVP
+- [x] Cenários de alíquota: `ano-teste-2026` (oficial), `exemplo-receita-2027` e `personalizado` para 2027 em diante
+- [x] Guardrails: verificador de números, aviso obrigatório, detecção de ambiguidade
+- [x] Servidor MCP remoto (Streamable HTTP), testado com o cliente MCP oficial
+- [ ] Passo a passo com prints no Claude, ChatGPT e Gemini (precisa de URL pública: deploy ou túnel)
+- [x] Runner de avaliação v0 com o gabarito extraído dos testes oficiais
+- [ ] Medir `termosTecnicos` com os 3 provedores (#31) e ESLint
 
 **Pronto quando:** a mesma pergunta funciona nos três chats e o runner roda os casos oficiais de ponta a ponta.
+
+> **Status em 18/11:** 30 testes automatizados; casos oficiais da Receita pelo caminho das ferramentas: 14 iguais ao gabarito, 6 tratados antes do motor, 0 divergentes, 15 fora do escopo do MVP (Imposto Seletivo e tributação regular).
 
 ### Semana 3 — Além do chat: painéis e site (01 a 07/12)
 - [ ] Painel **Memória de cálculo** (cascata: preço → base → redução → CBS → IBS → IS)

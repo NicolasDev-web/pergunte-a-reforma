@@ -20,3 +20,49 @@ jobs:
         run: pnpm --filter @reforma/search avaliar
       - name: Busca léxica — conjunto não visto (só relatório)
         run: pnpm --filter @reforma/search avaliar ../../eval/perguntas/busca-nao-visto.yaml || true
+      - name: Testes do core e do servidor MCP (com respostas gravadas do motor)
+        run: pnpm -r test
+
+  # Ponta a ponta com o motor oficial de verdade: casos oficiais da Receita pelo caminho das ferramentas.
+  integracao:
+    runs-on: ubuntu-latest
+    needs: checagens
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Clona o repositório oficial (gabarito e ETL)
+        run: |
+          REF=$(grep -m1 '^ARG RTC_REF=' engine/Dockerfile | cut -d= -f2)
+          git clone --depth 1 --branch "$REF" https://github.com/ReceitaFederal/calculadora-rtc-regime-regular .cache/calculadora-rtc-regime-regular
+          echo "REF=$REF" >> "$GITHUB_ENV"
+      - run: pnpm --filter @reforma/search etl
+        env: { RTC_REPO_DIR: "${{ github.workspace }}/.cache/calculadora-rtc-regime-regular" }
+      - name: Sobe o motor (JAR da release motor-<tag>)
+        run: |
+          mkdir -p /tmp/motor/calculadora/db && cd /tmp/motor
+          URL="https://github.com/${{ github.repository }}/releases/download/motor-$REF"
+          curl -fsSL -o motor.jar "$URL/api-regime-geral-$REF.jar"
+          curl -fsSL -o calculadora/db/calculadora-pro.db "$URL/calculadora-pro-$REF.db"
+          nohup java -Dspring.profiles.active=offline -jar motor.jar > motor.log 2>&1 &
+          timeout 120 bash -c 'until curl -fsS localhost:8080/api/calculadora/dados-abertos/versao >/dev/null 2>&1; do sleep 1; done' || { tail -50 motor.log; exit 1; }
+      - name: Gabarito dos testes oficiais
+        run: pnpm --filter @reforma/eval gabarito
+        env: { RTC_REPO_DIR: "${{ github.workspace }}/.cache/calculadora-rtc-regime-regular" }
+      - name: Casos oficiais pelo caminho das ferramentas
+        run: pnpm --filter @reforma/eval oficiais
+        env: { RTC_ENGINE_URL: "http://localhost:8080/api" }
+      - name: Relatório na issue #12
+        if: always() && github.ref == 'refs/heads/main'
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          [ -f eval/resultados/oficiais.md ] || exit 0
+          { cat eval/resultados/oficiais.md; echo; echo "[execução](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"; } > /tmp/c.md
+          gh issue comment 12 --repo "${{ github.repository }}" --body-file /tmp/c.md

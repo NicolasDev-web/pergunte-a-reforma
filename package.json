@@ -9,9 +9,9 @@
   },
   "scripts": {
     "typecheck": "pnpm -r typecheck",
-    "eval": "pnpm --filter eval run eval",
+    "eval": "pnpm --filter @reforma/eval oficiais",
     "format": "prettier --write \"**/*.{ts,json,yaml,md}\"",
-    "format:check": "prettier --check \"packages/**/*.ts\""
+    "format:check": "prettier --check \"packages/**/*.ts\" \"apps/**/*.ts\" \"eval/src/*.ts\""
   },
   "license": "MIT",
   "devDependencies": {

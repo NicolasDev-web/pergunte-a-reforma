@@ -1,0 +1,1277 @@
+{
+  "fonte": "calculadora-rtc-regime-regular",
+  "casos": [
+    {
+      "id": "Teste_000001_1",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_000001_1.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN"
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "200.00",
+        "pCBS": "0.90",
+        "vCBS": "1.80",
+        "pIBSUF": "0.10",
+        "vIBSUF": "0.20",
+        "pIBSMun": "0",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_000001_2",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_000001_2.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2027-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "baseCalculo": 200,
+              "quantidade": 1,
+              "unidade": "VN",
+              "impostoInformado": 0,
+              "cClassTrib": "000001"
+            },
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05,
+              "impostoSeletivo": {
+                "adValorem": 13,
+                "adRem": 21.3
+              }
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "247.30",
+        "pCBS": "8.40",
+        "vCBS": "20.77",
+        "pIBSUF": "0.05",
+        "vIBSUF": "0.12",
+        "pIBSMun": "0.05",
+        "vIBSMun": "0.12"
+      }
+    },
+    {
+      "id": "Teste_000001_3",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_000001_3.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "tributacaoRegular": {
+              "cst": "000",
+              "cClassTrib": "000001"
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "200.00",
+        "pCBS": "0.00",
+        "vCBS": "0",
+        "pIBSUF": "0.00",
+        "vIBSUF": "0",
+        "pIBSMun": "0.00",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_000001_4",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_000001_4.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2027-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "baseCalculo": 200,
+              "quantidade": 1,
+              "unidade": "VN",
+              "impostoInformado": 0,
+              "cClassTrib": "000001"
+            },
+            "tributacaoRegular": {
+              "cst": "000",
+              "cClassTrib": "000001"
+            },
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05,
+              "impostoSeletivo": {
+                "adValorem": 13,
+                "adRem": 21.3
+              }
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "247.30",
+        "pCBS": "0.00",
+        "vCBS": "0",
+        "pIBSUF": "0.00",
+        "vIBSUF": "0",
+        "pIBSMun": "0.00",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_000001_5",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_000001_5.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2028-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "09024000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "UN",
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "200.00",
+        "pCBS": "8.40",
+        "vCBS": "16.80",
+        "pIBSUF": "0.05",
+        "vIBSUF": "0.10",
+        "pIBSMun": "0.05",
+        "vIBSMun": "0.10"
+      }
+    },
+    {
+      "id": "Teste_000001_6",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_000001_6.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2028-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "87032100",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "UN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "baseCalculo": 200,
+              "quantidade": 1,
+              "unidade": "UN",
+              "impostoInformado": 0,
+              "cClassTrib": "000001"
+            },
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05,
+              "impostoSeletivo": {
+                "adValorem": 5.27
+              }
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "210.54",
+        "pCBS": "8.40",
+        "vCBS": "17.69",
+        "pIBSUF": "0.05",
+        "vIBSUF": "0.11",
+        "pIBSMun": "0.05",
+        "vIBSMun": "0.11"
+      }
+    },
+    {
+      "id": "Teste_000001_7",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_000001_7.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2028-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "09024000",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "UN",
+            "tributacaoRegular": {
+              "cst": "000",
+              "cClassTrib": "000001"
+            },
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "200.00",
+        "pCBS": "0.00",
+        "vCBS": "0",
+        "pIBSUF": "0.00",
+        "vIBSUF": "0",
+        "pIBSMun": "0.00",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_000001_8",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_000001_8.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2028-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "87032100",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "UN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "baseCalculo": 200,
+              "quantidade": 1,
+              "unidade": "UN",
+              "impostoInformado": 0,
+              "cClassTrib": "000001"
+            },
+            "tributacaoRegular": {
+              "cst": "000",
+              "cClassTrib": "000001"
+            },
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05,
+              "impostoSeletivo": {
+                "adValorem": 5.27
+              }
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "210.54",
+        "pCBS": "0.00",
+        "vCBS": "0",
+        "pIBSUF": "0.00",
+        "vIBSUF": "0",
+        "pIBSMun": "0.00",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_011002_1",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_011002_1.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "nbs": "114052200",
+            "cst": "011",
+            "cClassTrib": "011002",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "UN"
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "200.00",
+        "pCBS": "0.90",
+        "vCBS": "0.72",
+        "pIBSUF": "0.10",
+        "vIBSUF": "0.08",
+        "pIBSMun": "0",
+        "vIBSMun": "0",
+        "pAliqEfetCBS": "0.36",
+        "pRedAliqCBS": "60",
+        "pAliqEfetIBSUF": "0.04",
+        "pRedAliqIBSUF": "60",
+        "pAliqEfetIBSMun": "0.00",
+        "pRedAliqIBSMun": "60"
+      }
+    },
+    {
+      "id": "Teste_200002_1",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_200002_1.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "200",
+            "cClassTrib": "200002",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN"
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "200.00",
+        "vCBS": "0",
+        "vIBSUF": "0",
+        "pIBSMun": "0",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_200002_2",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_200002_2.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2027-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "200",
+            "cClassTrib": "200002",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "baseCalculo": 200,
+              "quantidade": 1,
+              "unidade": "VN",
+              "impostoInformado": 0,
+              "cClassTrib": "000001"
+            },
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05,
+              "impostoSeletivo": {
+                "adValorem": 13,
+                "adRem": 21.3
+              }
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "247.30",
+        "vCBS": "0",
+        "vIBSUF": "0",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_200002_3",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_200002_3.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "tributacaoRegular": {
+              "cst": "200",
+              "cClassTrib": "200002"
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "200.00",
+        "vCBS": "0",
+        "vIBSUF": "0",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_200002_4",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_200002_4.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2027-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "baseCalculo": 200,
+              "quantidade": 1,
+              "unidade": "VN",
+              "impostoInformado": 0,
+              "cClassTrib": "000001"
+            },
+            "tributacaoRegular": {
+              "cst": "200",
+              "cClassTrib": "200002"
+            },
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05,
+              "impostoSeletivo": {
+                "adValorem": 13,
+                "adRem": 21.3
+              }
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "247.30",
+        "vCBS": "0",
+        "vIBSUF": "0",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_200032_1",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_200032_1.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "200",
+            "cClassTrib": "200032",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN"
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "200.00",
+        "pCBS": "0.90",
+        "vCBS": "0.72",
+        "pIBSUF": "0.10",
+        "vIBSUF": "0.08",
+        "pIBSMun": "0",
+        "vIBSMun": "0",
+        "pAliqEfetCBS": "0.36",
+        "pRedAliqCBS": "60",
+        "pAliqEfetIBSUF": "0.04",
+        "pRedAliqIBSUF": "60",
+        "pAliqEfetIBSMun": "0.00",
+        "pRedAliqIBSMun": "60"
+      }
+    },
+    {
+      "id": "Teste_200032_2",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_200032_2.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2027-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "200",
+            "cClassTrib": "200032",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "baseCalculo": 200,
+              "quantidade": 1,
+              "unidade": "VN",
+              "impostoInformado": 0,
+              "cClassTrib": "000001"
+            },
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05,
+              "impostoSeletivo": {
+                "adValorem": 13,
+                "adRem": 21.3
+              }
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "247.30",
+        "pCBS": "8.40",
+        "vCBS": "8.31",
+        "pIBSUF": "0.05",
+        "vIBSUF": "0.05",
+        "pIBSMun": "0.05",
+        "vIBSMun": "0.05",
+        "pAliqEfetCBS": "3.36",
+        "pRedAliqCBS": "60",
+        "pAliqEfetIBSUF": "0.02",
+        "pRedAliqIBSUF": "60",
+        "pAliqEfetIBSMun": "0.02",
+        "pRedAliqIBSMun": "60"
+      }
+    },
+    {
+      "id": "Teste_200032_3",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_200032_3.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "tributacaoRegular": {
+              "cst": "200",
+              "cClassTrib": "200032"
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "200.00",
+        "pCBS": "0.00",
+        "vCBS": "0",
+        "pIBSUF": "0.00",
+        "vIBSUF": "0",
+        "pIBSMun": "0.00",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_200032_4",
+      "tipo": "calculo",
+      "origem": "entradas/calculoscorretos/Teste_200032_4.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2027-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "baseCalculo": 200,
+              "quantidade": 1,
+              "unidade": "VN",
+              "impostoInformado": 0,
+              "cClassTrib": "000001"
+            },
+            "tributacaoRegular": {
+              "cst": "200",
+              "cClassTrib": "200032"
+            },
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05,
+              "impostoSeletivo": {
+                "adValorem": 13,
+                "adRem": 21.3
+              }
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "vBC": "247.30",
+        "pCBS": "0.00",
+        "vCBS": "0",
+        "pIBSUF": "0.00",
+        "vIBSUF": "0",
+        "pIBSMun": "0.00",
+        "vIBSMun": "0"
+      }
+    },
+    {
+      "id": "Teste_validacao_10_SituacaoTributariaNaoEncontradaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_10_SituacaoTributariaNaoEncontradaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "999",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-004"
+      }
+    },
+    {
+      "id": "Teste_validacao_12_IncompatibilidadeSuspensaoException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_12_IncompatibilidadeSuspensaoException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT",
+            "tributacaoRegular": {
+              "cst": "550",
+              "cClassTrib": "550001"
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-010"
+      }
+    },
+    {
+      "id": "Teste_validacao_13_TributacaoRegularNaoInformadaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_13_TributacaoRegularNaoInformadaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "550",
+            "cClassTrib": "550001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-009"
+      }
+    },
+    {
+      "id": "Teste_validacao_15_ImpostoSeletivoNaoInformadoException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_15_ImpostoSeletivoNaoInformadoException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2027-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT",
+            "aliquotasNominais": {
+              "cbs": 8.4,
+              "ibsEstadual": 0.05,
+              "ibsMunicipal": 0.05
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-013"
+      }
+    },
+    {
+      "id": "Teste_validacao_17_MunicipioNaoEncontradoException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_17_MunicipioNaoEncontradoException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 9999990,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-019"
+      }
+    },
+    {
+      "id": "Teste_validacao_18_UfNaoEncontradaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_18_UfNaoEncontradaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RX",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-020"
+      }
+    },
+    {
+      "id": "Teste_validacao_19_MunicipioNaoPertencenteException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_19_MunicipioNaoPertencenteException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RJ",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-018"
+      }
+    },
+    {
+      "id": "Teste_validacao_1_NcmNaoEncontradaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_1_NcmNaoEncontradaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "99999999",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-002"
+      }
+    },
+    {
+      "id": "Teste_validacao_21_DataFatoGeradorNaoInformadaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_21_DataFatoGeradorNaoInformadaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "99999999",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-021"
+      }
+    },
+    {
+      "id": "Teste_validacao_23_BaseCalculoNaoInformadaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_23_BaseCalculoNaoInformadaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "quantidade": 1,
+            "unidade": "VN"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-025"
+      }
+    },
+    {
+      "id": "Teste_validacao_24_BaseCalculoInconsistenteException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_24_BaseCalculoInconsistenteException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2027-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "VN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "cClassTrib": "000001",
+              "baseCalculo": 187,
+              "quantidade": 1,
+              "unidade": "VN",
+              "impostoInformado": 12
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-026"
+      }
+    },
+    {
+      "id": "Teste_validacao_25_BaseCalculoMenorBaseCalculoImpostoSeletivoException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_25_BaseCalculoMenorBaseCalculoImpostoSeletivoException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2027-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 100,
+            "quantidade": 1,
+            "unidade": "VN",
+            "impostoSeletivo": {
+              "cst": "000",
+              "cClassTrib": "000001",
+              "baseCalculo": 188,
+              "quantidade": 1,
+              "unidade": "VN"
+            }
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-027"
+      }
+    },
+    {
+      "id": "Teste_validacao_2_NcmNaoVinculadaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_2_NcmNaoVinculadaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "200",
+            "cClassTrib": "200003",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-011"
+      }
+    },
+    {
+      "id": "Teste_validacao_3_NbsNaoEncontradaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_3_NbsNaoEncontradaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "nbs": "999999999",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-003"
+      }
+    },
+    {
+      "id": "Teste_validacao_4_NbsNaoVinculadaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_4_NbsNaoVinculadaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "nbs": "114052200",
+            "cst": "200",
+            "cClassTrib": "200028",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-012"
+      }
+    },
+    {
+      "id": "Teste_validacao_6_NcmNbsSimultaneasException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_6_NcmNbsSimultaneasException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "nbs": "114052200",
+            "cst": "000",
+            "cClassTrib": "000001",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-001"
+      }
+    },
+    {
+      "id": "Teste_validacao_7_ClassificacaoTributariaNaoEncontradaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_7_ClassificacaoTributariaNaoEncontradaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "999999",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-005"
+      }
+    },
+    {
+      "id": "Teste_validacao_8_ClassificacaoTributariaNaoVinculadaException",
+      "tipo": "erro",
+      "origem": "entradas/validacoes/Teste_validacao_8_ClassificacaoTributariaNaoVinculadaException.json",
+      "entradaOficial": {
+        "id": "6194602ea71cbf9431c236de4409d920",
+        "versao": "0.0.1",
+        "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+        "municipio": 4314902,
+        "uf": "RS",
+        "itens": [
+          {
+            "numero": 1,
+            "ncm": "24021000",
+            "cst": "000",
+            "cClassTrib": "200003",
+            "baseCalculo": 200,
+            "quantidade": 1,
+            "unidade": "LT"
+          }
+        ]
+      },
+      "esperado": {
+        "codigo": "REG-006"
+      }
+    }
+  ],
+  "ignorados": [
+    {
+      "id": "Teste_000001_9",
+      "motivo": "sem asserções literais"
+    },
+    {
+      "id": "Teste_000001_EquivalenciaAliquotasNominais",
+      "motivo": "sem asserções literais"
+    },
+    {
+      "id": "Teste_510002_1",
+      "motivo": "@Disabled no repositório oficial"
+    },
+    {
+      "id": "Teste_620001_1",
+      "motivo": "@Disabled no repositório oficial"
+    },
+    {
+      "id": "Teste_validacao_11_NomenclaturaException",
+      "motivo": "exceção sem código (?)"
+    },
+    {
+      "id": "Teste_validacao_14_TributacaoRegularInformadaIndevidamenteException",
+      "motivo": "@Disabled no repositório oficial"
+    },
+    {
+      "id": "Teste_validacao_16_ImpostoSeletivoInformadoIndevidamenteException",
+      "motivo": "@Disabled no repositório oficial"
+    },
+    {
+      "id": "Teste_validacao_22_ErroFaltaImplementacaoException",
+      "motivo": "vários cenários no mesmo teste (entrada alterada no código)"
+    },
+    {
+      "id": "Teste_validacao_5_NcmNbsNaoInformadasException",
+      "motivo": "@Disabled no repositório oficial"
+    },
+    {
+      "id": "Teste_validacao_88",
+      "motivo": "exceção sem código (?)"
+    },
+    {
+      "id": "Teste_validacao_99",
+      "motivo": "exceção sem código (?)"
+    },
+    {
+      "id": "Teste_validacao_9_AliquotaAdRemNaoEncontradaException",
+      "motivo": "@Disabled no repositório oficial"
+    },
+    {
+      "id": "Teste_validacao_AliquotasNominaisPorAnoFatoGerador",
+      "motivo": "vários cenários no mesmo teste (entrada alterada no código)"
+    }
+  ]
+}

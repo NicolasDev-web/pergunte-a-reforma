@@ -4,7 +4,7 @@
  * 1. Clona (ou reaproveita) o repositório oficial na tag fixada (RTC_REF)
  * 2. Gera o SQLite replicando o Flyway: beforeMigrate → B0001 → V0002..Vn → afterMigrate,
  *    cada migração em transação (exceto as que mexem em PRAGMA foreign_keys), como o Flyway mixed=true
- * 3. Exporta data/produtos.json, data/classificacoes.json e data/meta.json
+ * 3. Exporta data/produtos.json, classificacoes.json, municipios.json, erros.json e meta.json
  *
  * Uso: pnpm --filter @reforma/search etl
  * Variáveis: RTC_REF (padrão 1.6.1), RTC_REPO_DIR (usar um clone existente), DATA_REF (AAAA-MM-DD, padrão hoje)
@@ -102,7 +102,7 @@ const CONTEXTO_ESPECIFICO =
 
 type Row = Record<string, string | number | null>;
 
-function exportar(arquivoDb: string) {
+function exportar(arquivoDb: string, repo: string) {
   const db = new DatabaseSync(arquivoDb, { readOnly: true });
   const q = (sql: string, ...p: (string | number)[]) => db.prepare(sql).all(...p) as Row[];
   const vigente = (ini: string, fim: string) => `(${ini} <= '${DATA_REF}' AND (${fim} IS NULL OR ${fim} >= '${DATA_REF}'))`;
@@ -274,17 +274,30 @@ function exportar(arquivoDb: string) {
   montar("NBS");
 
   const versao = q(`SELECT * FROM VERSAO_BASE_DADO ORDER BY 1 DESC LIMIT 1`)[0] ?? {};
+  // Municípios (código IBGE ↔ nome/UF): a pessoa fala "Fortaleza", o motor quer 2304400.
+  const municipios = q(
+    `SELECT m.MUNI_CD AS codigo, m.MUNI_NOME AS nome, u.UF_SIGLA AS uf
+       FROM MUNICIPIO m JOIN UF u ON u.UF_CD = m.MUNI_UF_CD ORDER BY u.UF_SIGLA, m.MUNI_NOME`,
+  );
   db.close();
 
   mkdirSync(SAIDA, { recursive: true });
   writeFileSync(join(SAIDA, "produtos.json"), JSON.stringify(produtos));
   writeFileSync(join(SAIDA, "classificacoes.json"), JSON.stringify(classificacoes, null, 1));
+  writeFileSync(join(SAIDA, "municipios.json"), JSON.stringify(municipios));
+  const erros = extrairErros(repo);
+  writeFileSync(join(SAIDA, "erros.json"), JSON.stringify(erros, null, 1));
   const meta = {
     rtcRef: RTC_REF,
     dataReferencia: DATA_REF,
     geradoEm: new Date().toISOString(),
     versaoBase: versao,
-    totais: { produtos: produtos.length, classificacoes: classificacoes.length },
+    totais: {
+      produtos: produtos.length,
+      classificacoes: classificacoes.length,
+      municipios: municipios.length,
+      erros: erros.length,
+    },
     inconsistenciasAnexo: inconsistencias,
     avisos: [
       "NBS_APLICAVEL.NBSA_ANXO_ID aponta para itens de anexo deslocados na base oficial; texto do item ignorado para NBS (cClassTrib mantido).",
@@ -296,4 +309,28 @@ function exportar(arquivoDb: string) {
     console.warn(`⚠ ${inconsistencias.length} vínculos com item de anexo incoerente (ver data/meta.json)`);
 }
 
-exportar(gerarBanco(repoOficial()));
+/**
+ * Catálogo oficial de erros (código, título, descrição) lido do enum ProblemType do motor.
+ * É o mesmo texto que GET /calculadora/observabilidade/erros devolve; ter offline evita uma chamada por erro.
+ */
+function extrairErros(repo: string) {
+  const arq = join(repo, "src/main/java/br/gov/serpro/rtc/api/exceptionhandler/enumeration/ProblemType.java");
+  const java = readFileSync(arq, "utf8");
+  const re =
+    /\w+\(\s*\w+\.class,\s*"([^"]+)",\s*"([^"]+)",\s*new CodigoErro\("([A-Z]{3}-\d{3})",\s*(?:"([^"]*)"|null),\s*EstadoItemEnum\.(\w+)\),\s*"((?:[^"\\]|\\.)*)"\)/g;
+  const erros = [...java.matchAll(re)].map((m) => ({
+    codigo: m[3]!,
+    titulo: m[1]!,
+    slug: m[2]!,
+    campo: m[4] ?? null,
+    estado: m[5]!,
+    descricao: m[6]!,
+  }));
+  const esperados = (java.match(/new CodigoErro\(/g) ?? []).length;
+  if (erros.length !== esperados)
+    throw new Error(`catálogo de erros incompleto (${erros.length}/${esperados}); o formato do ProblemType mudou?`);
+  return erros.sort((a, b) => a.codigo.localeCompare(b.codigo));
+}
+
+const repo = repoOficial();
+exportar(gerarBanco(repo), repo);

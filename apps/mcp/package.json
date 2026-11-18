@@ -1,0 +1,22 @@
+{
+  "name": "@reforma/mcp",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --experimental-strip-types --no-warnings src/http.ts",
+    "start": "node --experimental-strip-types --no-warnings src/http.ts",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "node --experimental-strip-types --no-warnings --test-reporter=spec --test \"test/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@reforma/core": "workspace:*",
+    "@reforma/search": "workspace:*",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3"
+  }
+}

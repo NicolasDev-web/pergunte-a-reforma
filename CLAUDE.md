@@ -25,8 +25,19 @@ pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + 
 - `pnpm install --ignore-scripts` (o postinstall do onnxruntime precisa de internet livre; no CI roda normal)
 - `pnpm --filter @reforma/search etl` → `.cache/` (clone oficial + SQLite) e `data/*.json`
 - `pnpm --filter @reforma/search avaliar [arquivo.yaml] [--hibrida] [--detalhe]`
-- `pnpm typecheck` · `pnpm format:check`
-- Workflows: `ci` (sempre), `motor` (engine/**, comenta na issue #2), `busca` (embeddings + avaliação, comenta na #5), `deploy-motor` (manual)
+- `pnpm typecheck` · `pnpm format:check` · `pnpm -r test` (core + MCP, com respostas gravadas do motor)
+- Motor sem Docker: JAR + banco na release `motor-1.6.1` (ver `apps/mcp/README.md`); `java -Dspring.profiles.active=offline -jar ...`
+- `RTC_ENGINE_URL=... pnpm --filter @reforma/core fixtures` → regrava `packages/core/test/fixtures` (casos em `test/casos.ts`)
+- `RTC_ENGINE_URL=... pnpm --filter @reforma/mcp dev` → conector em `http://localhost:3333/mcp`
+- `pnpm --filter @reforma/eval gabarito` (lê os testes Java oficiais) · `RTC_ENGINE_URL=... pnpm --filter @reforma/eval oficiais`
+- Workflows: `ci` (sempre; job `integracao` roda os casos oficiais com o motor real e comenta na #12), `motor` (engine/**, comenta na #2 e publica a release), `busca` (embeddings + avaliação, comenta na #5), `deploy-motor` (manual)
+
+## Comportamento do motor que o core trata
+- Antes de 2027 o motor recusa `aliquotasNominais` (REG-036); a partir de 2027 exige (REG-037). `packages/core/src/cenarios.ts` decide.
+- `POST /observabilidade/regime-geral`: erro de item vem com HTTP 200 em `objetos[].erros`; erro da operação inteira (município/UF) vem 422 com `errors[]`.
+- Valores chegam como string com 2 casas; `decimal.ts` soma com BigInt (nada de float).
+- Em 2026 o Imposto Seletivo não é calculado; em 2027+ itens com IS exigem o grupo `impostoSeletivo` (REG-013), fora do MVP.
+- Testes oficiais com `@Disabled` são ignorados no gabarito.
 
 ## Achados nos dados oficiais
 - `NBS_APLICAVEL.NBSA_ANXO_ID` aponta para itens de anexo deslocados (ensino fundamental → "Ensino Infantil"). O cClassTrib está certo. O ETL ignora o texto do item para NBS.
