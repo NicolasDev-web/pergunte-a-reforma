@@ -3,7 +3,17 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { BuscarProdutoOutput, CalcularTributosInput, MunicipioResolvido } from "@reforma/core/contratos";
 import { IconeBusca } from "../Icones";
-import { contextoProduto, decidirBusca, hojeISO, lerValor, reais, totalItem, motivo, type Resultado } from "./formatar";
+import {
+  contextoProduto,
+  decidirBusca,
+  rotuloSituacao,
+  hojeISO,
+  lerValor,
+  reais,
+  totalItem,
+  motivo,
+  type Resultado,
+} from "./formatar";
 
 type Candidato = BuscarProdutoOutput["candidatos"][number];
 type Classe = Candidato["classificacaoProvavel"];
@@ -339,6 +349,8 @@ function Ficha(props: {
   const [cidades, setCidades] = useState<MunicipioResolvido[]>([]);
   const [data, setData] = useState(hojeISO());
   const [erro, setErro] = useState("");
+  /** "Não sei": usamos a situação mais comum e dizemos isso (a pergunta continua sendo feita). */
+  const [naoSei, setNaoSei] = useState(false);
   const [cidadeDestaque, setCidadeDestaque] = useState(-1);
   const primeiroCampo = useRef<HTMLDivElement>(null);
   const campoValor = useRef<HTMLInputElement>(null);
@@ -412,7 +424,7 @@ function Ficha(props: {
         data,
         local: { municipio: cidade.codigo },
       },
-      `${rotulo} · ${reais(v.toFixed(2))} · ${cidade.nome}/${cidade.uf}`,
+      `${rotulo} · ${reais(v.toFixed(2))} · ${cidade.nome}/${cidade.uf}${naoSei ? " · situação mais comum" : ""}`,
     );
   };
 
@@ -440,14 +452,39 @@ function Ficha(props: {
               <button
                 key={o.cClassTrib}
                 type="button"
-                aria-pressed={classe?.cClassTrib === o.cClassTrib}
-                onClick={() => setClasse(o)}
+                aria-pressed={!naoSei && classe?.cClassTrib === o.cClassTrib}
+                onClick={() => {
+                  setClasse(o);
+                  setNaoSei(false);
+                }}
                 className="chip chip-situacao"
               >
-                {o.descricao.length > 70 ? `${o.descricao.slice(0, 68)}…` : o.descricao}
+                <span className="situacao-titulo">{rotuloSituacao(o.cClassTrib, o.descricao)}</span>
+                <span className="situacao-oficial">{o.descricao}</span>
               </button>
             ))}
+            {c.classificacaoAmbigua && (
+              <button
+                type="button"
+                aria-pressed={naoSei}
+                onClick={() => {
+                  setClasse(c.classificacaoProvavel);
+                  setNaoSei(true);
+                }}
+                className="chip chip-situacao"
+              >
+                <span className="situacao-titulo">Não sei</span>
+                <span className="situacao-oficial">Usar a situação mais comum</span>
+              </button>
+            )}
           </div>
+          {naoSei && (
+            <p className="situacao-aviso" role="status">
+              Vamos usar a situação mais comum: “
+              {rotuloSituacao(c.classificacaoProvavel.cClassTrib, c.classificacaoProvavel.descricao)}”. Se não for o seu caso,
+              escolha outra acima.
+            </p>
+          )}
         </div>
       )}
 

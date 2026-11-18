@@ -1618,3 +1618,28 @@ code {
   border-radius: var(--raio);
   background: var(--cartao);
 }
+/* Situação em palavras simples, com o texto oficial embaixo (auditoria UX-004). */
+.chip-situacao {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  border-radius: var(--raio-p);
+  padding: 10px 14px;
+  max-width: 100%;
+}
+.situacao-titulo {
+  font-weight: 600;
+  font-size: 15px;
+}
+.situacao-oficial {
+  font-size: 13px;
+  color: var(--tinta-2);
+  font-weight: 400;
+}
+.chip[aria-pressed="true"] .situacao-oficial {
+  color: var(--papel-2);
+}
+.situacao-aviso {
+  font-size: 14px;
+  color: var(--tinta-2);
+}

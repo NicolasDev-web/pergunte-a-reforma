@@ -20,3 +20,18 @@ test("o contexto mostra os dois níveis acima do item, sem repetir o próprio it
   assert.equal(contextoProduto([], "Energia elétrica"), "");
   assert.equal(contextoProduto(undefined, "x"), "");
 });
+
+test("a situação aparece em palavras simples, sem texto de lei nem percentual", async () => {
+  const { rotuloSituacao } = await import("../src/componentes/calcular/formatar.ts");
+  assert.equal(
+    rotuloSituacao("200003", "Vendas de produtos destinados à alimentação humana (Anexo I)"),
+    "É alimento da cesta básica",
+  );
+  assert.equal(
+    rotuloSituacao("200033", "Fornecimento das composições para nutrição enteral e parenteral (Anexo VI)"),
+    "Composições para nutrição enteral e parenteral",
+  );
+  assert.equal(rotuloSituacao("999999", "Algo"), "Algo");
+  for (const r of ["200003", "200014", "200034", "200038", "000001"].map((c) => rotuloSituacao(c, "x")))
+    assert.doesNotMatch(r, /\d|%|Anexo/);
+});

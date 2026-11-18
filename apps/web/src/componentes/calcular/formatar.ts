@@ -172,3 +172,28 @@ export function contextoProduto(hierarquia: string[] | undefined, descricao: str
   const niveis = (hierarquia ?? []).filter((h) => h && h !== descricao).slice(-2);
   return niveis.map((h) => (h.length > 48 ? `${h.slice(0, 46).trimEnd()}…` : h.replace(/:$/, ""))).join(" › ");
 }
+
+/**
+ * A pergunta "Em qual situação se encaixa?" em palavras de todo dia (auditoria UX-004). Só os casos em que o
+ * sentido é inequívoco ganham frase própria; os outros usam a descrição oficial limpa ("Fornecimento dos …",
+ * "(Anexo VII)"). A descrição oficial completa continua aparecendo embaixo. Nenhum percentual aqui.
+ */
+const SITUACAO: Record<string, string> = {
+  "000001": "Nenhuma das outras: regra geral",
+  "200003": "É alimento da cesta básica",
+  "200014": "É fruta, verdura ou ovo",
+  "200034": "É outro alimento para consumo das pessoas",
+  "200035": "É produto de higiene pessoal ou de limpeza",
+  "200038": "Vai ser usado na produção rural (insumo agropecuário)",
+  "200028": "É serviço de educação",
+  "200029": "É serviço de saúde",
+};
+export function rotuloSituacao(cClassTrib: string, descricao: string): string {
+  const proprio = SITUACAO[cClassTrib];
+  if (proprio) return proprio;
+  const limpo = descricao
+    .replace(/\s*\(Anexo [IVXL]+\)\s*$/i, "")
+    .replace(/^(Fornecimento|Venda|Vendas|Prestação|Operações?)\s+(d[eoa]s?)\s+/i, "")
+    .trim();
+  return limpo ? limpo.charAt(0).toUpperCase() + limpo.slice(1) : descricao;
+}
