@@ -5,7 +5,8 @@ import type { CalcularTributosOutput, Fundamentacao, PassoMemoria, ResultadoItem
 export type Resultado = CalcularTributosOutput;
 export { porcento, reais };
 
-export const COR = { cbs: "#3b5bdb", ibs_uf: "#7b93f0", ibs_mun: "#c2cefa", is: "#14161f" } as const;
+/** Cores dos tributos: tokens de app/globals.css (nada de hex solto, para o modo escuro funcionar). */
+export const COR = { cbs: "var(--cbs)", ibs_uf: "var(--ibs-uf)", ibs_mun: "var(--ibs-mun)", is: "var(--is)" } as const;
 const NOME: Record<string, string> = {
   cbs: "CBS (federal)",
   ibs_uf: "IBS estadual",

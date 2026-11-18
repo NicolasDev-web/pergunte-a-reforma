@@ -83,14 +83,14 @@ export function CartaoResultado({ r, i = 0, onLei }: { r: Resultado; i?: number;
           {carga ? (
             <>
               {" "}
-              · <strong style={{ color: "var(--tinta)" }}>{porcento(carga)} do valor</strong>
+              · <strong>{porcento(carga)} do valor</strong>
             </>
           ) : null}
         </span>
       </div>
       <AvisoAno r={r} />
       {linhas.length > 0 && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div className="composicao">
           <Barra itemLinhas={linhas} />
           <div className="legenda">
             {linhas.map((l) => (
@@ -157,44 +157,28 @@ export function RaioX({ r, onEscolher }: { r: Resultado; onEscolher: (i: number)
           {r.totais.cargaSobreBase ? (
             <>
               {" "}
-              · <strong style={{ color: "var(--tinta)" }}>{porcento(r.totais.cargaSobreBase)} do total</strong>
+              · <strong>{porcento(r.totais.cargaSobreBase)} do total</strong>
             </>
           ) : null}
         </span>
       </div>
       <AvisoAno r={r} />
-      <div>
+      <div className="raiox-lista">
         {r.itens.map((it, i) => (
-          <button
-            key={i}
-            type="button"
-            className="raiox-linha"
-            onClick={() => onEscolher(i)}
-            style={{
-              width: "100%",
-              background: "none",
-              border: "none",
-              borderBottom: "1px solid var(--linha)",
-              textAlign: "left",
-              cursor: "pointer",
-            }}
-          >
-            <span style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <button key={i} type="button" className="raiox-linha" onClick={() => onEscolher(i)}>
+            <span className="raiox-item">
               <strong>{it.rotulo}</strong>
-              <span className="mudo" style={{ fontSize: 13 }}>
+              <span>
                 {base(it) ? `${reais(base(it)!)} · ` : ""}
                 {it.erros.length ? "não calculado" : motivo(it).toLowerCase()}
               </span>
             </span>
             <span className="barra" aria-hidden="true">
-              <span style={{ width: `${(totais[i]! / max) * 100}%`, background: "var(--azul)", display: "block" }} />
+              <span className="raiox-barra" style={{ width: `${(totais[i]! / max) * 100}%` }} />
             </span>
-            <span style={{ textAlign: "right" }}>
+            <span className="raiox-valor">
               <strong className="num">{reais(totalItem(it))}</strong>
-              <br />
-              <span className="mudo" style={{ fontSize: 12 }}>
-                {cargaItem(it) ? `${porcento(cargaItem(it)!)} do valor` : ""}
-              </span>
+              <span>{cargaItem(it) ? `${porcento(cargaItem(it)!)} do valor` : ""}</span>
             </span>
           </button>
         ))}
@@ -220,7 +204,7 @@ export function Painel(props: {
     return (
       <aside className="painel" aria-label="Detalhes do cálculo">
         <div className="painel-vazio">
-          <strong style={{ color: "var(--tinta)" }}>Detalhes do cálculo</strong>
+          <strong>Detalhes do cálculo</strong>
           <span>
             Quando houver um resultado, aqui aparecem a conta passo a passo, o artigo da lei e os códigos para contadores.
           </span>
@@ -237,6 +221,25 @@ export function Painel(props: {
     ["lei", "A lei"],
     ["contador", "Modo contador"],
   ];
+  // Abas no padrão WAI-ARIA: setas trocam de aba; Home e End vão para a primeira e a última.
+  const teclasAbas = (e: React.KeyboardEvent) => {
+    const ordem = ABAS.map(([id]) => id);
+    const agora = ordem.indexOf(aba);
+    const alvo =
+      e.key === "ArrowRight"
+        ? (agora + 1) % ordem.length
+        : e.key === "ArrowLeft"
+          ? (agora - 1 + ordem.length) % ordem.length
+          : e.key === "Home"
+            ? 0
+            : e.key === "End"
+              ? ordem.length - 1
+              : -1;
+    if (alvo < 0) return;
+    e.preventDefault();
+    onAba(ordem[alvo]!);
+    document.getElementById(`aba-${ordem[alvo]}`)?.focus();
+  };
   const baixarJson = () => {
     const blob = new Blob([JSON.stringify(mostrado.respostaMotor, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
@@ -247,17 +250,27 @@ export function Painel(props: {
   };
   return (
     <aside className="painel" aria-label="Detalhes do cálculo">
-      <div role="tablist" aria-label="Detalhes" className="abas">
+      <div role="tablist" aria-label="Detalhes" className="abas" onKeyDown={teclasAbas}>
         {ABAS.map(([id, nome]) => (
-          <button key={id} type="button" role="tab" className="aba" aria-selected={aba === id} onClick={() => onAba(id)}>
+          <button
+            key={id}
+            id={`aba-${id}`}
+            type="button"
+            role="tab"
+            className="aba"
+            aria-selected={aba === id}
+            aria-controls={`painel-${id}`}
+            tabIndex={aba === id ? 0 : -1}
+            onClick={() => onAba(id)}
+          >
             {nome}
           </button>
         ))}
       </div>
       {aba === "conta" && (
-        <div className="painel-corpo">
-          <div className="mudo" style={{ fontSize: 14 }}>
-            <strong style={{ color: "var(--tinta)" }}>{item.rotulo}</strong> · {r.local.nome}/{r.local.uf}
+        <div className="painel-corpo" role="tabpanel" id="painel-conta" aria-labelledby="aba-conta">
+          <div className="painel-item">
+            <strong>{item.rotulo}</strong> · {r.local.nome}/{r.local.uf}
           </div>
           {r.data.startsWith("2026") && (
             <div role="group" aria-label="Ano" className="segmento">
@@ -295,7 +308,7 @@ export function Painel(props: {
                     {linhas.map((l) => (
                       <tr key={l.etapa}>
                         <td>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                          <span className="tributo-nome">
                             <span className="ponto" style={{ background: COR[l.etapa] }} />
                             {l.nome}
                           </span>
@@ -308,7 +321,7 @@ export function Painel(props: {
                         </td>
                       </tr>
                     ))}
-                    <tr>
+                    <tr className="total">
                       <td colSpan={4}>
                         <strong>Total de tributos</strong>
                       </td>
@@ -339,7 +352,7 @@ export function Painel(props: {
                       {red ? ` · redução de ${porcento(red)}` : ""}
                     </span>
                   </div>
-                  <span style={{ fontSize: 14 }}>{f.descricao}</span>
+                  <span>{f.descricao}</span>
                 </div>
               )}
             </>
@@ -347,27 +360,23 @@ export function Painel(props: {
         </div>
       )}
       {aba === "lei" && (
-        <div className="painel-corpo">
+        <div className="painel-corpo" role="tabpanel" id="painel-lei" aria-labelledby="aba-lei">
           {f ? (
             <>
-              <h3 style={{ fontSize: 20 }}>{citacao(f)}</h3>
-              <span className="mudo" style={{ fontSize: 14 }}>
+              <h3>{citacao(f)}</h3>
+              <span className="painel-item">
                 {f.situacao}: {f.descricao}
               </span>
               {f.dispositivos.map((d) => (
-                <div key={d.dispositivo} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  {d.referencia && (
-                    <span className="mudo" style={{ fontSize: 12 }}>
-                      {d.referencia}
-                    </span>
-                  )}
+                <div key={d.dispositivo} className="dispositivo">
+                  {d.referencia && <span className="dispositivo-ref">{d.referencia}</span>}
                   <blockquote className="citacao">
                     {d.texto.startsWith(d.dispositivo) ? null : <strong>{d.dispositivo}. </strong>}
                     {d.texto}
                   </blockquote>
                 </div>
               ))}
-              <a href={f.url} target="_blank" rel="noreferrer" style={{ fontWeight: 500 }}>
+              <a href={f.url} target="_blank" rel="noreferrer">
                 Ler a lei completa no Planalto
               </a>
             </>
@@ -377,7 +386,7 @@ export function Painel(props: {
         </div>
       )}
       {aba === "contador" && (
-        <div className="painel-corpo">
+        <div className="painel-corpo" role="tabpanel" id="painel-contador" aria-labelledby="aba-contador">
           <dl className="dl-contador">
             {item.codigo && (
               <>
@@ -405,22 +414,12 @@ export function Painel(props: {
             .filter((l) => l.textoMotor)
             .slice(0, 1)
             .map((l) => (
-              <div key={l.etapa} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <div key={l.etapa} className="dispositivo">
                 <span className="rotulo-caixa">Memória do motor · {l.nome}</span>
                 <p className="memoria-motor">{l.textoMotor}</p>
               </div>
             ))}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 8,
-              fontSize: 13,
-            }}
-            className="mudo"
-          >
+          <div className="contador-rodape">
             <span>Motor oficial {mostrado.versaoMotor}</span>
             <button type="button" className="btn btn-peq" onClick={baixarJson}>
               Baixar JSON do motor

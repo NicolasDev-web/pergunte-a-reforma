@@ -40,6 +40,8 @@ export function Inicio(props: {
   exemplos?: Resultado | "erro";
   cidadeExemplos: MunicipioResolvido;
   ocupado: boolean;
+  /** Entre a busca e os exemplos (a estante de livros). */
+  children?: React.ReactNode;
 }) {
   const [texto, setTexto] = useState("");
   const [sugestoes, setSugestoes] = useState<Candidato[]>([]);
@@ -88,120 +90,129 @@ export function Inicio(props: {
     } else if (e.key === "Escape") setAberto(false);
   };
 
+  const idOpcao = (i: number) => `sugestao-${i}`;
+  const listaAberta = aberto && texto.trim().length >= 2;
+
   return (
     <main>
       <section className="inicio">
-        <div className="inicio-topo">
-          <span className="pilula">Reforma tributária · os novos tributos CBS e IBS</span>
-          <h1>
-            Quanto de imposto tem <br className="quebra" />
-            na sua compra?
-          </h1>
-          <p>Pergunte do seu jeito. A conta é feita pela calculadora oficial da Receita Federal, e a resposta mostra a lei.</p>
-        </div>
+        <div className="abertura">
+          <p className="sobretitulo">
+            Reforma tributária · <b>CBS e IBS</b>
+          </p>
+          <h1>Quanto de imposto tem na sua compra?</h1>
+          <p className="linha-fina">
+            Pergunte do seu jeito. A conta é feita pela calculadora oficial da Receita Federal, e a resposta mostra a lei.
+          </p>
 
-        {!escolhido ? (
-          <form className="busca" onSubmit={enviar} role="search">
-            <label htmlFor="pergunta" className="vh">
-              Produto, serviço ou pergunta
-            </label>
-            <div className="busca-caixa">
-              <IconeBusca />
-              <input
-                id="pergunta"
-                value={texto}
-                autoComplete="off"
-                placeholder="Ex.: mensalidade da escola, arroz, conta de luz…"
-                role="combobox"
-                aria-expanded={aberto && sugestoes.length > 0}
-                aria-controls="lista-sugestoes"
-                onChange={(e) => {
-                  setTexto(e.target.value);
-                  setAberto(true);
-                  setDestaque(-1);
-                }}
-                onKeyDown={teclas}
-                onFocus={() => setAberto(true)}
-                onBlur={() => setTimeout(() => setAberto(false), 150)}
-              />
-              <button type="submit" className="btn btn-pri" disabled={props.ocupado}>
-                Calcular
-              </button>
-            </div>
-            {aberto && texto.trim().length >= 2 && (
-              <div className="sugestoes" id="lista-sugestoes" role="listbox" aria-label="Produtos e serviços da tabela oficial">
-                {sugestoes.length > 0 && <div className="sugestoes-titulo">Na tabela oficial</div>}
-                {sugestoes.map((s, i) => (
-                  <button
-                    key={s.codigo}
-                    type="button"
-                    role="option"
-                    aria-selected={destaque === i}
-                    className="sugestao"
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => escolher(s)}
-                    title={s.descricao}
-                  >
-                    <span
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                      }}
-                    >
-                      {s.descricao}
-                    </span>
-                    <small>{s.nomenclatura === "NBS" ? "Serviço" : "Produto"}</small>
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={destaque === sugestoes.length}
-                  className="sugestao sugestao-livre"
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => props.onPerguntar(texto.trim())}
-                >
-                  Perguntar à IA: “{texto.trim()}”
+          {!escolhido ? (
+            <form className="busca" onSubmit={enviar} role="search">
+              <label htmlFor="pergunta" className="vh">
+                Produto, serviço ou pergunta
+              </label>
+              <div className="busca-caixa">
+                <IconeBusca />
+                <input
+                  id="pergunta"
+                  value={texto}
+                  autoComplete="off"
+                  placeholder="Ex.: mensalidade da escola, arroz, conta de luz…"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-expanded={listaAberta}
+                  aria-controls="lista-sugestoes"
+                  aria-activedescendant={listaAberta && destaque >= 0 ? idOpcao(destaque) : undefined}
+                  onChange={(e) => {
+                    setTexto(e.target.value);
+                    setAberto(true);
+                    setDestaque(-1);
+                  }}
+                  onKeyDown={teclas}
+                  onFocus={() => setAberto(true)}
+                  onBlur={() => setTimeout(() => setAberto(false), 150)}
+                />
+                <button type="submit" className="btn btn-pri" disabled={props.ocupado}>
+                  Calcular
                 </button>
               </div>
-            )}
-          </form>
-        ) : (
-          <Ficha
-            escolhido={escolhido.c}
-            termo={escolhido.termo}
-            ocupado={props.ocupado}
-            onVoltar={() => setEscolhido(undefined)}
-            onCalcular={props.onCalcular}
-          />
-        )}
+              {listaAberta && (
+                <div className="sugestoes" id="lista-sugestoes" role="listbox" aria-label="Produtos e serviços da tabela oficial">
+                  {sugestoes.length > 0 && (
+                    <div className="sugestoes-titulo" aria-hidden="true">
+                      Na tabela oficial
+                    </div>
+                  )}
+                  {sugestoes.map((s, i) => (
+                    <button
+                      key={s.codigo}
+                      id={idOpcao(i)}
+                      type="button"
+                      role="option"
+                      tabIndex={-1}
+                      aria-selected={destaque === i}
+                      className="sugestao"
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => escolher(s)}
+                      title={s.descricao}
+                    >
+                      <span className="sugestao-texto">{s.descricao}</span>
+                      <small>{s.nomenclatura === "NBS" ? "Serviço" : "Produto"}</small>
+                    </button>
+                  ))}
+                  <button
+                    id={idOpcao(sugestoes.length)}
+                    type="button"
+                    role="option"
+                    tabIndex={-1}
+                    aria-selected={destaque === sugestoes.length}
+                    className="sugestao sugestao-livre"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => props.onPerguntar(texto.trim())}
+                  >
+                    Perguntar à IA: “{texto.trim()}”
+                  </button>
+                </div>
+              )}
+            </form>
+          ) : (
+            <Ficha
+              escolhido={escolhido.c}
+              termo={escolhido.termo}
+              ocupado={props.ocupado}
+              onVoltar={() => {
+                setEscolhido(undefined);
+                setTimeout(() => document.getElementById("pergunta")?.focus(), 0);
+              }}
+              onCalcular={props.onCalcular}
+            />
+          )}
 
-        {!escolhido && (
-          <div role="group" aria-label="Começar por um tipo de gasto" className="atalhos">
-            {ATALHOS.map((a) => (
-              <button
-                key={a.nome}
-                type="button"
-                className="chip"
-                onClick={() => {
-                  setTexto(a.termo);
-                  setAberto(true);
-                  document.getElementById("pergunta")?.focus();
-                }}
-              >
-                {a.nome}
-              </button>
-            ))}
-          </div>
-        )}
+          {!escolhido && (
+            <div role="group" aria-label="Começar por um tipo de gasto" className="atalhos">
+              {ATALHOS.map((a) => (
+                <button
+                  key={a.nome}
+                  type="button"
+                  className="chip"
+                  onClick={() => {
+                    setTexto(a.termo);
+                    setAberto(true);
+                    document.getElementById("pergunta")?.focus();
+                  }}
+                >
+                  {a.nome}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {props.children}
 
         <section aria-labelledby="exemplos" className="secao-larga">
           <div className="secao-cab">
-            <h2 id="exemplos">Já calculados para você ver como funciona</h2>
-            <span className="mudo" style={{ fontSize: 13 }}>
+            <h2 id="exemplos">Já calculados, para você ver como funciona</h2>
+            <span className="nota">
               {props.cidadeExemplos.nome}/{props.cidadeExemplos.uf} · hoje · em 2026 os valores são de teste e compensados
             </span>
           </div>
@@ -222,24 +233,17 @@ export function Inicio(props: {
                     )
                   }
                 >
-                  <span style={{ display: "flex", justifyContent: "space-between", gap: 8, fontSize: 14 }} className="mudo">
+                  <span className="exemplo-topo">
                     <span>{ex.rotulo}</span>
-                    <span>{reais(String(ex.valor))}</span>
+                    <span className="num">compra de {reais(String(ex.valor))}</span>
                   </span>
                   {it ? (
                     <>
-                      <span style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-                        <span className="valor num">{reais(totalItem(it))}</span>
-                        <span className="mudo" style={{ fontSize: 14 }}>
-                          de tributos
-                        </span>
-                      </span>
-                      <span style={{ fontSize: 14, fontWeight: 500 }}>{motivo(it)}</span>
+                      <span className="valor num">{reais(totalItem(it))}</span>
+                      <span className="motivo-curto">de tributos · {motivo(it).toLowerCase()}</span>
                     </>
                   ) : props.exemplos === "erro" ? (
-                    <span className="mudo" style={{ fontSize: 14 }}>
-                      Calculadora desligada: veja como ligar no aviso acima.
-                    </span>
+                    <span className="mudo">Calculadora desligada: veja como ligar no aviso acima.</span>
                   ) : (
                     <span className="carregando">
                       <span className="girando" /> Calculando…
@@ -251,24 +255,25 @@ export function Inicio(props: {
           </div>
         </section>
 
-        <section aria-label="Como funciona" className="secao-larga">
-          <div className="passos-como">
+        <section aria-labelledby="passos" className="secao-larga">
+          <div className="secao-cab">
+            <h2 id="passos">Como a resposta é feita</h2>
+          </div>
+          <ol className="passos-como">
             {[
               ["Você pergunta", "Com as suas palavras, sem código nenhum."],
-              ["Achamos na tabela oficial", "Se houver dúvida, perguntamos antes."],
-              ["A Receita faz a conta", "Pela calculadora oficial. A IA só explica."],
+              ["Achamos na tabela oficial", "Se houver dúvida sobre a situação, perguntamos antes."],
+              ["A Receita faz a conta", "Pela calculadora oficial. A IA só explica, nunca inventa número."],
             ].map(([t, d], i) => (
-              <div key={t} className="passo-como">
-                <span className="bolinha">{i + 1}</span>
-                <div>
-                  <div style={{ fontWeight: 600 }}>{t}</div>
-                  <div className="mudo" style={{ fontSize: 14 }}>
-                    {d}
-                  </div>
-                </div>
-              </div>
+              <li key={t} className="passo-como">
+                <span className="passo-numero" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <strong>{t}</strong>
+                <span>{d}</span>
+              </li>
             ))}
-          </div>
+          </ol>
         </section>
       </section>
     </main>
@@ -292,6 +297,35 @@ function Ficha(props: {
   const [cidades, setCidades] = useState<MunicipioResolvido[]>([]);
   const [data, setData] = useState(hojeISO());
   const [erro, setErro] = useState("");
+  const [cidadeDestaque, setCidadeDestaque] = useState(-1);
+  const primeiroCampo = useRef<HTMLDivElement>(null);
+  const campoValor = useRef<HTMLInputElement>(null);
+
+  // A busca some quando a ficha aparece: o foco vai para a pergunta da situação (se houver dúvida) ou para o valor.
+  useEffect(() => {
+    if (c.classificacaoAmbigua) primeiroCampo.current?.querySelector("button")?.focus();
+    else campoValor.current?.focus();
+  }, [c]);
+
+  const escolherCidade = (m: MunicipioResolvido) => {
+    setCidade(m);
+    setCidadeTexto(`${m.nome}/${m.uf}`);
+    setCidades([]);
+    setCidadeDestaque(-1);
+  };
+  const teclasCidade = (e: React.KeyboardEvent) => {
+    if (!cidades.length) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setCidadeDestaque((d) => Math.min(d + 1, cidades.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setCidadeDestaque((d) => Math.max(d - 1, 0));
+    } else if (e.key === "Enter" && cidadeDestaque >= 0) {
+      e.preventDefault();
+      escolherCidade(cidades[cidadeDestaque]!);
+    } else if (e.key === "Escape") setCidades([]);
+  };
 
   useEffect(() => {
     const salva = lerCidadeSalva() ?? CIDADE_PADRAO;
@@ -343,14 +377,10 @@ function Ficha(props: {
   return (
     <form className="ficha" onSubmit={calcular} aria-label="Dados da compra">
       <div className="ficha-produto">
-        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <span className="mudo" style={{ fontSize: 13 }}>
-            {c.nomenclatura === "NBS" ? "Serviço" : "Produto"} encontrado na tabela oficial
-          </span>
-          <strong style={{ fontSize: 17 }}>{rotulo}</strong>
-          <span className="mudo" style={{ fontSize: 13 }}>
-            {c.descricao}
-          </span>
+        <div className="ficha-produto-texto">
+          <span className="sobretitulo">{c.nomenclatura === "NBS" ? "Serviço" : "Produto"} encontrado na tabela oficial</span>
+          <strong>{rotulo}</strong>
+          <span>{c.descricao}</span>
         </div>
         <button type="button" className="link-btn" onClick={props.onVoltar}>
           Trocar
@@ -358,19 +388,16 @@ function Ficha(props: {
       </div>
 
       {opcoes.length > 1 && (
-        <div className="pergunta-cartao" style={{ padding: 0, border: "none" }}>
-          <p style={{ fontSize: 15 }}>
-            {c.classificacaoAmbigua ? "Em qual situação se encaixa?" : "Situação (a mais comum já vem marcada)"}
-          </p>
+        <div className="pergunta-cartao" ref={primeiroCampo}>
+          <p>{c.classificacaoAmbigua ? "Em qual situação se encaixa?" : "Situação (a mais comum já vem marcada)"}</p>
           <div className="botoes" role="group" aria-label="Situação">
             {opcoes.slice(0, 4).map((o) => (
               <button
                 key={o.cClassTrib}
                 type="button"
-                className="chip"
                 aria-pressed={classe?.cClassTrib === o.cClassTrib}
                 onClick={() => setClasse(o)}
-                style={{ textAlign: "left", height: "auto", padding: "8px 14px" }}
+                className="chip chip-situacao"
               >
                 {o.descricao.length > 70 ? `${o.descricao.slice(0, 68)}…` : o.descricao}
               </button>
@@ -387,7 +414,7 @@ function Ficha(props: {
             placeholder="Ex.: 1.200,00"
             value={valor}
             onChange={(e) => setValor(e.target.value)}
-            autoFocus
+            ref={campoValor}
           />
         </label>
         <div className="campo">
@@ -396,24 +423,30 @@ function Ficha(props: {
             id="cidade"
             value={cidadeTexto}
             autoComplete="off"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={cidades.length > 0}
+            aria-controls="lista-cidades"
+            aria-activedescendant={cidadeDestaque >= 0 ? `cidade-${cidadeDestaque}` : undefined}
+            onKeyDown={teclasCidade}
             onChange={(e) => {
               setCidadeTexto(e.target.value);
               setCidade(undefined);
+              setCidadeDestaque(-1);
             }}
           />
           {cidades.length > 0 && (
-            <div className="opcoes-cidade" role="listbox" aria-label="Cidades">
-              {cidades.map((m) => (
+            <div className="opcoes-cidade" id="lista-cidades" role="listbox" aria-label="Cidades">
+              {cidades.map((m, i) => (
                 <button
                   key={m.codigo}
+                  id={`cidade-${i}`}
                   type="button"
                   role="option"
-                  aria-selected={false}
-                  onClick={() => {
-                    setCidade(m);
-                    setCidadeTexto(`${m.nome}/${m.uf}`);
-                    setCidades([]);
-                  }}
+                  tabIndex={-1}
+                  aria-selected={cidadeDestaque === i}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => escolherCidade(m)}
                 >
                   {m.nome}/{m.uf}
                 </button>
@@ -431,7 +464,7 @@ function Ficha(props: {
           {erro}
         </p>
       )}
-      <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+      <div className="ficha-fim">
         <button type="submit" className="btn btn-pri" disabled={props.ocupado}>
           {props.ocupado ? "Calculando…" : "Calcular com a calculadora oficial"}
         </button>

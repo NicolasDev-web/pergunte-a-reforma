@@ -2,7 +2,7 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { CalcularTributosInput, MunicipioResolvido } from "@reforma/core/contratos";
+import { AVISO_SIMULACAO, type CalcularTributosInput, type MunicipioResolvido } from "@reforma/core/contratos";
 import {
   IconeAjustes,
   IconeCalendario,
@@ -212,8 +212,8 @@ export function App() {
     const it = r.itens[0]!;
     const texto =
       r.itens.length === 1
-        ? `${it.rotulo}: ${reais(totalItem(it))} de tributos${cargaItem(it) ? ` (${porcento(cargaItem(it)!)} do valor)` : ""}, pela calculadora oficial da Receita (${r.local.nome}/${r.local.uf}, ${dataBR(r.data)}). Simulação, não é consultoria.`
-        : `Minha compra: ${reais(r.totais.vTributos)} de tributos em ${reais(r.totais.vBC)}, pela calculadora oficial da Receita. Simulação, não é consultoria.`;
+        ? `${it.rotulo}: ${reais(totalItem(it))} de tributos${cargaItem(it) ? ` (${porcento(cargaItem(it)!)} do valor)` : ""}, pela calculadora oficial da Receita (${r.local.nome}/${r.local.uf}, ${dataBR(r.data)}). ${AVISO_SIMULACAO}`
+        : `Minha compra: ${reais(r.totais.vTributos)} de tributos em ${reais(r.totais.vBC)}, pela calculadora oficial da Receita. ${AVISO_SIMULACAO}`;
     try {
       if (navigator.share) await navigator.share({ text: `${texto} ${location.origin}` });
       else await navigator.clipboard.writeText(`${texto} ${location.origin}`);
@@ -227,11 +227,11 @@ export function App() {
 
   const banner =
     motor === "lento" ? (
-      <p className="aviso-2026" style={{ maxWidth: 1232, margin: "16px auto 0" }}>
+      <p className="aviso-2026 banner">
         <span className="girando" /> Acordando a calculadora oficial… a primeira resposta pode demorar um pouco.
       </p>
     ) : motor === "desligado" ? (
-      <p className="alerta" style={{ maxWidth: 1232, margin: "16px auto 0" }} role="alert">
+      <p className="alerta banner" role="alert">
         <IconeInfo />
         <span>
           A calculadora oficial não está rodando. No seu computador, rode <code>pnpm local</code> na pasta do projeto (ele baixa e
@@ -262,7 +262,7 @@ export function App() {
   if (messages.length === 0)
     return (
       <>
-        {banner && <div style={{ padding: "0 24px" }}>{banner}</div>}
+        {banner && <div className="banner-fora">{banner}</div>}
         <Inicio
           onCalcular={calcularRapido}
           onPerguntar={perguntar}
@@ -270,7 +270,7 @@ export function App() {
           cidadeExemplos={cidadeEx}
           ocupado={ocupado}
         />
-        <div style={{ textAlign: "center", paddingBottom: 24 }}>
+        <div className="config-ia">
           <button type="button" className="link-btn" onClick={() => setModal({})}>
             <IconeAjustes /> Perguntas livres usam IA: {ia}
           </button>
@@ -282,7 +282,7 @@ export function App() {
 
   return (
     <div className="pagina-resposta">
-      {banner && <div style={{ padding: "0 24px" }}>{banner}</div>}
+      {banner && <div className="banner-fora">{banner}</div>}
       <div className="resposta-grade">
         <section aria-label="Conversa" className="conversa" aria-live="polite">
           {messages.map((m) =>
@@ -378,10 +378,11 @@ function MensagemAssistente(props: {
   const v = m.metadata?.verificacao;
 
   const cartao = (r: Resultado, entrada: CalcularTributosInput | undefined, id: string) => (
-    <div key={id} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <div key={id} className="cartao-calculo">
+      {/* Clicar no cartão mostra os detalhes dele no painel; pelo teclado, o botão "Ver detalhes" faz o mesmo. */}
       <div
         onClick={r.itens.length === 1 ? () => props.onSelecionar(id, 0) : undefined}
-        style={{ borderRadius: 20, outline: props.selecionado === id ? "2px solid var(--azul-claro)" : "none" }}
+        className={`selecionavel${props.selecionado === id ? " selecionado" : ""}`}
       >
         {r.itens.length === 1 ? (
           <CartaoResultado r={r} onLei={() => props.onLei(id)} />
@@ -390,6 +391,11 @@ function MensagemAssistente(props: {
         )}
       </div>
       <div className="acoes">
+        {r.itens.length === 1 && props.selecionado !== id && (
+          <button type="button" className="chip" onClick={() => props.onSelecionar(id, 0)}>
+            Ver detalhes
+          </button>
+        )}
         {entrada && r.data.startsWith("2026") && (
           <button
             type="button"
@@ -415,9 +421,9 @@ function MensagemAssistente(props: {
   );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <div className="mensagem">
       {passos.length > 0 && (
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <div className="mensagem">
           <button
             type="button"
             className="passos-linha"
@@ -494,11 +500,7 @@ function MensagemAssistente(props: {
           </span>
         </p>
       )}
-      {temCalculo && !v?.avisoPresente && (
-        <p className="aviso-legal">
-          Simulação educativa com a calculadora oficial da Receita Federal. Não é consultoria tributária.
-        </p>
-      )}
+      {temCalculo && !v?.avisoPresente && <p className="aviso-legal">{AVISO_SIMULACAO}</p>}
     </div>
   );
 }
@@ -538,7 +540,7 @@ function Compositor(props: {
             </span>
           </>
         )}
-        <button type="button" className="link-btn" onClick={props.onConfig} style={{ marginLeft: "auto" }}>
+        <button type="button" className="link-btn" onClick={props.onConfig}>
           IA: {props.ia}
         </button>
       </div>

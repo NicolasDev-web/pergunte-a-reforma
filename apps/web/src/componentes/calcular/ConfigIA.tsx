@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useDialogo } from "../dialogo";
 
 export type Provedor = "anthropic" | "openai" | "google";
 export interface ConfigIA {
@@ -29,28 +30,36 @@ export function ModalConfigIA(props: {
   const [provedor, setProvedor] = useState<Provedor>(props.atual?.provedor ?? "anthropic");
   const [chave, setChave] = useState(props.atual?.chave ?? "");
   const [modelo, setModelo] = useState(props.atual?.modelo ?? "");
+  const caixa = useRef<HTMLFormElement>(null);
+  useDialogo(caixa, props.onFechar);
   return (
     <div className="modal-fundo" role="dialog" aria-modal="true" aria-labelledby="titulo-ia" onClick={props.onFechar}>
       <form
         className="modal"
+        ref={caixa}
         onClick={(e) => e.stopPropagation()}
         onSubmit={(e) => {
           e.preventDefault();
           props.onSalvar(chave.trim() ? { provedor, chave: chave.trim(), modelo: modelo.trim() } : undefined);
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          <h2 id="titulo-ia" style={{ fontSize: 22 }}>
-            Escolha a IA que vai explicar
-          </h2>
-          <p className="mudo" style={{ fontSize: 14 }}>
+        <div className="mensagem">
+          <h2 id="titulo-ia">Escolha a IA que vai explicar</h2>
+          <p className="mudo">
             {props.motivo ??
               "Perguntas livres usam uma IA para entender e explicar. A conta continua sendo da calculadora oficial. A busca de produtos funciona sem IA."}
           </p>
         </div>
         <div className="provedores" role="group" aria-label="Provedor">
           {(Object.keys(NOMES) as Provedor[]).map((p) => (
-            <button key={p} type="button" className="provedor" aria-pressed={provedor === p} onClick={() => setProvedor(p)}>
+            <button
+              key={p}
+              type="button"
+              className="provedor"
+              aria-pressed={provedor === p}
+              onClick={() => setProvedor(p)}
+              {...(provedor === p ? { "data-foco-inicial": "" } : {})}
+            >
               {NOMES[p].nome}
             </button>
           ))}
@@ -76,14 +85,10 @@ export function ModalConfigIA(props: {
           <input value={modelo} onChange={(e) => setModelo(e.target.value)} placeholder="Deixe vazio para usar o padrão" />
         </label>
         {props.demo?.demo && (
-          <p className="mudo" style={{ fontSize: 13 }}>
-            Sem chave, você usa a demonstração grátis: {props.demo.limiteDia} perguntas por dia.
-          </p>
+          <p className="aviso-legal">Sem chave, você usa a demonstração grátis: {props.demo.limiteDia} perguntas por dia.</p>
         )}
-        <p className="mudo" style={{ fontSize: 12 }}>
-          Claude, ChatGPT e Gemini são marcas de seus respectivos donos; sem afiliação.
-        </p>
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: 8 }}>
+        <p className="aviso-legal">Claude, ChatGPT e Gemini são marcas de seus respectivos donos; sem afiliação.</p>
+        <div className="ficha-fim">
           {props.atual && (
             <button type="button" className="btn" onClick={() => props.onSalvar(undefined)}>
               Apagar chave
