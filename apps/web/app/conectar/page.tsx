@@ -14,9 +14,7 @@ export default async function Conectar() {
     <>
       <main className="conteudo" style={{ gap: 40 }}>
         <section className="conteudo-topo">
-          <span className="pilula" style={{ alignSelf: "flex-start" }}>
-            Conector MCP
-          </span>
+          <span className="sobretitulo">Conector MCP</span>
           <h1>Use no Claude, ChatGPT ou Gemini que você já tem</h1>
           <p>
             Adicione o endereço abaixo como conector. O seu chat passa a calcular com a calculadora oficial e a citar a lei, com a

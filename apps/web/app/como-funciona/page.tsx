@@ -36,10 +36,10 @@ const CADEIA = [
 ];
 
 const FAIXAS = [
-  { nome: "Regra geral", regra: "alíquota cheia", base: 70, extra: 0, cor: "#3b5bdb" },
-  { nome: "Saúde e educação", regra: "60% menos", base: 28, extra: 0, cor: "#7b93f0" },
-  { nome: "Cesta básica", regra: "zero", base: 0, extra: 0, cor: "#c2cefa" },
-  { nome: "Cigarro, bebida alcoólica", regra: "regra geral + Imposto Seletivo (2027)", base: 70, extra: 22, cor: "#3b5bdb" },
+  { nome: "Regra geral", regra: "alíquota cheia", base: 70, extra: 0, cor: "var(--azul)" },
+  { nome: "Saúde e educação", regra: "60% menos", base: 28, extra: 0, cor: "var(--azul-medio)" },
+  { nome: "Cesta básica", regra: "zero", base: 0, extra: 0, cor: "var(--azul-claro)" },
+  { nome: "Cigarro, bebida alcoólica", regra: "regra geral + Imposto Seletivo (2027)", base: 70, extra: 22, cor: "var(--azul)" },
 ];
 
 export default function ComoFunciona() {
@@ -47,9 +47,7 @@ export default function ComoFunciona() {
     <>
       <main className="conteudo" style={{ gap: 64 }}>
         <section className="conteudo-topo">
-          <span className="pilula" style={{ alignSelf: "flex-start" }}>
-            Como funciona · em 4 desenhos
-          </span>
+          <span className="sobretitulo">Como funciona · em 4 desenhos</span>
           <h1>Do caixa do mercado até o governo</h1>
         </section>
 
@@ -66,7 +64,7 @@ export default function ComoFunciona() {
             style={{
               justifySelf: "center",
               width: 300,
-              background: "#fff",
+              background: "var(--cartao)",
               border: "1px solid var(--borda-forte)",
               borderRadius: 12,
               boxShadow: "0 10px 30px rgba(20,22,31,.08)",
@@ -75,7 +73,7 @@ export default function ComoFunciona() {
             }}
             aria-label="Exemplo de nota fiscal com CBS e IBS separados"
           >
-            <div style={{ padding: "20px 20px 8px", textAlign: "center", borderBottom: "1px dashed #c7d0ee" }}>
+            <div style={{ padding: "20px 20px 8px", textAlign: "center", borderBottom: "1px dashed var(--fio-forte)" }}>
               <div style={{ fontWeight: 500 }}>MERCADO DO BAIRRO</div>
               <div className="mudo" style={{ fontSize: 11 }}>
                 Nota fiscal · 2026
@@ -116,7 +114,7 @@ export default function ComoFunciona() {
             aria-label="O dinheiro do imposto se divide entre a União, o seu estado e a sua cidade"
             style={{ width: "100%", maxWidth: 520, justifySelf: "center" }}
           >
-            <circle cx="260" cy="48" r="32" fill="#e7ecff" stroke="#3b5bdb" strokeWidth="2" />
+            <circle cx="260" cy="48" r="32" fill="var(--azul-suave)" stroke="var(--azul)" strokeWidth="2" />
             <text
               x="260"
               y="55"
@@ -124,31 +122,43 @@ export default function ComoFunciona() {
               fontFamily="Manrope, Inter, sans-serif"
               fontSize="20"
               fontWeight="800"
-              fill="#14161f"
+              fill="var(--tinta)"
             >
               R$
             </text>
-            <path d="M240 76 C 180 110, 110 110, 90 140" fill="none" stroke="#3b5bdb" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M260 80 L 260 140" fill="none" stroke="#7b93f0" strokeWidth="2.5" strokeLinecap="round" />
-            <path d="M280 76 C 340 110, 410 110, 430 140" fill="none" stroke="#c2cefa" strokeWidth="2.5" strokeLinecap="round" />
-            <g fill="none" stroke="#3b5bdb" strokeWidth="2" strokeLinejoin="round">
+            <path
+              d="M240 76 C 180 110, 110 110, 90 140"
+              fill="none"
+              stroke="var(--azul)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+            <path d="M260 80 L 260 140" fill="none" stroke="var(--azul-medio)" strokeWidth="2.5" strokeLinecap="round" />
+            <path
+              d="M280 76 C 340 110, 410 110, 430 140"
+              fill="none"
+              stroke="var(--azul-claro)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+            />
+            <g fill="none" stroke="var(--azul)" strokeWidth="2" strokeLinejoin="round">
               <path d="M60 162 L90 146 L120 162 Z" />
               <path d="M64 166h52M68 170v24M80 170v24M100 170v24M112 170v24M60 198h60" />
             </g>
-            <g fill="none" stroke="#7b93f0" strokeWidth="2" strokeLinejoin="round">
+            <g fill="none" stroke="var(--azul-medio)" strokeWidth="2" strokeLinejoin="round">
               <rect x="236" y="152" width="48" height="44" rx="2" />
               <path d="M246 162h8M266 162h8M246 174h8M266 174h8M256 196v-12h8v12M260 152v-12l12 4-12 4" />
             </g>
-            <g fill="none" stroke="#c2cefa" strokeWidth="2" strokeLinejoin="round">
+            <g fill="none" stroke="var(--azul-claro)" strokeWidth="2" strokeLinejoin="round">
               <path d="M406 170 L430 150 L454 170 M410 168v28h40v-28M424 196v-14h12v14" />
             </g>
-            <text x="90" y="222" textAnchor="middle" fontSize="14" fontWeight="600" fill="#14161f">
+            <text x="90" y="222" textAnchor="middle" fontSize="14" fontWeight="600" fill="var(--tinta)">
               União · CBS
             </text>
-            <text x="260" y="222" textAnchor="middle" fontSize="14" fontWeight="600" fill="#14161f">
+            <text x="260" y="222" textAnchor="middle" fontSize="14" fontWeight="600" fill="var(--tinta)">
               Seu estado · IBS
             </text>
-            <text x="430" y="222" textAnchor="middle" fontSize="14" fontWeight="600" fill="#14161f">
+            <text x="430" y="222" textAnchor="middle" fontSize="14" fontWeight="600" fill="var(--tinta)">
               Sua cidade · IBS
             </text>
           </svg>
@@ -190,7 +200,7 @@ export default function ComoFunciona() {
                   height="48"
                   viewBox="0 0 48 48"
                   fill="none"
-                  stroke="#3b5bdb"
+                  stroke="var(--azul)"
                   strokeWidth={2}
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -205,13 +215,13 @@ export default function ComoFunciona() {
                     height: 14,
                     borderRadius: 4,
                     overflow: "hidden",
-                    background: "#fff",
+                    background: "var(--cartao)",
                     border: "1px solid var(--borda-forte)",
                   }}
                   aria-hidden="true"
                 >
-                  <div style={{ width: `${c.antes}%`, background: "#c7d0ee" }} />
-                  <div style={{ width: `${c.agora}%`, background: "#3b5bdb" }} />
+                  <div style={{ width: `${c.antes}%`, background: "var(--fio-forte)" }} />
+                  <div style={{ width: `${c.agora}%`, background: "var(--azul)" }} />
                 </div>
                 <span className="mudo" style={{ fontSize: 13 }}>
                   {c.texto}
@@ -221,10 +231,10 @@ export default function ComoFunciona() {
           </ol>
           <div className="legenda mudo" style={{ fontSize: 13 }}>
             <span>
-              <span className="ponto" style={{ background: "#c7d0ee" }} /> imposto já pago antes (descontado)
+              <span className="ponto" style={{ background: "var(--fio-forte)" }} /> imposto já pago antes (descontado)
             </span>
             <span>
-              <span className="ponto" style={{ background: "#3b5bdb" }} /> imposto desta etapa
+              <span className="ponto" style={{ background: "var(--azul)" }} /> imposto desta etapa
             </span>
           </div>
         </section>
@@ -247,7 +257,7 @@ export default function ComoFunciona() {
                 </div>
                 <div className="barra" style={{ height: 16, background: "var(--linha)" }} aria-hidden="true">
                   <div style={{ width: `${f.base}%`, background: f.cor }} />
-                  <div style={{ width: `${f.extra}%`, background: "#14161f" }} />
+                  <div style={{ width: `${f.extra}%`, background: "var(--tinta)" }} />
                 </div>
               </div>
             ))}
@@ -258,11 +268,11 @@ export default function ComoFunciona() {
         </section>
 
         <div className="cta">
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <strong style={{ fontFamily: "var(--fonte-titulo)", fontSize: 24 }}>Agora veja o seu caso</strong>
-            <span style={{ color: "#e3e8fb" }}>Digite o que você comprou. A calculadora oficial faz a conta.</span>
+          <div className="mensagem">
+            <h2>Agora veja o seu caso</h2>
+            <p>Digite o que você comprou. A calculadora oficial faz a conta.</p>
           </div>
-          <Link href="/" className="btn" style={{ border: "none" }}>
+          <Link href="/" className="btn btn-pri">
             Calcular agora
           </Link>
         </div>

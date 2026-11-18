@@ -5,10 +5,10 @@ export const IconeMarca = ({ tamanho = 20 }: P) => (
   <svg {...base(tamanho)} stroke="#fff" strokeWidth={1.8} strokeLinejoin="round">
     <path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" />
     <path d="M9 8h6M9 12h4" />
-    <circle cx="15.5" cy="15" r="1.6" fill="#c2cefa" stroke="none" />
+    <circle cx="15.5" cy="15" r="1.6" fill="var(--azul-claro)" stroke="none" />
   </svg>
 );
-export const IconeBusca = ({ tamanho, cor = "#7b93f0" }: P) => (
+export const IconeBusca = ({ tamanho, cor = "var(--tinta-2)" }: P) => (
   <svg {...base(tamanho ?? 20)} stroke={cor} strokeWidth={2} strokeLinecap="round">
     <circle cx="11" cy="11" r="7" />
     <path d="M20 20l-4-4" />
@@ -20,7 +20,7 @@ export const IconeSeta = ({ tamanho }: P) => (
   </svg>
 );
 export const IconeCheck = ({ tamanho = 16 }: P) => (
-  <svg {...base(tamanho)} stroke="#3b5bdb" strokeWidth={2.4} strokeLinecap="round">
+  <svg {...base(tamanho)} stroke="var(--azul)" strokeWidth={2.4} strokeLinecap="round">
     <path d="M5 12l5 5 9-10" />
   </svg>
 );

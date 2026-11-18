@@ -45,9 +45,7 @@ export default function OQueMuda() {
     <>
       <main className="conteudo">
         <section className="conteudo-topo">
-          <span className="pilula" style={{ alignSelf: "flex-start" }}>
-            O que muda · em 3 minutos
-          </span>
+          <span className="sobretitulo">O que muda · em 3 minutos</span>
           <h1>Cinco impostos viram dois. E um terceiro para o que faz mal.</h1>
           <p>
             A reforma mexe nos impostos que já vêm no preço de tudo o que você compra. Eles não são novos: estão sendo trocados,
@@ -55,7 +53,7 @@ export default function OQueMuda() {
           </p>
         </section>
 
-        <section aria-labelledby="troca" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <section aria-labelledby="troca" className="secao-num">
           <h2 id="troca">A troca</h2>
           <div className="troca">
             {TROCAS.map((t) => (
@@ -66,14 +64,14 @@ export default function OQueMuda() {
 
         <section className="dupla">
           <div className="bloco-azul">
-            <h2 style={{ fontSize: 22 }}>Vou pagar mais?</h2>
+            <h3>Vou pagar mais?</h3>
             <p>
               Não é um imposto a mais. Os novos substituem os antigos, que hoje vêm escondidos no preço. A diferença é que agora o
               valor aparece separado na nota fiscal.
             </p>
           </div>
           <div className="bloco-borda">
-            <h2 style={{ fontSize: 22 }}>E em 2026?</h2>
+            <h3>E em 2026?</h3>
             <p>
               É um ano de teste. A CBS (0,9%) e o IBS (0,1%) aparecem na nota, mas a lei manda descontar esse valor do PIS e da
               Cofins. Não aumenta o tributo que você paga.
@@ -81,7 +79,7 @@ export default function OQueMuda() {
           </div>
         </section>
 
-        <section aria-labelledby="tempo" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        <section aria-labelledby="tempo" className="secao-num">
           <h2 id="tempo">A troca é aos poucos</h2>
           <ol className="linha-tempo">
             {ETAPAS.map((e) => (
@@ -96,7 +94,7 @@ export default function OQueMuda() {
                 {e.agora && (
                   <span
                     className="selo selo-oficial"
-                    style={{ alignSelf: "flex-start", background: "var(--azul)", color: "#fff" }}
+                    style={{ alignSelf: "flex-start", background: "var(--azul)", color: "var(--cartao)" }}
                   >
                     Você está aqui
                   </span>
@@ -109,7 +107,7 @@ export default function OQueMuda() {
           </ol>
         </section>
 
-        <section aria-labelledby="menos" style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <section aria-labelledby="menos" className="secao-num">
           <h2 id="menos">Quem paga menos</h2>
           <div className="cartoes-icone">
             <Cartao
@@ -131,11 +129,11 @@ export default function OQueMuda() {
         </section>
 
         <div className="cta">
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <strong style={{ fontFamily: "var(--fonte-titulo)", fontSize: 24 }}>Agora veja o seu caso</strong>
-            <span style={{ color: "#e3e8fb" }}>Digite o que você comprou. A calculadora oficial faz a conta.</span>
+          <div className="mensagem">
+            <h2>Agora veja o seu caso</h2>
+            <p>Digite o que você comprou. A calculadora oficial faz a conta.</p>
           </div>
-          <Link href="/" className="btn" style={{ border: "none" }}>
+          <Link href="/" className="btn btn-pri">
             Calcular agora
           </Link>
         </div>
@@ -163,7 +161,7 @@ function Troca(t: (typeof TROCAS)[number]) {
         height="24"
         viewBox="0 0 56 24"
         fill="none"
-        stroke="#7b93f0"
+        stroke="var(--azul-medio)"
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -192,7 +190,7 @@ function Cartao({ titulo, texto, d }: { titulo: string; texto: string; d: string
         height="40"
         viewBox="0 0 48 48"
         fill="none"
-        stroke="#3b5bdb"
+        stroke="var(--azul)"
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
