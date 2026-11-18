@@ -3,22 +3,13 @@ import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AVISO_SIMULACAO, type CalcularTributosInput, type MunicipioResolvido } from "@reforma/core/contratos";
-import {
-  IconeAjustes,
-  IconeCalendario,
-  IconeCheck,
-  IconeChevron,
-  IconeCompartilhar,
-  IconeInfo,
-  IconeLocal,
-  IconeSeta,
-} from "../Icones";
+import { IconeCalendario, IconeCheck, IconeChevron, IconeCompartilhar, IconeInfo, IconeLocal, IconeSeta } from "../Icones";
 import { EVENTO_INICIO } from "../Cabecalho";
 import { Rodape } from "../Rodape";
 import { ModalConfigIA, type ConfigIA } from "./ConfigIA";
 import { dataBR, em2027, hojeISO, porcento, reais, totalItem, cargaItem, type Resultado } from "./formatar";
 import { EXEMPLOS, Inicio, lerCidadeSalva } from "./Inicio";
-import { CartaoResultado, Painel, RaioX, type Variante } from "./Resultado";
+import { CartaoResultado, RaioX, VerConta, type Aba, type Variante } from "./Resultado";
 import { Estante } from "../estante/Estante";
 import type { DadosLivros } from "../estante/livros";
 
@@ -32,7 +23,6 @@ type Mensagem = UIMessage<
   { rapido?: boolean; verificacao?: Verificacao },
   { calculo: Calculo; perguntaCenario: { entrada: CalcularTributosInput; fala: string }; erro: { mensagem: string } }
 >;
-type Aba = "conta" | "lei" | "contador";
 type SaidaFerramenta = { ok: boolean; dados?: unknown; texto: string; erro?: { tipo: string; mensagem: string } };
 
 const NOME_IA: Record<string, string> = { anthropic: "Claude", openai: "OpenAI", google: "Gemini" };
@@ -63,7 +53,9 @@ export function App({ livros }: { livros: DadosLivros | null }) {
   const [exemplos, setExemplos] = useState<Resultado | "erro">();
   const [cidadeEx, setCidadeEx] = useState<MunicipioResolvido>(CIDADE_PADRAO);
   const [ocupado, setOcupado] = useState(false);
+  /** Qual cálculo (e qual item) está com "Ver a conta" aberto. Fechado por padrão. */
   const [selecao, setSelecao] = useState<{ id: string; i: number }>();
+  const [perguntando, setPerguntando] = useState(false);
   const [aba, setAba] = useState<Aba>("conta");
   const [ano, setAno] = useState<"base" | "2027">("base");
   const [variantes, setVariantes] = useState<Record<string, Resultado | "carregando" | "erro">>({});
@@ -139,7 +131,6 @@ export function App({ livros }: { livros: DadosLivros | null }) {
     return lista;
   }, [messages]);
   const atual = calculos.find((c) => c.id === selecao?.id) ?? calculos.at(-1);
-  const itemAtual = atual && selecao?.id === atual.id ? selecao.i : 0;
 
   async function calcularRapido(entrada: CalcularTributosInput, fala: string) {
     setOcupado(true);
@@ -184,7 +175,7 @@ export function App({ livros }: { livros: DadosLivros | null }) {
       };
     setMessages((m) => [...m, pessoa, resposta]);
     if (res.ok) {
-      setSelecao({ id: `${idA}:0`, i: 0 });
+      setSelecao(undefined);
       setAno("base");
     }
   }
@@ -200,6 +191,7 @@ export function App({ livros }: { livros: DadosLivros | null }) {
     const voltar = () => {
       setMessages([]);
       setSelecao(undefined);
+      setPerguntando(false);
       window.scrollTo({ top: 0 });
     };
     window.addEventListener(EVENTO_INICIO, voltar);
@@ -300,11 +292,6 @@ export function App({ livros }: { livros: DadosLivros | null }) {
         >
           <Estante dados={livros} />
         </Inicio>
-        <div className="config-ia">
-          <button type="button" className="link-btn" onClick={() => setModal({})}>
-            <IconeAjustes /> Perguntas livres usam IA: {ia}
-          </button>
-        </div>
         <Rodape versao={exemplos && exemplos !== "erro" ? exemplos.versaoMotor : undefined} />
         {modalEl}
       </>
@@ -314,7 +301,7 @@ export function App({ livros }: { livros: DadosLivros | null }) {
     <div className="pagina-resposta">
       <h1 className="vh">Resultado do cálculo</h1>
       {banner && <div className="banner-fora">{banner}</div>}
-      <div className="resposta-grade">
+      <div className="resposta-coluna">
         <section aria-label="Conversa" className="conversa" aria-live="polite">
           {messages.map((m) =>
             m.role === "user" ? (
@@ -325,15 +312,17 @@ export function App({ livros }: { livros: DadosLivros | null }) {
               <MensagemAssistente
                 key={m.id}
                 m={m}
-                selecionado={atual?.id}
-                onSelecionar={(id, i) => {
-                  setSelecao({ id, i });
+                conta={selecao}
+                onConta={(id, i, a) => {
+                  const fechar = selecao?.id === id && selecao.i === i && !a;
+                  setSelecao(fechar ? undefined : { id, i });
                   setAno("base");
+                  if (a) setAba(a);
                 }}
-                onLei={(id) => {
-                  setSelecao({ id, i: 0 });
-                  setAba("lei");
-                }}
+                aba={aba}
+                onAba={setAba}
+                ano={ano}
+                onAno={verAno}
                 onRapido={calcularRapido}
                 onCompartilhar={compartilhar}
                 onNovo={() => setMessages([])}
@@ -357,24 +346,21 @@ export function App({ livros }: { livros: DadosLivros | null }) {
               <span>{mensagemErro(error.message)}</span>
             </p>
           )}
-          <Compositor
-            ocupado={ocupadoChat || ocupado}
-            ia={ia}
-            contexto={atual?.r}
-            onEnviar={perguntar}
-            onConfig={() => setModal({})}
-          />
+          {perguntando ? (
+            <Compositor
+              ocupado={ocupadoChat || ocupado}
+              ia={ia}
+              contexto={atual?.r}
+              onEnviar={perguntar}
+              onConfig={() => setModal({})}
+            />
+          ) : (
+            <button type="button" className="btn perguntar-mais" onClick={() => setPerguntando(true)}>
+              Perguntar mais sobre isso
+            </button>
+          )}
           <div ref={fimRef} />
         </section>
-        <Painel
-          r={atual?.r}
-          i={itemAtual}
-          aba={aba}
-          onAba={setAba}
-          ano={ano}
-          onAno={verAno}
-          variante2027={atual ? variantes[atual.id] : undefined}
-        />
       </div>
       <Rodape versao={atual?.r.versaoMotor} />
       {modalEl}
@@ -393,9 +379,13 @@ function mensagemErro(msg: string): string {
 
 function MensagemAssistente(props: {
   m: Mensagem;
-  selecionado?: string;
-  onSelecionar: (id: string, i: number) => void;
-  onLei: (id: string) => void;
+  conta?: { id: string; i: number };
+  /** Abre/fecha "Ver a conta" do item i; com `a`, abre já nessa aba (ex.: a lei). */
+  onConta: (id: string, i: number, a?: Aba) => void;
+  aba: Aba;
+  onAba: (a: Aba) => void;
+  ano: "base" | "2027";
+  onAno: (a: "base" | "2027") => void;
   onRapido: (e: CalcularTributosInput, fala: string) => void;
   onCompartilhar: (r: Resultado) => void;
   onNovo: () => void;
@@ -411,48 +401,42 @@ function MensagemAssistente(props: {
   );
   const v = m.metadata?.verificacao;
 
-  const cartao = (r: Resultado, entrada: CalcularTributosInput | undefined, id: string) => (
-    <div key={id} className="cartao-calculo">
-      {/* Clicar no cartão mostra os detalhes dele no painel; pelo teclado, o botão "Ver detalhes" faz o mesmo. */}
-      <div
-        onClick={r.itens.length === 1 ? () => props.onSelecionar(id, 0) : undefined}
-        className={`selecionavel${props.selecionado === id ? " selecionado" : ""}`}
-      >
+  const cartao = (r: Resultado, _entrada: CalcularTributosInput | undefined, id: string) => {
+    const aberta = props.conta?.id === id ? props.conta.i : undefined;
+    return (
+      <div key={id} className="cartao-calculo">
         {r.itens.length === 1 ? (
-          <CartaoResultado r={r} onLei={() => props.onLei(id)} depois={props.variantes[id]} />
+          <CartaoResultado r={r} onLei={() => props.onConta(id, 0, "lei")} depois={props.variantes[id]} />
         ) : (
-          <RaioX r={r} onEscolher={(i) => props.onSelecionar(id, i)} depois={props.variantes[id]} />
+          <RaioX r={r} escolhido={aberta} onEscolher={(i) => props.onConta(id, i)} depois={props.variantes[id]} />
+        )}
+        <div className="acoes">
+          {r.itens.length === 1 && (
+            <button type="button" className="chip" aria-expanded={aberta !== undefined} onClick={() => props.onConta(id, 0)}>
+              {aberta !== undefined ? "Fechar a conta" : "Ver a conta"}
+            </button>
+          )}
+          <button type="button" className="chip" onClick={() => props.onCompartilhar(r)}>
+            <IconeCompartilhar /> Compartilhar
+          </button>
+          <button type="button" className="chip" onClick={props.onNovo}>
+            Nova consulta
+          </button>
+        </div>
+        {aberta !== undefined && (
+          <VerConta
+            r={r}
+            i={aberta}
+            aba={props.aba}
+            onAba={props.onAba}
+            ano={props.ano}
+            onAno={props.onAno}
+            variante2027={props.variantes[id]}
+          />
         )}
       </div>
-      <div className="acoes">
-        {r.itens.length === 1 && props.selecionado !== id && (
-          <button type="button" className="chip" onClick={() => props.onSelecionar(id, 0)}>
-            Ver detalhes
-          </button>
-        )}
-        {entrada && r.data.startsWith("2026") && (
-          <button
-            type="button"
-            className="chip"
-            onClick={() =>
-              props.onRapido(
-                { ...entrada, data: em2027(entrada.data.slice(0, 10)), cenario: "exemplo-receita-2027" },
-                `E em 2027? (${r.itens.length === 1 ? r.itens[0]!.rotulo : "mesma compra"})`,
-              )
-            }
-          >
-            E em 2027?
-          </button>
-        )}
-        <button type="button" className="chip" onClick={() => props.onCompartilhar(r)}>
-          <IconeCompartilhar /> Compartilhar
-        </button>
-        <button type="button" className="chip" onClick={props.onNovo}>
-          Nova consulta
-        </button>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="mensagem">

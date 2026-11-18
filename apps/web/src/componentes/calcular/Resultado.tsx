@@ -41,54 +41,66 @@ function Barra({ itemLinhas }: { itemLinhas: ReturnType<typeof tributos> }) {
   );
 }
 
-export function AvisoAno({ r }: { r: Resultado }) {
+export type Variante = Resultado | "carregando" | "erro";
+
+/** Uma linha curta que explica o número (antes era um bloco repetido no cartão e no painel). */
+function NotaAno({ r }: { r: Resultado }) {
   if (r.cenario.oficial && r.data.startsWith("2026"))
-    return (
-      <p className="aviso-2026">
-        <IconeInfo />
-        <span>
-          Em 2026 isso é um teste: o valor aparece na nota, mas a lei manda descontar do PIS e da Cofins. Não aumenta o que você
-          paga.
-        </span>
-      </p>
-    );
-  if (!r.cenario.oficial)
-    return (
-      <p className="aviso-2026 aviso-sim">
-        <IconeInfo />
-        <span>Simulação. {r.cenario.descricao}</span>
-      </p>
-    );
+    return <p className="nota-ano">2026 é ano-teste: o valor é compensado e não aumenta o que você paga.</p>;
+  if (!r.cenario.oficial) return <p className="nota-ano nota-sim">Simulação: {r.cenario.descricao}</p>;
   return null;
 }
 
-export type Variante = Resultado | "carregando" | "erro";
-
 /**
- * Ao lado do valor de 2026 (ano-teste, quase sempre perto de zero), o mesmo cálculo em 2027 com as alíquotas
- * de exemplo da Receita (auditoria UX-005). Números só do motor; âmbar porque é simulação.
+ * O número principal, lado a lado: hoje (o cálculo pedido) e, quando ele é de 2026, o mesmo cálculo em 2027
+ * com as alíquotas de exemplo da Receita (variante calculada pelo motor). Nada de número que não venha do motor.
  */
-function LinhaEm2027({ depois, i }: { depois?: Variante; i?: number }) {
-  if (!depois || depois === "erro") return null;
-  if (depois === "carregando")
-    return (
-      <p className="em-2027" aria-live="polite">
-        <span className="girando" /> Calculando 2027…
-      </p>
-    );
-  const valor = i === undefined ? depois.totais.vTributos : totalItem(depois.itens[i] ?? depois.itens[0]!);
-  const carga = i === undefined ? depois.totais.cargaSobreBase : cargaItem(depois.itens[i] ?? depois.itens[0]!);
+function DoisNumeros({
+  r,
+  valor,
+  carga,
+  depois,
+  emDepois,
+  sufixo = "do valor",
+}: {
+  r: Resultado;
+  valor: string;
+  carga?: string;
+  depois?: Variante;
+  emDepois: (d: Resultado) => { valor: string; carga?: string };
+  sufixo?: string;
+}) {
+  const ano = r.data.slice(0, 4);
+  const rotuloHoje = !r.cenario.oficial ? `${ano} · simulação` : ano === "2026" ? "Hoje · 2026, teste" : `${ano} · oficial`;
+  const mostra2027 = r.cenario.oficial && ano === "2026" && depois !== "erro";
+  const d = typeof depois === "object" ? emDepois(depois) : undefined;
   return (
-    <p className="em-2027">
-      <span className="em-2027-rotulo">Em 2027 · simulação com as alíquotas de exemplo da Receita</span>
-      <span>
-        <strong className="num">{reais(valor)}</strong> de tributos{carga ? ` · ${porcento(carga)} do valor` : ""}
-      </span>
-    </p>
+    <div className={`dois-numeros${mostra2027 ? "" : " um-numero"}`}>
+      <div className="numero">
+        <span className="numero-rotulo">{rotuloHoje}</span>
+        <strong className="valor num">{reais(valor)}</strong>
+        <span className="numero-carga">{carga ? `${porcento(carga)} ${sufixo}` : "de tributos"}</span>
+      </div>
+      {mostra2027 && (
+        <div className="numero numero-2027" aria-live="polite">
+          <span className="numero-rotulo">Em 2027 · simulação</span>
+          {d ? (
+            <>
+              <strong className="valor num">{reais(d.valor)}</strong>
+              <span className="numero-carga">{d.carga ? `${porcento(d.carga)} ${sufixo}` : "de tributos"}</span>
+            </>
+          ) : (
+            <span className="carregando">
+              <span className="girando" /> Calculando…
+            </span>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
-/** Cartão de um item: manchete no formato da nota fiscal, composição, motivo e lei. */
+/** Cartão de um item: os dois números, uma nota curta, o motivo e a lei. O detalhe fica em "Ver a conta". */
 export function CartaoResultado({
   r,
   i = 0,
@@ -100,50 +112,27 @@ export function CartaoResultado({
   onLei?: () => void;
   depois?: Variante;
 }) {
-  const [glossario, setGlossario] = useState(false);
   const item = r.itens[i]!;
   if (item.erros.length) return <ErroItem r={r} i={i} />;
-  const linhas = tributos(item);
-  const carga = cargaItem(item);
   const b = base(item);
   const lei = citacao(item.fundamentacao);
   return (
     <article className="resultado" aria-label={`Resultado: ${item.rotulo}`}>
-      <div className="resultado-topo">
-        <span>
-          {item.rotulo}
-          {b ? ` · ${reais(b)}` : ""} · {r.local.nome}/{r.local.uf}
-        </span>
-        <SeloAno r={r} />
-      </div>
-      <div className="manchete">
-        <strong className="valor num">{reais(totalItem(item))}</strong>
-        <span>
-          de tributos
-          {carga ? (
-            <>
-              {" "}
-              · <strong>{porcento(carga)} do valor</strong>
-            </>
-          ) : null}
-        </span>
-      </div>
-      <LinhaEm2027 depois={depois} i={i} />
-      <AvisoAno r={r} />
-      {linhas.length > 0 && (
-        <div className="composicao">
-          <Barra itemLinhas={linhas} />
-          <div className="legenda">
-            {linhas.map((l) => (
-              <span key={l.etapa}>
-                <span className="ponto" style={{ background: COR[l.etapa] }} />
-                <span className="mudo">{l.nome}</span>
-                <strong className="num">{reais(l.valor)}</strong>
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
+      <p className="resultado-topo">
+        {item.rotulo}
+        {b ? ` · ${reais(b)}` : ""} · {r.local.nome}/{r.local.uf}
+      </p>
+      <DoisNumeros
+        r={r}
+        valor={totalItem(item)}
+        carga={cargaItem(item)}
+        depois={depois}
+        emDepois={(d) => {
+          const it = d.itens[i] ?? d.itens[0]!;
+          return { valor: totalItem(it), carga: cargaItem(it) };
+        }}
+      />
+      <NotaAno r={r} />
       <div className="motivo">
         <span>{motivo(item)}.</span>
         {lei && (
@@ -152,16 +141,7 @@ export function CartaoResultado({
             {lei}
           </button>
         )}
-        <button type="button" className="link-btn" aria-expanded={glossario} onClick={() => setGlossario(!glossario)}>
-          O que é CBS e IBS?
-        </button>
       </div>
-      {glossario && (
-        <p className="glossario">
-          A CBS é o novo tributo federal e substitui PIS e Cofins. O IBS é dividido entre estado e município e substitui ICMS e
-          ISS. A troca é gradual até 2033; 2026 é o ano-teste.
-        </p>
-      )}
     </article>
   );
 }
@@ -179,62 +159,66 @@ export function ErroItem({ r, i }: { r: Resultado; i: number }) {
   );
 }
 
-/** Vários itens: onde está o peso dos tributos. */
-export function RaioX({ r, onEscolher, depois }: { r: Resultado; onEscolher: (i: number) => void; depois?: Variante }) {
+/** Vários itens: os totais (hoje e 2027) e a lista. A caixa com a nota só aparece quando a pessoa pede. */
+export function RaioX({
+  r,
+  onEscolher,
+  escolhido,
+  depois,
+}: {
+  r: Resultado;
+  onEscolher: (i: number) => void;
+  escolhido?: number;
+  depois?: Variante;
+}) {
+  const [nota, setNota] = useState(false);
   const totais = r.itens.map((it) => Number(totalItem(it)));
   const max = Math.max(...totais, 0.0001);
   return (
     <article className="resultado" aria-label="Raio-X da compra">
-      <div className="resultado-topo">
-        <span>
-          Raio-X · {r.itens.length} itens · {r.local.nome}/{r.local.uf}
-        </span>
-        <SeloAno r={r} />
-      </div>
-      <div className="manchete">
-        <strong className="valor num">{reais(r.totais.vTributos)}</strong>
-        <span>
-          de tributos em {reais(r.totais.vBC)}
-          {r.totais.cargaSobreBase ? (
-            <>
-              {" "}
-              · <strong>{porcento(r.totais.cargaSobreBase)} do total</strong>
-            </>
-          ) : null}
-        </span>
-      </div>
-      <LinhaEm2027 depois={depois} />
-      <AvisoAno r={r} />
-      <CaixaRaioX r={r} />
+      <p className="resultado-topo">
+        {r.itens.length} itens · {reais(r.totais.vBC)} · {r.local.nome}/{r.local.uf}
+      </p>
+      <DoisNumeros
+        r={r}
+        valor={r.totais.vTributos}
+        carga={r.totais.cargaSobreBase}
+        sufixo="do total"
+        depois={depois}
+        emDepois={(d) => ({ valor: d.totais.vTributos, carga: d.totais.cargaSobreBase })}
+      />
+      <NotaAno r={r} />
       <div className="raiox-lista">
         {r.itens.map((it, i) => (
-          <button key={i} type="button" className="raiox-linha" onClick={() => onEscolher(i)}>
+          <button key={i} type="button" className="raiox-linha" aria-expanded={escolhido === i} onClick={() => onEscolher(i)}>
             <span className="raiox-item">
               <strong>{it.rotulo}</strong>
-              <span>
-                {base(it) ? `${reais(base(it)!)} · ` : ""}
-                {it.erros.length ? "não calculado" : motivo(it).toLowerCase()}
-              </span>
+              <span>{it.erros.length ? "não calculado" : motivo(it).toLowerCase()}</span>
             </span>
             <span className="barra" aria-hidden="true">
               <span className="raiox-barra" style={{ width: `${(totais[i]! / max) * 100}%` }} />
             </span>
             <span className="raiox-valor">
               <strong className="num">{reais(totalItem(it))}</strong>
-              <span>{cargaItem(it) ? `${porcento(cargaItem(it)!)} do valor` : ""}</span>
             </span>
           </button>
         ))}
       </div>
+      <div className="acoes-nota">
+        <button type="button" className="link-btn" aria-expanded={nota} onClick={() => setNota(!nota)}>
+          {nota ? "Esconder a nota" : "Ver a nota da compra"}
+        </button>
+      </div>
+      {nota && <CaixaRaioX r={r} />}
     </article>
   );
 }
 
-type Aba = "conta" | "lei" | "contador";
+export type Aba = "conta" | "lei" | "contador";
 
-/** Painel de detalhe: como chegamos aqui, a lei e o modo contador. */
-export function Painel(props: {
-  r?: Resultado;
+/** "Ver a conta": a conta (barra + tabela), a lei e o modo contador, embaixo do cartão, só quando pedido. */
+export function VerConta(props: {
+  r: Resultado;
   i: number;
   aba: Aba;
   onAba: (a: Aba) => void;
@@ -243,24 +227,13 @@ export function Painel(props: {
   onAno: (a: "base" | "2027") => void;
 }) {
   const { r, i, aba, onAba } = props;
-  if (!r)
-    return (
-      <aside className="painel" aria-label="Detalhes do cálculo">
-        <div className="painel-vazio">
-          <strong>Detalhes do cálculo</strong>
-          <span>
-            Quando houver um resultado, aqui aparecem a conta passo a passo, o artigo da lei e os códigos para contadores.
-          </span>
-        </div>
-      </aside>
-    );
   const mostrado = props.ano === "2027" && typeof props.variante2027 === "object" ? props.variante2027 : r;
   const item = mostrado.itens[i] ?? mostrado.itens[0]!;
   const linhas = tributos(item);
   const red = reducao(item);
   const f = item.fundamentacao;
   const ABAS: [Aba, string][] = [
-    ["conta", "Como chegamos aqui"],
+    ["conta", "A conta"],
     ["lei", "A lei"],
     ["contador", "Modo contador"],
   ];
@@ -292,7 +265,7 @@ export function Painel(props: {
     URL.revokeObjectURL(a.href);
   };
   return (
-    <aside className="painel" aria-label="Detalhes do cálculo">
+    <section className="ver-conta" aria-label="A conta em detalhe">
       <div role="tablist" aria-label="Detalhes" className="abas" onKeyDown={teclasAbas}>
         {ABAS.map(([id, nome]) => (
           <button
@@ -312,9 +285,6 @@ export function Painel(props: {
       </div>
       {aba === "conta" && (
         <div className="painel-corpo" role="tabpanel" id="painel-conta" aria-labelledby="aba-conta">
-          <div className="painel-item">
-            <strong>{item.rotulo}</strong> · {r.local.nome}/{r.local.uf}
-          </div>
           {r.data.startsWith("2026") && (
             <div role="group" aria-label="Ano" className="segmento">
               <button type="button" aria-pressed={props.ano === "base"} onClick={() => props.onAno("base")}>
@@ -333,7 +303,7 @@ export function Painel(props: {
             <p className="alerta">Não foi possível simular 2027 para este item.</p>
           ) : (
             <>
-              <AvisoAno r={mostrado} />
+              {!item.erros.length && linhas.length > 0 && <Barra itemLinhas={linhas} />}
               {item.erros.length ? (
                 <ErroItem r={mostrado} i={mostrado.itens.indexOf(item)} />
               ) : (
@@ -341,7 +311,7 @@ export function Painel(props: {
                   <thead>
                     <tr>
                       <th>Tributo</th>
-                      <th>Alíquota da lei</th>
+                      <th>Alíquota</th>
                       <th>Redução</th>
                       <th>Efetiva</th>
                       <th className="dir">Valor</th>
@@ -374,29 +344,6 @@ export function Painel(props: {
                     </tr>
                   </tbody>
                 </table>
-              )}
-              {f && (
-                <div className="caixa-suave">
-                  <span className="rotulo-caixa">Por que essa regra</span>
-                  <div className="caminho">
-                    <span className="passo">{item.rotulo}</span>
-                    <span aria-hidden="true">›</span>
-                    {f.anexo && (
-                      <>
-                        <span className="passo">{f.anexo}</span>
-                        <span aria-hidden="true">›</span>
-                      </>
-                    )}
-                    <span className="passo">
-                      {f.dispositivos
-                        .map((x) => x.dispositivo)
-                        .filter((x) => x !== f.norma)
-                        .join("; ") || "Regra geral"}
-                      {red ? ` · redução de ${porcento(red)}` : ""}
-                    </span>
-                  </div>
-                  <span>{f.descricao}</span>
-                </div>
               )}
             </>
           )}
@@ -470,7 +417,7 @@ export function Painel(props: {
           </div>
         </div>
       )}
-    </aside>
+    </section>
   );
 }
 

@@ -1850,3 +1850,79 @@ body,
 .abertura-pagina + .inicio {
   padding-top: 8px;
 }
+
+/* ---------- menos é mais: resultado em uma coluna (ver CLAUDE.md, "Menos é mais") ---------- */
+.resposta-coluna {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.dois-numeros {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 32px;
+}
+.dois-numeros.um-numero {
+  grid-template-columns: 1fr;
+}
+.numero {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.numero-2027 {
+  padding-left: 24px;
+  border-left: 3px solid var(--simulacao-fundo);
+}
+.numero-rotulo {
+  font-family: var(--fonte-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tinta-2);
+}
+.numero-2027 .numero-rotulo {
+  color: var(--simulacao-texto);
+}
+.numero .valor {
+  font-family: var(--serif);
+  font-size: clamp(40px, 6vw, 60px);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.numero-carga {
+  font-size: 16px;
+  color: var(--tinta-2);
+}
+.nota-ano {
+  font-size: 15px;
+  color: var(--tinta-2);
+}
+.nota-sim {
+  color: var(--simulacao-texto);
+  background: var(--simulacao-fundo);
+  padding: 8px 12px;
+  border-radius: var(--raio-p);
+}
+.ver-conta {
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  overflow: hidden;
+}
+.perguntar-mais {
+  align-self: flex-start;
+}
+.acoes-nota {
+  display: flex;
+  justify-content: center;
+}
+@media (max-width: 520px) {
+  .dois-numeros {
+    grid-template-columns: 1fr;
+  }
+  .numero-2027 {
+    padding-left: 16px;
+  }
+}
