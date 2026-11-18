@@ -1,10 +1,10 @@
 # Avaliação da busca (lexica): busca.yaml
 
-Data: 2026-11-17 · 50 consultas · carga do índice 907 ms · consulta média 1.6 ms
+Data: 2026-11-18 · 57 consultas · carga do índice 877 ms · consulta média 0.9 ms
 
 | Métrica | Resultado |
 |---|---|
-| Top-1 | **96.0%** |
+| Top-1 | **96.5%** |
 | Top-3 | **100.0%** (meta 80.0%) |
 | Top-5 | 100.0% |
 

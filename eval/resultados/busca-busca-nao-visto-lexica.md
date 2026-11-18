@@ -1,6 +1,6 @@
 # Avaliação da busca (lexica): busca-nao-visto.yaml
 
-Data: 2026-11-17 · 40 consultas · carga do índice 854 ms · consulta média 0.8 ms
+Data: 2026-11-18 · 40 consultas · carga do índice 832 ms · consulta média 1.1 ms
 
 | Métrica | Resultado |
 |---|---|
@@ -21,5 +21,5 @@ Data: 2026-11-17 · 40 consultas · carga do índice 854 ms · consulta média 0
 | batom | 330410 | — |  |
 | pneu novo de carro | 401110 | — | 84261200 Pórticos móveis de pneumáticos e carros-<br>95030010 Triciclos, patinetes, carros de pedais e<br>118024000 Serviços de carro-forte |
 | advogado trabalhista | 11301 | — |  |
-| dedetização da casa | 118032 | — | 83030000 Cofres-fortes, portas blindadas e compar<br>26011210 Aglomerados por processo de peletização, |
+| dedetização da casa | 118032 | — | 117022100 Serviços de acesso à rede mundial de com<br>117022200 Serviços de acesso à rede mundial de com<br>83030000 Cofres-fortes, portas blindadas e compar |
 | passagem de ônibus para outra cidade | 1040211, 1040213 | — | 40131090 Outras<br>104011111 Serviços de transporte rodoviário local <br>19011090 Outras |
