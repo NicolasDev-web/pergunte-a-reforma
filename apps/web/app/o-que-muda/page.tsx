@@ -17,28 +17,27 @@ const TROCAS = [
     antigos: ["ICMS", "ISS"],
     novo: "IBS",
     longo: "Imposto sobre Bens e Serviços",
-    texto: "Dividido entre o seu estado e a sua cidade: vai para onde você consome.",
+    texto: "Dividido entre estado e cidade; vai para onde você consome.",
     destaque: true,
   },
   {
     antigos: ["IPI"],
     novo: "IS",
     longo: "Imposto Seletivo",
-    texto:
-      "Só para o que faz mal à saúde ou ao meio ambiente, como cigarro e bebida alcoólica. O IPI vai a zero, exceto na Zona Franca de Manaus.",
+    texto: "Só para o que faz mal à saúde ou ao meio ambiente, como cigarro e bebida.",
     destaque: false,
   },
 ];
 
 const ETAPAS = [
-  { ano: "2026", texto: "Ano de teste. CBS e IBS aparecem na nota, mas são compensados.", agora: true },
+  { ano: "2026", texto: "Teste: aparece na nota e é compensado.", agora: true },
   {
     ano: "2027",
-    texto: "A CBS passa a valer e acaba com PIS e Cofins. O IPI vai a zero (com exceções). Começa o Imposto Seletivo.",
+    texto: "A CBS substitui PIS e Cofins. Começa o Seletivo.",
   },
-  { ano: "2028", texto: "Igual a 2027. O IBS segue com alíquota de teste." },
-  { ano: "2029 a 2032", texto: "ICMS e ISS diminuem ano a ano, e o IBS cresce no lugar deles." },
-  { ano: "2033", texto: "ICMS e ISS acabam. Ficam só CBS, IBS e o Imposto Seletivo." },
+  { ano: "2028", texto: "O IBS segue em teste." },
+  { ano: "2029 a 2032", texto: "ICMS e ISS caem; o IBS cresce." },
+  { ano: "2033", texto: "Ficam só CBS, IBS e Seletivo." },
 ];
 
 export default function OQueMuda() {
@@ -49,10 +48,7 @@ export default function OQueMuda() {
           <div className="faixa-conteudo">
             <span className="sobretitulo">O que muda · em 3 minutos</span>
             <h1>Cinco impostos viram dois. E um terceiro para o que faz mal.</h1>
-            <p>
-              A reforma mexe nos impostos que já vêm no preço de tudo o que você compra. Eles não são novos: estão sendo trocados,
-              aos poucos, até 2033.
-            </p>
+            <p>Os impostos que já vêm no preço estão sendo trocados, aos poucos, até 2033.</p>
           </div>
         </section>
 
@@ -68,17 +64,11 @@ export default function OQueMuda() {
         <section className="dupla">
           <div className="bloco-azul">
             <h3>Vou pagar mais?</h3>
-            <p>
-              Não é um imposto a mais. Os novos substituem os antigos, que hoje vêm escondidos no preço. A diferença é que agora o
-              valor aparece separado na nota fiscal.
-            </p>
+            <p>Não é imposto a mais: os novos substituem os antigos, que agora aparecem na nota.</p>
           </div>
           <div className="bloco-borda">
             <h3>E em 2026?</h3>
-            <p>
-              É um ano de teste. A CBS (0,9%) e o IBS (0,1%) aparecem na nota, mas a lei manda descontar esse valor do PIS e da
-              Cofins. Não aumenta o tributo que você paga.
-            </p>
+            <p>Ano de teste: a CBS (0,9%) e o IBS (0,1%) aparecem na nota, mas são compensados. Não aumenta o que você paga.</p>
           </div>
         </section>
 
@@ -125,7 +115,7 @@ export default function OQueMuda() {
             />
             <Cartao
               titulo="Cashback"
-              texto="Famílias do CadÚnico com renda de até meio salário mínimo por pessoa recebem parte de volta: da CBS a partir de 2027, do IBS a partir de 2029."
+              texto="Famílias de baixa renda do CadÚnico recebem parte de volta (CBS a partir de 2027, IBS a partir de 2029)."
               d="M24 9a15 15 0 100 30 15 15 0 000-30z M29 18h-7a3 3 0 000 6h4a3 3 0 010 6h-7M24 14v4M24 30v4"
             />
           </div>
@@ -135,7 +125,7 @@ export default function OQueMuda() {
           <FundoFormas variante="cta" />
           <div className="mensagem">
             <h2>Agora veja o seu caso</h2>
-            <p>Digite o que você comprou. A calculadora oficial faz a conta.</p>
+            <p>A calculadora oficial faz a conta.</p>
           </div>
           <Link href="/" className="btn btn-pri">
             Calcular agora

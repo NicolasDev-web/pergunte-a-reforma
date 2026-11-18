@@ -17,6 +17,12 @@
 5. Nunca registrar em log nem salvar chaves BYOK.
 6. Não modificar o código do motor da Receita, só empacotar.
 7. Textos para o usuário em português simples; termos técnicos (cClassTrib, CST) só no "modo contador".
+8. **Menos é mais** (pedido do usuário, 18/11/2026):
+   - cada informação aparece uma vez por tela;
+   - o detalhe fica atrás de um clique ("Ver a conta", "Perguntar mais", "Ver a nota");
+   - nada de aviso repetido ou de dois caminhos para a mesma coisa;
+   - textos curtos.
+9. **Personalização: pergunte antes.** Para visual, texto ou fluxo, faça perguntas ao usuário com opções (uma recomendada) e mostre capturas depois.
 
 ## Stack
 pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + Vercel AI SDK · transformers.js (embeddings locais) · Cloud Run (motor) · Vercel (site + MCP) · Upstash (limite de uso)

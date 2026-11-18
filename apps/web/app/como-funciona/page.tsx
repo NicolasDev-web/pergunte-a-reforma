@@ -64,10 +64,7 @@ export default function ComoFunciona() {
           <div className="ilustrada-texto">
             <span className="numero-passo">1</span>
             <h2 id="p1">O imposto aparece na nota</h2>
-            <p>
-              Antes, o imposto ficava escondido dentro do preço. Agora a nota fiscal mostra quanto é CBS e quanto é IBS, separado
-              do valor do produto.
-            </p>
+            <p>Antes escondido no preço, agora a nota mostra a CBS e o IBS separados.</p>
           </div>
           <div
             style={{
@@ -174,10 +171,7 @@ export default function ComoFunciona() {
           <div className="ilustrada-texto">
             <span className="numero-passo">2</span>
             <h2 id="p2">Para onde vai o dinheiro</h2>
-            <p>
-              A CBS vai para o governo federal. O IBS é dividido entre o estado e a cidade onde você compra ou usa o serviço, e
-              não onde a empresa fica.
-            </p>
+            <p>A CBS vai para a União. O IBS vai para o estado e a cidade onde você compra, não onde a empresa fica.</p>
           </div>
         </section>
 
@@ -185,10 +179,7 @@ export default function ComoFunciona() {
           <div className="ilustrada-texto" style={{ maxWidth: 720 }}>
             <span className="numero-passo">3</span>
             <h2 id="p3">Cada etapa paga só a sua parte</h2>
-            <p>
-              Cada empresa desconta o imposto que já foi pago na etapa anterior. Assim o imposto não vira bola de neve, e o total
-              é o imposto sobre o preço final.
-            </p>
+            <p>Cada empresa desconta o imposto da etapa anterior. Assim ele não vira bola de neve.</p>
           </div>
           <ol
             style={{
@@ -252,10 +243,7 @@ export default function ComoFunciona() {
           <div className="ilustrada-texto">
             <span className="numero-passo">4</span>
             <h2 id="p4">Nem tudo paga igual</h2>
-            <p>
-              A lei dá desconto para o essencial e cobra a mais do que faz mal. É por isso que a calculadora precisa saber
-              exatamente o que você comprou.
-            </p>
+            <p>Desconto para o essencial, cobrança a mais para o que faz mal.</p>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {FAIXAS.map((f) => (
@@ -271,7 +259,7 @@ export default function ComoFunciona() {
               </div>
             ))}
             <span className="mudo" style={{ fontSize: 12 }}>
-              As barras comparam cada grupo com a regra geral. Os valores do seu caso vêm da calculadora.
+              Comparação ilustrativa; o valor do seu caso vem da calculadora.
             </span>
           </div>
         </section>
@@ -280,7 +268,7 @@ export default function ComoFunciona() {
           <FundoFormas variante="cta" />
           <div className="mensagem">
             <h2>Agora veja o seu caso</h2>
-            <p>Digite o que você comprou. A calculadora oficial faz a conta.</p>
+            <p>A calculadora oficial faz a conta.</p>
           </div>
           <Link href="/" className="btn btn-pri">
             Calcular agora
