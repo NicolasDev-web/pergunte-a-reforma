@@ -1,4 +1,5 @@
 import { calcularTributos } from "@reforma/core";
+import { comCors, respostaOptions } from "@/lib/cors";
 import { contexto } from "@/lib/servidor";
 
 export const runtime = "nodejs";
@@ -7,7 +8,11 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
   const entrada = await req.json().catch(() => null);
   const r = await calcularTributos(contexto(), entrada);
-  if (r.ok) return Response.json({ ok: true, dados: r.dados });
+  if (r.ok) return comCors(Response.json({ ok: true, dados: r.dados }));
   const status = r.erro.tipo === "motor" ? 502 : r.erro.tipo === "pergunte" ? 200 : 400;
-  return Response.json({ ok: false, erro: r.erro }, { status });
+  return comCors(Response.json({ ok: false, erro: r.erro }, { status }));
+}
+
+export function OPTIONS() {
+  return respostaOptions();
 }

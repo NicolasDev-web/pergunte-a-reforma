@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Exemplo: CBS, IBS e IS com o motor oficial da Receita</title>
+    <style>
+      :root {
+        --azul: #3b5bdb;
+        --borda: #d9dde8;
+        --fundo: #f6f7fb;
+        --ambar: #b45309;
+        --ambar-fundo: #fff7e6;
+        --erro: #b42318;
+        --ok: #067647;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font:
+          15px/1.45 system-ui,
+          "Segoe UI",
+          sans-serif;
+        margin: 0;
+        background: var(--fundo);
+        color: #1b1f2a;
+      }
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 24px 16px 48px;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0 0 4px;
+      }
+      h2 {
+        font-size: 16px;
+        margin: 0 0 12px;
+      }
+      p.sub {
+        margin: 0 0 16px;
+        color: #4a5163;
+      }
+      section {
+        background: #fff;
+        border: 1px solid var(--borda);
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+      label {
+        display: block;
+        font-size: 13px;
+        color: #4a5163;
+        margin-bottom: 4px;
+      }
+      input,
+      select,
+      button {
+        font: inherit;
+        padding: 8px 10px;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        background: #fff;
+      }
+      button {
+        cursor: pointer;
+        background: var(--azul);
+        color: #fff;
+        border-color: var(--azul);
+      }
+      button.sec {
+        background: #fff;
+        color: var(--azul);
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .linha {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: end;
+      }
+      .linha > div {
+        flex: 1 1 160px;
+      }
+      .linha > div.fixo {
+        flex: 0 0 auto;
+      }
+      #status {
+        display: inline-block;
+        font-size: 13px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #eef0f6;
+      }
+      #status.ok {
+        background: #e6f6ee;
+        color: var(--ok);
+      }
+      #status.off {
+        background: #fdecea;
+        color: var(--erro);
+      }
+      .cand {
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin: 6px 0;
+        display: flex;
+        gap: 8px;
+        cursor: pointer;
+      }
+      .cand small {
+        color: #4a5163;
+        display: block;
+      }
+      .aviso {
+        background: var(--ambar-fundo);
+        border: 1px solid #f5d08a;
+        color: var(--ambar);
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin-top: 12px;
+        font-size: 13px;
+      }
+      .erro {
+        background: #fdecea;
+        border: 1px solid #f4b4ad;
+        color: var(--erro);
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin-top: 12px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th,
+      td {
+        text-align: right;
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--borda);
+      }
+      th:first-child,
+      td:first-child {
+        text-align: left;
+      }
+      tfoot td {
+        font-weight: 600;
+      }
+      .tec {
+        color: #6b7385;
+        font-size: 12px;
+        display: block;
+        font-weight: 400;
+      }
+      .oculto {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>CBS, IBS e IS com o motor oficial da Receita</h1>
+      <p class="sub">
+        Página de exemplo: mostra como um HTML seu usa o <code>reforma-client.js</code>.
+        <span id="status">verificando o motor…</span>
+      </p>
+
+      <section>
+        <h2>1. Operação</h2>
+        <div class="linha">
+          <div><label for="data">Data da operação</label><input id="data" type="date" /></div>
+          <div>
+            <label for="cidade">Município</label
+            ><input id="cidade" list="cidades" value="Americana" autocomplete="off" /><datalist id="cidades"></datalist>
+          </div>
+          <div class="fixo"><label for="uf">UF</label><input id="uf" value="SP" maxlength="2" size="3" /></div>
+          <div id="blocoCenario" class="oculto">
+            <label for="cenario">Alíquotas (a partir de 2027)</label>
+            <select id="cenario">
+              <option value="exemplo-receita-2027">Exemplo da documentação oficial</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Adicionar item</h2>
+        <div class="linha">
+          <div>
+            <label for="busca">Produto ou serviço</label
+            ><input id="busca" placeholder="ex.: arroz, cerveja, mensalidade escolar" autocomplete="off" />
+          </div>
+          <div class="fixo"><button id="btnBuscar" class="sec" type="button">Buscar</button></div>
+        </div>
+        <div id="candidatos"></div>
+        <div id="blocoAdd" class="oculto">
+          <div class="linha" style="margin-top: 12px">
+            <div id="blocoCls">
+              <label for="cls">Classificação tributária</label
+              ><select id="cls"></select>
+            </div>
+            <div class="fixo">
+              <label for="valor">Valor (R$)</label
+              ><input id="valor" type="number" min="0.01" step="0.01" size="10" value="100.00" />
+            </div>
+            <div class="fixo"><button id="btnAdd" type="button">Adicionar item</button></div>
+          </div>
+        </div>
+        <div id="msgBusca"></div>
+      </section>
+
+      <section>
+        <h2>3. Itens e cálculo</h2>
+        <table id="tabItens">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Código</th>
+              <th>Valor</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p id="vazio" style="color: #6b7385">Nenhum item ainda.</p>
+        <button id="btnCalc" type="button" disabled>Calcular com o motor da Receita</button>
+        <div id="msgCalc"></div>
+      </section>
+
+      <section id="secResultado" class="oculto">
+        <h2>Resultado</h2>
+        <div id="resumo" style="margin-bottom: 8px"></div>
+        <table id="tabRes">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Base</th>
+              <th>Redução</th>
+              <th>CBS</th>
+              <th>IBS (UF)</th>
+              <th>IBS (município)</th>
+              <th>IS</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot></tfoot>
+        </table>
+        <div id="avisos"></div>
+      </section>
+    </main>
+
+    <!-- Em qualquer HTML seu, basta esta linha (o site precisa estar ligado): -->
+    <script src="http://localhost:3000/ferramentas/reforma-client.js"></script>
+    <script>
+      (function () {
+        "use strict";
+        var $ = function (id) {
+          return document.getElementById(id);
+        };
+
+        function el(tag, props, filhos) {
+          var e = document.createElement(tag);
+          Object.keys(props || {}).forEach(function (k) {
+            e[k] = props[k];
+          });
+          (filhos || []).forEach(function (f) {
+            e.appendChild(typeof f === "string" ? document.createTextNode(f) : f);
+          });
+          return e;
+        }
+        function limpar(e) {
+          while (e.firstChild) e.removeChild(e.firstChild);
+        }
+        function mostrarErro(onde, texto) {
+          limpar(onde);
+          if (texto) onde.appendChild(el("div", { className: "erro", textContent: texto }));
+        }
+
+        if (typeof Reforma === "undefined") {
+          $("status").textContent = "motor desligado";
+          $("status").className = "off";
+          mostrarErro(
+            $("msgBusca"),
+            "Não consegui carregar o reforma-client.js. Ligue o programa (Iniciar Pergunte a Reforma.cmd) e recarregue a página.",
+          );
+          return;
+        }
+
+        var hoje = new Date();
+        $("data").value =
+          hoje.getFullYear() + "-" + String(hoje.getMonth() + 1).padStart(2, "0") + "-" + String(hoje.getDate()).padStart(2, "0");
+
+        var candidatos = [];
+        var escolhido = null;
+        var itens = [];
+
+        // ---- Estado do motor -----------------------------------------------------------------------
+        Reforma.motor()
+          .then(function (m) {
+            if (m.ok) {
+              $("status").textContent = "motor ligado (versão " + m.versao + ")";
+              $("status").className = "ok";
+            } else {
+              $("status").textContent = "motor desligado";
+              $("status").className = "off";
+            }
+          })
+          .catch(function (e) {
+            $("status").textContent = "sem conexão";
+            $("status").className = "off";
+            mostrarErro($("msgBusca"), e.message);
+          });
+
+        // ---- Data muda a regra: a partir de 2027 pede o cenário de alíquotas -------------------------
+        function atualizarCenario() {
+          var ano = Number(($("data").value || "").slice(0, 4));
+          $("blocoCenario").classList.toggle("oculto", !(ano >= 2027));
+        }
+        $("data").addEventListener("change", atualizarCenario);
+        atualizarCenario();
+
+        // ---- Sugestão de município -------------------------------------------------------------------
+        var tempo;
+        $("cidade").addEventListener("input", function () {
+          clearTimeout(tempo);
+          var q = $("cidade").value;
+          tempo = setTimeout(function () {
+            if (q.trim().length < 2) return;
+            Reforma.buscarMunicipio(q)
+              .then(function (lista) {
+                limpar($("cidades"));
+                lista.forEach(function (m) {
+                  $("cidades").appendChild(el("option", { value: m.nome, label: m.nome + " - " + m.uf }));
+                });
+                var exato = lista.filter(function (m) {
+                  return m.nome.toLowerCase() === q.trim().toLowerCase();
+                });
+                if (exato.length === 1) $("uf").value = exato[0].uf;
+              })
+              .catch(function () {});
+          }, 250);
+        });
+
+        // ---- Busca de produto ------------------------------------------------------------------------
+        function buscar() {
+          var texto = $("busca").value.trim();
+          if (texto.length < 2) return;
+          mostrarErro($("msgBusca"), "");
+          Reforma.buscarProduto(texto)
+            .then(function (r) {
+              candidatos = r.candidatos || [];
+              escolhido = null;
+              $("blocoAdd").classList.add("oculto");
+              limpar($("candidatos"));
+              if (!candidatos.length) {
+                mostrarErro($("msgBusca"), "Nada encontrado. Tente outro nome, mais próximo do oficial.");
+                return;
+              }
+              if (r.ambiguo && r.perguntaSugerida)
+                $("candidatos").appendChild(el("div", { className: "aviso", textContent: r.perguntaSugerida }));
+              candidatos.forEach(function (c, i) {
+                var radio = el("input", { type: "radio", name: "cand", value: String(i) });
+                radio.addEventListener("change", function () {
+                  escolher(i);
+                });
+                var corpo = el("div", {}, [
+                  el("strong", { textContent: c.descricao }),
+                  el("small", {
+                    textContent: c.nomenclatura + " " + c.codigo + (c.impostoSeletivo ? " · sujeito a Imposto Seletivo" : ""),
+                  }),
+                ]);
+                var cartao = el("label", { className: "cand" }, [radio, corpo]);
+                $("candidatos").appendChild(cartao);
+              });
+            })
+            .catch(function (e) {
+              mostrarErro($("msgBusca"), e.message);
+            });
+        }
+        $("btnBuscar").addEventListener("click", buscar);
+        $("busca").addEventListener("keydown", function (e) {
+          if (e.key === "Enter") buscar();
+        });
+
+        function escolher(i) {
+          escolhido = candidatos[i];
+          limpar($("cls"));
+          var lista = [escolhido.classificacaoProvavel].concat(escolhido.outrasClassificacoes || []);
+          if (escolhido.classificacaoAmbigua)
+            $("cls").appendChild(el("option", { value: "", textContent: "Escolha a classificação…" }));
+          lista.forEach(function (c, k) {
+            $("cls").appendChild(el("option", { value: String(k), textContent: c.cClassTrib + " · " + c.descricao }));
+          });
+          escolhido._lista = lista;
+          $("blocoAdd").classList.remove("oculto");
+        }
+
+        // ---- Itens -----------------------------------------------------------------------------------
+        function desenharItens() {
+          var corpo = $("tabItens").querySelector("tbody");
+          limpar(corpo);
+          itens.forEach(function (it, i) {
+            var rm = el("button", { className: "sec", type: "button", textContent: "remover" });
+            rm.addEventListener("click", function () {
+              itens.splice(i, 1);
+              desenharItens();
+            });
+            corpo.appendChild(
+              el("tr", {}, [
+                el("td", { textContent: it.rotulo }),
+                el("td", { textContent: (it.ncm || it.nbs) + " · " + it.cClassTrib }),
+                el("td", { textContent: Reforma.moeda(it.valor.toFixed(2)) }),
+                el("td", {}, [rm]),
+              ]),
+            );
+          });
+          $("vazio").classList.toggle("oculto", itens.length > 0);
+          $("btnCalc").disabled = itens.length === 0;
+        }
+        $("btnAdd").addEventListener("click", function () {
+          mostrarErro($("msgBusca"), "");
+          if (!escolhido) return;
+          var valor = parseFloat($("valor").value);
+          var sel = $("cls").value;
+          try {
+            var cls = sel === "" ? undefined : escolhido._lista[Number(sel)];
+            itens.push(
+              Reforma.itemDeCandidato(escolhido, {
+                valor: valor,
+                rotulo: $("busca").value.trim() || escolhido.descricao,
+                classificacao: cls,
+              }),
+            );
+            desenharItens();
+          } catch (e) {
+            mostrarErro(
+              $("msgBusca"),
+              e.tipo === "ambiguo"
+                ? "Este produto tem mais de uma classificação possível. Escolha uma na lista acima do valor."
+                : e.message,
+            );
+          }
+        });
+        desenharItens();
+
+        // ---- Cálculo ---------------------------------------------------------------------------------
+        function passo(item, etapa) {
+          for (var i = 0; i < item.memoria.length; i++) if (item.memoria[i].etapa === etapa) return item.memoria[i];
+          return null;
+        }
+        function celula(p) {
+          return el("td", { textContent: p ? (p.unidade === "%" ? Reforma.percentual(p.valor) : Reforma.moeda(p.valor)) : "-" });
+        }
+
+        $("btnCalc").addEventListener("click", function () {
+          mostrarErro($("msgCalc"), "");
+          $("btnCalc").disabled = true;
+          var ano = Number(($("data").value || "").slice(0, 4));
+          var op = {
+            itens: itens,
+            data: $("data").value,
+            local: { municipio: $("cidade").value.trim(), uf: $("uf").value.trim().toUpperCase() },
+          };
+          if (ano >= 2027) op.cenario = $("cenario").value;
+          Reforma.calcular(op)
+            .then(function (r) {
+              if (!r.ok) {
+                var msg = r.erro.mensagem;
+                if (r.erro.codigos && r.erro.codigos.length) msg += " (" + r.erro.codigos.join(", ") + ")";
+                mostrarErro($("msgCalc"), msg);
+                return;
+              }
+              desenharResultado(r.dados);
+            })
+            .catch(function (e) {
+              mostrarErro($("msgCalc"), e.message);
+            })
+            .then(function () {
+              $("btnCalc").disabled = itens.length === 0;
+            });
+        });
+
+        function desenharResultado(d) {
+          $("secResultado").classList.remove("oculto");
+          limpar($("resumo"));
+          $("resumo").appendChild(
+            el("span", {
+              textContent: d.local.nome + "/" + d.local.uf + " · " + d.data + " · alíquotas: " + d.cenario.descricao,
+            }),
+          );
+          var corpo = $("tabRes").querySelector("tbody");
+          var pe = $("tabRes").querySelector("tfoot");
+          limpar(corpo);
+          limpar(pe);
+          d.itens.forEach(function (it) {
+            var nome = el("td", {}, [
+              it.rotulo,
+              el("span", {
+                className: "tec",
+                textContent: "CST " + it.cst + " · cClassTrib " + it.cClassTrib + " · " + it.estado,
+              }),
+            ]);
+            var linha = el("tr", {}, [
+              nome,
+              celula(passo(it, "base")),
+              celula(passo(it, "reducao")),
+              celula(passo(it, "cbs")),
+              celula(passo(it, "ibs_uf")),
+              celula(passo(it, "ibs_mun")),
+              celula(passo(it, "is")),
+              el("td", { textContent: it.totalTributos ? Reforma.moeda(it.totalTributos) : "-" }),
+            ]);
+            corpo.appendChild(linha);
+            if (it.erros && it.erros.length) {
+              corpo.appendChild(
+                el("tr", {}, [
+                  el("td", {
+                    colSpan: 8,
+                    className: "erro",
+                    textContent: it.erros
+                      .map(function (x) {
+                        return x.codigo + ": " + x.detalhe;
+                      })
+                      .join(" | "),
+                  }),
+                ]),
+              );
+            }
+          });
+          var t = d.totais;
+          pe.appendChild(
+            el("tr", {}, [
+              el("td", { textContent: "Totais" }),
+              el("td", { textContent: Reforma.moeda(t.vBC) }),
+              el("td", { textContent: "" }),
+              el("td", { textContent: Reforma.moeda(t.vCBS) }),
+              el("td", { textContent: Reforma.moeda(t.vIBSUF) }),
+              el("td", { textContent: Reforma.moeda(t.vIBSMun) }),
+              el("td", { textContent: Reforma.moeda(t.vIS) }),
+              el("td", { textContent: Reforma.moeda(t.vTributos) }),
+            ]),
+          );
+          limpar($("avisos"));
+          if (t.cargaSobreBase)
+            $("avisos").appendChild(el("p", { textContent: "Carga sobre a base: " + Reforma.percentual(t.cargaSobreBase) }));
+          (d.avisos || []).forEach(function (a) {
+            $("avisos").appendChild(el("div", { className: "aviso", textContent: a }));
+          });
+          $("avisos").appendChild(el("div", { className: "aviso", textContent: d.aviso || Reforma.AVISO }));
+        }
+      })();
+    </script>
+  </body>
+</html>

@@ -94,6 +94,10 @@ pnpm --filter @reforma/search avaliar      # mede a busca no gabarito
 RTC_ENGINE_URL=http://localhost:8080/api pnpm --filter @reforma/eval oficiais   # casos oficiais da Receita
 ```
 
+## Usar nos seus HTML
+
+Quer que uma ferramenta HTML sua busque o NCM de um produto e calcule CBS, IBS e IS com o motor oficial? Com o programa ligado, inclua o `reforma-client.js` e chame `Reforma.buscarProduto()` e `Reforma.calcular()`. Passo a passo e exemplo pronto em [`docs/USO-EM-HTML.md`](docs/USO-EM-HTML.md).
+
 ## Estrutura do repositório
 
 ```

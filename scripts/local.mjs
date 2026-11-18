@@ -289,7 +289,14 @@ else {
 }
 
 // 7) Site -------------------------------------------------------------------------
-const env = { ...process.env, RTC_ENGINE_URL: urlMotor, REFORMA_RAIZ: RAIZ, NEXT_TELEMETRY_DISABLED: "1" };
+// REFORMA_CORS_ORIGEM libera as rotas /api/* para HTMLs locais (ver docs/USO-EM-HTML.md); só vale na sua máquina.
+const env = {
+  REFORMA_CORS_ORIGEM: "*",
+  ...process.env,
+  RTC_ENGINE_URL: urlMotor,
+  REFORMA_RAIZ: RAIZ,
+  NEXT_TELEMETRY_DISABLED: "1",
+};
 if (SIMULADO) env.PERGUNTE_MODELO_SIMULADO = "1";
 if (PRODUCAO && (arg("--reconstruir") || !existsSync(join(RAIZ, "apps/web/.next/BUILD_ID")))) {
   info("Compilando o site (só na primeira vez, cerca de 1 minuto)…");
