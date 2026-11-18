@@ -19,6 +19,8 @@ import { ModalConfigIA, type ConfigIA } from "./ConfigIA";
 import { dataBR, em2027, hojeISO, porcento, reais, totalItem, cargaItem, type Resultado } from "./formatar";
 import { EXEMPLOS, Inicio, lerCidadeSalva } from "./Inicio";
 import { CartaoResultado, Painel, RaioX, type Variante } from "./Resultado";
+import { Estante } from "../estante/Estante";
+import type { DadosLivros } from "../estante/livros";
 
 interface Verificacao {
   ok: boolean;
@@ -51,7 +53,7 @@ const PASSO_AMIGAVEL: Record<string, string> = {
   explicar_erro: "Expliquei o erro da calculadora",
 };
 
-export function App() {
+export function App({ livros }: { livros: DadosLivros | null }) {
   const [config, setConfig] = useState<ConfigIA>();
   const configRef = useRef<ConfigIA | undefined>(undefined);
   configRef.current = config;
@@ -295,7 +297,9 @@ export function App() {
           exemplos={exemplos}
           cidadeExemplos={cidadeEx}
           ocupado={ocupado}
-        />
+        >
+          <Estante dados={livros} />
+        </Inicio>
         <div className="config-ia">
           <button type="button" className="link-btn" onClick={() => setModal({})}>
             <IconeAjustes /> Perguntas livres usam IA: {ia}

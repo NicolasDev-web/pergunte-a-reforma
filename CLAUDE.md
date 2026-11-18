@@ -63,6 +63,11 @@ pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + 
   - Papel texturizado na página toda; formas (`FundoFormas`, no layout) fixas nas margens laterais, nunca atrás de conteúdo.
   - Newsreader + IBM Plex via `next/font`; toda cor por token em `app/globals.css`.
   - Não parecer site do governo: nada de barra gov.br, brasão, Rawline ou #1351B4/#071D41.
+- Estante (`src/componentes/estante/`): introdução na home, abaixo da busca.
+  - Livro abre na mesa (`/?livro=id`); `papel.ts` tem a geometria testada.
+  - Livros com dados: `src/lib/livros.ts` (artigos procurados pelo número; a 1ª fundamentação às vezes é de outro assunto).
+- Caixa (`src/componentes/caixa/`): só no Raio-X; o papel vem de `notaDaSimulacao()` (formatar.ts).
+- `useDialogo` (src/componentes/dialogo.ts): foco preso, Esc e retorno do foco, para todo modal.
 
 ## Achados nos dados oficiais
 - `NBS_APLICAVEL.NBSA_ANXO_ID` aponta para itens de anexo deslocados (ensino fundamental → "Ensino Infantil"). O cClassTrib está certo. O ETL ignora o texto do item para NBS.

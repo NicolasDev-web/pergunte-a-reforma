@@ -1,0 +1,759 @@
+/*
+ * Estante e livro. Materiais (papel do miolo, madeira) ficam como tokens locais; os tecidos e as
+ * lâminas de cada livro vêm de livros.tsx. Nenhum livro usa âmbar: âmbar é só para "simulação".
+ */
+.estante,
+.mesa {
+  --miolo: var(--papel-livro);
+  --miolo-tinta: #3a342c;
+  --miolo-tinta-forte: #221e19;
+  --miolo-apagado: var(--tinta-2); /* 5,9:1 sobre o miolo (o #7d7466 dava 3,9) */
+  --orelha: #e3d9c5;
+  --madeira-topo-1: #a07b55;
+  --madeira-topo-2: #8a6644;
+  --madeira-frente-1: #6d4f33;
+  --madeira-frente-2: #553d27;
+  --lado-folhas: #e3d9c2;
+  --mesa-fundo: var(--noite);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ───────── Página de papel ───────── */
+.folha {
+  background: var(--miolo);
+  color: var(--miolo-tinta);
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  padding: 28px 32px 16px;
+}
+@media (min-width: 768px) {
+  .folha {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+}
+.folhaEsq {
+  border-radius: 3px 0 0 3px;
+  box-shadow: inset -28px 0 28px -24px rgb(0 0 0 / 0.28);
+}
+.folhaDir {
+  border-radius: 0 3px 3px 0;
+  box-shadow: inset 28px 0 28px -24px rgb(0 0 0 / 0.28);
+}
+.cabecaPagina,
+.folio,
+.legenda {
+  font-family: var(--fonte-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--miolo-apagado);
+}
+.cabecaPagina {
+  height: 16px;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.folio {
+  height: 16px;
+  margin: 12px 0 0;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+.conteudoPagina {
+  position: relative;
+  margin-top: 20px;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+/* O texto corre em colunas do tamanho de uma página; cada página mostra uma coluna. */
+.texto {
+  height: 100%;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 28px;
+  column-count: 1;
+  column-fill: auto;
+}
+.guarda {
+  height: 100%;
+}
+.guardaEsq {
+  border-radius: 3px 0 0 3px;
+  box-shadow: inset -28px 0 28px -24px rgb(0 0 0 / 0.35);
+}
+.guardaDir {
+  border-radius: 0 3px 3px 0;
+  box-shadow: inset 28px 0 28px -24px rgb(0 0 0 / 0.35);
+}
+
+/* ───────── O livro ───────── */
+.livro {
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  height: min(640px, calc(100svh - 160px));
+  width: 100%;
+  touch-action: pan-y;
+  user-select: none;
+  will-change: translate;
+  animation: subir 650ms var(--ease) backwards;
+}
+@media (min-width: 768px) {
+  .livro {
+    height: calc(min(720px, 100svh - 200px) + 20px);
+    width: calc(min(720px, 100svh - 200px) * 1.4 + 20px);
+    max-width: 100%;
+    translate: -25% 0;
+  }
+}
+.metade {
+  height: 100%;
+  min-width: 0;
+  flex: 1;
+  padding: 10px;
+}
+.metadeEsq {
+  visibility: hidden;
+  border-radius: 6px 0 0 6px;
+  padding-right: 0;
+}
+.metadeDirLarga {
+  border-radius: 0 6px 6px 0;
+  padding-left: 0;
+}
+.metadeDirEstreita {
+  border-radius: 6px;
+}
+.relativo {
+  position: relative;
+  height: 100%;
+}
+.sombraCapaEsq,
+.sombraCapaDir {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  opacity: 0;
+}
+.sombraCapaEsq {
+  right: 0;
+  background: linear-gradient(270deg, rgb(0 0 0 / 0.28), rgb(0 0 0 / 0.12) 60%, rgb(0 0 0 / 0));
+}
+.sombraCapaDir {
+  left: 0;
+  background: linear-gradient(90deg, rgb(0 0 0 / 0.28), rgb(0 0 0 / 0.12) 60%, rgb(0 0 0 / 0));
+}
+.medida {
+  pointer-events: none;
+  visibility: hidden;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  bottom: 10px;
+  width: calc(100% - 20px);
+}
+@media (min-width: 768px) {
+  .medida {
+    width: calc(50% - 10px);
+  }
+}
+.folhaVirando {
+  pointer-events: none;
+  position: absolute;
+  top: 10px;
+}
+.frente {
+  position: absolute;
+  top: 0;
+  will-change: clip-path;
+}
+.cheio {
+  position: absolute;
+  inset: 0;
+}
+.projecao {
+  position: absolute;
+  top: 0;
+}
+.verso {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  will-change: transform;
+}
+
+/* Orelhas nas pontas: dizem que a página vira. */
+.orelha {
+  position: absolute;
+  bottom: 10px;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: none;
+}
+.orelhaDir {
+  right: 10px;
+}
+.orelhaEsq {
+  left: 10px;
+}
+.dobra {
+  position: absolute;
+  bottom: 0;
+  width: 24px;
+  height: 24px;
+  background: var(--orelha);
+  box-shadow: 0 0 4px rgb(0 0 0 / 0.2);
+  transition:
+    width 300ms var(--ease),
+    height 300ms var(--ease);
+}
+.orelha:hover .dobra {
+  width: 40px;
+  height: 40px;
+}
+.dobraDir {
+  right: 0;
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+}
+.dobraEsq {
+  left: 0;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+/* Capas: tábuas rígidas com dobradiça na lombada. */
+.contracapa,
+.capa {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform-origin: left center;
+}
+.contracapa {
+  width: 50%;
+  opacity: 0;
+}
+.capa {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .capa {
+    width: 50%;
+  }
+}
+.face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+.faceMioloDir {
+  position: absolute;
+  inset: 0;
+  border-radius: 0 6px 6px 0;
+  padding: 10px 10px 10px 0;
+}
+.faceMioloEsq {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px 0 0 6px;
+  padding: 10px 0 10px 10px;
+}
+.escuroDir,
+.escuroEsq,
+.escuro {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+}
+.escuroDir {
+  border-radius: 0 6px 6px 0;
+}
+.escuroEsq {
+  border-radius: 6px 0 0 6px;
+}
+.capaFora,
+.contracapaFora {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  backface-visibility: hidden;
+}
+.capaFora {
+  gap: 24px;
+  border-radius: 0 6px 6px 0;
+  padding: 0 48px;
+}
+.contracapaFora {
+  gap: 20px;
+  border-radius: 6px 0 0 6px;
+  padding: 0 56px;
+}
+.filete {
+  height: 1px;
+  width: 96px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.fileteCurto {
+  height: 1px;
+  width: 64px;
+  background: currentColor;
+  opacity: 0.6;
+}
+.tituloCapa {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 36px;
+  line-height: 1.15;
+  font-weight: 500;
+  text-wrap: balance;
+}
+.resumoCapa {
+  margin: 0;
+  max-width: 28ch;
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 32px;
+  text-wrap: balance;
+}
+.rodapeCapa {
+  margin: 0;
+  font-family: var(--fonte-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.borda {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  height: 100%;
+  transform-origin: left;
+  border-radius: 1px;
+}
+
+/* ───────── A estante ───────── */
+.estante {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 0 0;
+}
+.fileira {
+  display: flex;
+  height: 380px;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  padding: 0 24px;
+  filter: drop-shadow(0 6px 6px rgb(0 0 0 / 0.25));
+}
+.lombada {
+  display: flex;
+  flex-shrink: 0;
+  transform-origin: bottom;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  border-radius: 2px;
+  padding: 12px 0;
+  font: inherit;
+  transition:
+    translate 500ms var(--ease),
+    rotate 500ms var(--ease);
+  outline: none;
+}
+.lombada:focus-visible {
+  box-shadow:
+    0 0 0 2px var(--papel),
+    0 0 0 5px var(--ocre);
+}
+.puxada {
+  translate: 0 -20px;
+}
+.assentando {
+  animation: assentar 420ms;
+}
+.faixas {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 8px;
+  opacity: 0.6;
+}
+.faixas > span {
+  height: 1px;
+  background: currentColor;
+}
+.tituloLombada {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: 220px;
+  rotate: 180deg;
+  text-align: left;
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 18px;
+  writing-mode: vertical-rl;
+}
+.pe {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.rotuloLombada {
+  rotate: 180deg;
+  font-family: var(--fonte-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  writing-mode: vertical-rl;
+}
+.prateleiraTopo {
+  height: 8px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(var(--madeira-topo-1), var(--madeira-topo-2));
+}
+.prateleiraFrente {
+  height: 12px;
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(var(--madeira-frente-1), var(--madeira-frente-2));
+  box-shadow: 0 14px 24px -12px rgb(0 0 0 / 0.5);
+}
+.dica {
+  margin: 14px 0 0;
+  text-align: center;
+  font-size: 14px;
+  color: var(--tinta-2);
+}
+
+/* Livro voando de volta ao vão. */
+.voando {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 70;
+  will-change: offset-distance;
+}
+.solido {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.voandoContracapa {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  border-radius: 6px 0 0 6px;
+  padding: 0 56px;
+  text-align: center;
+}
+.blocoFolhas {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  height: 100%;
+  transform-origin: left;
+  border-radius: 0 2px 2px 0;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 0.24), rgb(0 0 0 / 0) 45%, rgb(0 0 0 / 0.14)),
+    repeating-linear-gradient(90deg, var(--lado-folhas) 0 1px, var(--miolo) 1px 3px);
+}
+.voandoLombada {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  height: 100%;
+  transform-origin: left;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 2px 0 0 2px;
+  padding: 12px 0;
+}
+.voandoCapa {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  border-radius: 0 6px 6px 0;
+  padding: 0 48px;
+  text-align: center;
+  box-shadow: 0 24px 40px -16px rgb(0 0 0 / 0.45);
+}
+
+/* ───────── A mesa (o livro aberto em tela cheia) ───────── */
+.mesa {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  background: var(--mesa-fundo);
+  color: #f3efe6;
+  overflow-x: clip;
+  overflow-y: auto;
+}
+.mesaBarra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+}
+.mesaTitulo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.mesaTitulo strong {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+}
+.mesaTitulo span {
+  font-size: 13px;
+  color: rgb(243 239 230 / 0.7);
+}
+.mesaAcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.mesaBotao {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--raio-p);
+  border: 1px solid rgb(255 255 255 / 0.25);
+  background: transparent;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+.mesaBotao:hover {
+  border-color: rgb(255 255 255 / 0.6);
+  color: #fff;
+}
+.mesaBotaoPri {
+  background: #f3efe6;
+  border-color: #f3efe6;
+  color: var(--tinta);
+}
+.mesaBotaoPri:hover {
+  background: #fff;
+  color: var(--tinta);
+}
+.mesaPalco {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px 40px;
+}
+.leituraCorrida {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--miolo);
+  color: var(--miolo-tinta);
+  border-radius: 6px;
+  padding: 40px clamp(20px, 5vw, 56px) 48px;
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.65;
+}
+.leituraCorrida h2 {
+  font-size: 30px;
+  margin-bottom: 20px;
+  color: var(--miolo-tinta-forte);
+}
+.fimLivro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  height: 100%;
+  text-align: center;
+}
+.fimLivro p {
+  margin: 0;
+}
+.fimAcoes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--fonte);
+  font-size: 14px;
+}
+.fimAcoes a,
+.fimAcoes button {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: var(--raio-p);
+  border: 1px solid var(--miolo-apagado);
+  background: transparent;
+  color: var(--miolo-tinta-forte);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font: inherit;
+}
+.rosto {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+.rosto p {
+  margin: 0;
+}
+.rostoTitulo {
+  font-family: var(--serif);
+  font-size: 30px;
+  line-height: 1.2;
+  text-wrap: balance;
+  color: var(--miolo-tinta-forte);
+}
+.rostoFilete {
+  height: 1px;
+  width: 48px;
+  background: rgb(34 30 25 / 0.3);
+}
+
+/* Tipografia do miolo (usada pelos livros) */
+.p {
+  margin: 16px 0 0;
+}
+.p:first-child {
+  margin-top: 0;
+}
+.capitular::first-letter {
+  float: left;
+  margin: 4px 8px 0 0;
+  font-size: 56px;
+  line-height: 0.8;
+  color: var(--miolo-tinta-forte);
+}
+.h {
+  margin: 32px 0 0;
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 28px;
+  font-weight: 600;
+  color: var(--miolo-tinta-forte);
+  break-after: avoid;
+}
+.lei {
+  margin: 12px 0 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--azul);
+  font-style: italic;
+}
+.fonte {
+  margin: 24px 0 0;
+  font-family: var(--fonte-mono);
+  font-size: 11px;
+  line-height: 18px;
+  letter-spacing: 0.04em;
+  color: var(--miolo-apagado);
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: perspective(1600px) translateY(90px) rotateX(18deg) scale(0.94);
+  }
+}
+/* O livro cai no vão e quica três vezes, cada vez com um terço da anterior: é o que dá a sensação de peso. */
+@keyframes assentar {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    animation-timing-function: cubic-bezier(0, 0.6, 0.4, 1);
+  }
+  28% {
+    transform: translateY(-13px) rotate(1.3deg);
+    animation-timing-function: cubic-bezier(0.6, 0, 1, 0.4);
+  }
+  56% {
+    transform: translateY(0) rotate(0deg);
+    animation-timing-function: cubic-bezier(0, 0.6, 0.4, 1);
+  }
+  74% {
+    transform: translateY(-5px) rotate(0.5deg);
+    animation-timing-function: cubic-bezier(0.6, 0, 1, 0.4);
+  }
+  88% {
+    transform: translateY(0) rotate(0deg);
+    animation-timing-function: cubic-bezier(0, 0.6, 0.4, 1);
+  }
+  95% {
+    transform: translateY(-1.5px) rotate(0.15deg);
+    animation-timing-function: cubic-bezier(0.6, 0, 1, 0.4);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .livro,
+  .assentando {
+    animation: none;
+  }
+}
+@media (max-width: 520px) {
+  .fileira {
+    height: 340px;
+    padding: 0 8px;
+    gap: 2px;
+  }
+}
