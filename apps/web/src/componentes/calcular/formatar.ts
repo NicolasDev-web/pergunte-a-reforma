@@ -149,3 +149,26 @@ export function notaDaSimulacao(r: Resultado): NotaSimulacao {
     versaoMotor: r.versaoMotor,
   };
 }
+
+/**
+ * O que o "Calcular" (ou Enter) da busca faz. A IA só entra quando a pessoa escolhe "Perguntar à IA"
+ * explicitamente (auditoria UX-001: antes, Enter sem sugestão escolhida ia para a IA e pedia chave).
+ *  - destaque numa sugestão → escolhe essa;
+ *  - destaque na linha "Perguntar à IA" (índice = total de sugestões) → IA;
+ *  - sem destaque e com sugestões → a primeira (a mais provável);
+ *  - sem sugestões → avisa que não achou, sem chamar a IA.
+ */
+export type DecisaoBusca = { tipo: "vazio" } | { tipo: "escolher"; indice: number } | { tipo: "ia" } | { tipo: "nao-achou" };
+export function decidirBusca(texto: string, totalSugestoes: number, destaque: number): DecisaoBusca {
+  if (!texto.trim()) return { tipo: "vazio" };
+  if (destaque >= 0 && destaque < totalSugestoes) return { tipo: "escolher", indice: destaque };
+  if (destaque >= 0 && destaque === totalSugestoes) return { tipo: "ia" };
+  if (totalSugestoes > 0) return { tipo: "escolher", indice: 0 };
+  return { tipo: "nao-achou" };
+}
+
+/** "Arroz descascado › Parboilizado": os dois níveis acima do item, para "Parboilizado" ou "De aviação" fazerem sentido (UX-003). */
+export function contextoProduto(hierarquia: string[] | undefined, descricao: string): string {
+  const niveis = (hierarquia ?? []).filter((h) => h && h !== descricao).slice(-2);
+  return niveis.map((h) => (h.length > 48 ? `${h.slice(0, 46).trimEnd()}…` : h.replace(/:$/, ""))).join(" › ");
+}

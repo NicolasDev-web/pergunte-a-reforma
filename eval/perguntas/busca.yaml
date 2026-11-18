@@ -51,3 +51,12 @@
 - { q: "corrida de táxi", aceita: ["104011"], tipo: servico }
 - { q: "conserto do carro na oficina", aceita: ["1200131"], tipo: servico }
 - { q: "diária de hotel", aceita: ["103031"], tipo: servico }
+# Contas da casa (auditoria de UX 18/11/2026: o exemplo do próprio campo, "conta de luz", falhava)
+- { q: "conta de luz", aceita: ["2716"] }
+- { q: "energia elétrica", aceita: ["2716"] }
+- { q: "conta de água", aceita: ["108021"] }
+- { q: "internet", aceita: ["117022"] }
+- { q: "plano de celular", aceita: ["117013"] }
+- { q: "gás de cozinha", aceita: ["27111910"] }
+- { q: "gasolina comum", aceita: ["27101259"] }
+

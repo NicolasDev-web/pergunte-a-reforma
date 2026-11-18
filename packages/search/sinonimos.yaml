@@ -91,7 +91,10 @@
 - { codigos: ["8703"], termos: [carro, automóvel, carro de passeio, suv] }
 - { codigos: ["8711"], termos: [moto, motocicleta] }
 - { codigos: ["8712"], termos: [bicicleta] }
-- { codigos: ["271012"], termos: [gasolina] }
+# Gasolina comum (automotiva) é a "Outras" de 271012; a 1ª da posição é a de aviação, que confundia na tela.
+- { codigos: ["27101259"], termos: [gasolina, gasolina comum, gasolina aditivada, combustível do carro, abastecer o carro] }
+- { codigos: ["27101921"], termos: [diesel, óleo diesel] }
+- { codigos: ["27111910"], termos: [gás de cozinha, botijão de gás, gás de botijão, glp] }
 - { codigos: ["271019"], termos: [diesel, óleo diesel] }
 - { codigos: ["220710", "220720"], termos: [etanol, álcool combustível] }
 - { codigos: ["271119"], termos: [botijão de gás, gás de cozinha, glp] }
@@ -126,3 +129,11 @@
 - { codigos: ["1170332"], termos: [streaming de vídeo, netflix, assinatura de filmes] }
 - { codigos: ["1170322"], termos: [streaming de música, spotify] }
 - { codigos: ["113022"], termos: [contador, contabilidade, serviço de contabilidade] }
+
+# --- Contas da casa (as perguntas mais comuns de quem não é contador) ---
+- { codigos: ["2716"], termos: [conta de luz, luz, energia, energia elétrica, eletricidade, conta de energia] }
+- { codigos: ["108021"], termos: [conta de água, água encanada, água da companhia, abastecimento de água] }
+- { codigos: ["124021"], termos: [esgoto, taxa de esgoto, conta de esgoto] }
+- { codigos: ["117022"], termos: [internet, internet de casa, banda larga, wi-fi, fibra óptica, plano de internet] }
+- { codigos: ["117013"], termos: [plano de celular, conta de celular, crédito de celular, recarga de celular, telefone celular plano] }
+- { codigos: ["1170332", "1170322"], termos: [streaming, assinatura de streaming, netflix, spotify, serviço de streaming] }

@@ -1,8 +1,9 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { BuscarProdutoOutput, CalcularTributosInput, MunicipioResolvido } from "@reforma/core/contratos";
 import { IconeBusca } from "../Icones";
-import { hojeISO, lerValor, reais, totalItem, motivo, type Resultado } from "./formatar";
+import { contextoProduto, decidirBusca, hojeISO, lerValor, reais, totalItem, motivo, type Resultado } from "./formatar";
 
 type Candidato = BuscarProdutoOutput["candidatos"][number];
 type Classe = Candidato["classificacaoProvavel"];
@@ -11,8 +12,8 @@ const ATALHOS = [
   { nome: "Mercado", termo: "arroz" },
   { nome: "Escola", termo: "pré-escola" },
   { nome: "Saúde", termo: "consulta médica" },
-  { nome: "Contas da casa", termo: "energia elétrica" },
-  { nome: "Carro", termo: "gasolina" },
+  { nome: "Contas da casa", termo: "conta de luz" },
+  { nome: "Carro", termo: "gasolina comum" },
   { nome: "Restaurante", termo: "refeição" },
 ];
 
@@ -49,6 +50,9 @@ export function Inicio(props: {
   const [destaque, setDestaque] = useState(-1);
   const [escolhido, setEscolhido] = useState<{ c: Candidato; termo: string }>();
   const ultimaBusca = useRef(0);
+  /** Para qual texto as sugestões atuais valem (Enter antes do debounce precisa buscar na hora). */
+  const buscadoPara = useRef("");
+  const [naoAchou, setNaoAchou] = useState("");
 
   useEffect(() => {
     const t = texto.trim();
@@ -61,7 +65,9 @@ export function Inicio(props: {
       const r = await fetch(`/api/busca?q=${encodeURIComponent(t)}`)
         .then((x) => x.json())
         .catch(() => null);
-      if (id === ultimaBusca.current) setSugestoes((r?.candidatos as Candidato[] | undefined)?.slice(0, 5) ?? []);
+      if (id !== ultimaBusca.current) return;
+      setSugestoes((r?.candidatos as Candidato[] | undefined)?.slice(0, 5) ?? []);
+      buscadoPara.current = t;
     }, 180);
     return () => clearTimeout(h);
   }, [texto, escolhido]);
@@ -72,10 +78,27 @@ export function Inicio(props: {
     setDestaque(-1);
   };
 
-  const enviar = (e: React.FormEvent) => {
+  // "Calcular" sempre calcula: escolhe a sugestão (a destacada ou a primeira). A IA só pela opção explícita.
+  const enviar = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (destaque >= 0 && sugestoes[destaque]) return escolher(sugestoes[destaque]!);
-    if (texto.trim()) props.onPerguntar(texto.trim());
+    const t = texto.trim();
+    let lista = sugestoes;
+    if (t && buscadoPara.current !== t) {
+      ++ultimaBusca.current;
+      const r = await fetch(`/api/busca?q=${encodeURIComponent(t)}`)
+        .then((x) => x.json())
+        .catch(() => null);
+      lista = (r?.candidatos as Candidato[] | undefined)?.slice(0, 5) ?? [];
+      setSugestoes(lista);
+      buscadoPara.current = t;
+    }
+    const d = decidirBusca(t, lista.length, destaque);
+    if (d.tipo === "escolher") return escolher(lista[d.indice]!);
+    if (d.tipo === "ia") return props.onPerguntar(t);
+    if (d.tipo === "nao-achou") {
+      setNaoAchou(t);
+      setAberto(false);
+    }
   };
 
   const teclas = (e: React.KeyboardEvent) => {
@@ -116,7 +139,7 @@ export function Inicio(props: {
                   id="pergunta"
                   value={texto}
                   autoComplete="off"
-                  placeholder="Ex.: mensalidade da escola, arroz, conta de luz…"
+                  placeholder="Ex.: conta de luz, mensalidade da escola, arroz…"
                   role="combobox"
                   aria-autocomplete="list"
                   aria-expanded={listaAberta}
@@ -126,6 +149,7 @@ export function Inicio(props: {
                     setTexto(e.target.value);
                     setAberto(true);
                     setDestaque(-1);
+                    setNaoAchou("");
                   }}
                   onKeyDown={teclas}
                   onFocus={() => setAberto(true)}
@@ -155,7 +179,12 @@ export function Inicio(props: {
                       onClick={() => escolher(s)}
                       title={s.descricao}
                     >
-                      <span className="sugestao-texto">{s.descricao}</span>
+                      <span className="sugestao-corpo">
+                        {contextoProduto(s.hierarquia, s.descricao) && (
+                          <span className="sugestao-contexto">{contextoProduto(s.hierarquia, s.descricao)} ›</span>
+                        )}
+                        <span className="sugestao-texto">{s.descricao}</span>
+                      </span>
                       <small>{s.nomenclatura === "NBS" ? "Serviço" : "Produto"}</small>
                     </button>
                   ))}
@@ -171,6 +200,19 @@ export function Inicio(props: {
                   >
                     Perguntar à IA: “{texto.trim()}”
                   </button>
+                </div>
+              )}
+              {naoAchou && naoAchou === texto.trim() && (
+                <div className="sem-resultado" role="status">
+                  <p>Não achamos “{naoAchou}” na tabela oficial. Tente outro nome, como “energia elétrica” ou “pré-escola”.</p>
+                  <div className="botoes">
+                    <button type="button" className="chip" onClick={() => props.onPerguntar(naoAchou)}>
+                      Perguntar à IA
+                    </button>
+                    <Link className="chip" href="/conectar">
+                      Usar no seu chat
+                    </Link>
+                  </div>
                 </div>
               )}
             </form>
@@ -380,7 +422,10 @@ function Ficha(props: {
         <div className="ficha-produto-texto">
           <span className="sobretitulo">{c.nomenclatura === "NBS" ? "Serviço" : "Produto"} encontrado na tabela oficial</span>
           <strong>{rotulo}</strong>
-          <span>{c.descricao}</span>
+          <span>
+            {contextoProduto(c.hierarquia, c.descricao) ? `${contextoProduto(c.hierarquia, c.descricao)} › ` : ""}
+            {c.descricao}
+          </span>
         </div>
         <button type="button" className="link-btn" onClick={props.onVoltar}>
           Trocar
