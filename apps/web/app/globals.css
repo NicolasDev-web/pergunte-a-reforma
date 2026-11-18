@@ -1706,8 +1706,10 @@ body,
 .pagina-resposta {
   background: transparent;
 }
+/* Cabeçalho em areia (gold-10 do DSGov): tom terroso, texto 10,9:1, secundário e links 5,3:1. */
 .cab {
-  background: var(--papel-forma);
+  background: var(--areia-2);
+  border-bottom-color: color-mix(in srgb, var(--areia-2), var(--tinta) 14%);
 }
 /*
  * As formas ficam presas às bordas da janela e acompanham a rolagem. Ocupam só a margem lateral,
