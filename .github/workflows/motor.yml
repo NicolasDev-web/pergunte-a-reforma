@@ -5,7 +5,7 @@ on:
     paths: ["engine/**", ".github/workflows/motor.yml"]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   packages: write
   issues: write
 jobs:
@@ -38,6 +38,20 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
           for t in "$REF" latest; do docker tag rtc-engine:ci "ghcr.io/$OWNER/rtc-engine:$t"; docker push "ghcr.io/$OWNER/rtc-engine:$t"; done
           echo "IMAGEM=ghcr.io/$OWNER/rtc-engine:$REF" >> "$GITHUB_ENV"
+      - name: Publica o JAR e o banco numa release (para rodar sem Docker em dev)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          REF=$(grep -m1 '^ARG RTC_REF=' engine/Dockerfile | cut -d= -f2)
+          TAG="motor-$REF"
+          mkdir -p /tmp/rel
+          docker cp rtc:/app/app.jar "/tmp/rel/api-regime-geral-$REF.jar"
+          docker cp rtc:/app/calculadora/db/calculadora-pro.db "/tmp/rel/calculadora-pro-$REF.db"
+          (cd /tmp/rel && sha256sum * > SHA256SUMS)
+          gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --title "Motor oficial $REF (build sem alterações)" \
+            --notes "JAR e banco SQLite do motor oficial da Receita Federal ([calculadora-rtc-regime-regular](https://github.com/ReceitaFederal/calculadora-rtc-regime-regular), tag $REF, licença MIT), compilados sem alterações pelo workflow \`motor\`. Uso: \`java -Dspring.profiles.active=offline -jar api-regime-geral-$REF.jar\` com o banco em \`calculadora/db/calculadora-pro.db\`. Veja \`engine/README.md\`."
+          gh release upload "$TAG" /tmp/rel/* --clobber
       - name: Relatório na issue #2
         if: always()
         env:
