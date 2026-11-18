@@ -62,8 +62,44 @@ export function AvisoAno({ r }: { r: Resultado }) {
   return null;
 }
 
+export type Variante = Resultado | "carregando" | "erro";
+
+/**
+ * Ao lado do valor de 2026 (ano-teste, quase sempre perto de zero), o mesmo cálculo em 2027 com as alíquotas
+ * de exemplo da Receita (auditoria UX-005). Números só do motor; âmbar porque é simulação.
+ */
+function LinhaEm2027({ depois, i }: { depois?: Variante; i?: number }) {
+  if (!depois || depois === "erro") return null;
+  if (depois === "carregando")
+    return (
+      <p className="em-2027" aria-live="polite">
+        <span className="girando" /> Calculando 2027…
+      </p>
+    );
+  const valor = i === undefined ? depois.totais.vTributos : totalItem(depois.itens[i] ?? depois.itens[0]!);
+  const carga = i === undefined ? depois.totais.cargaSobreBase : cargaItem(depois.itens[i] ?? depois.itens[0]!);
+  return (
+    <p className="em-2027">
+      <span className="em-2027-rotulo">Em 2027 · simulação com as alíquotas de exemplo da Receita</span>
+      <span>
+        <strong className="num">{reais(valor)}</strong> de tributos{carga ? ` · ${porcento(carga)} do valor` : ""}
+      </span>
+    </p>
+  );
+}
+
 /** Cartão de um item: manchete no formato da nota fiscal, composição, motivo e lei. */
-export function CartaoResultado({ r, i = 0, onLei }: { r: Resultado; i?: number; onLei?: () => void }) {
+export function CartaoResultado({
+  r,
+  i = 0,
+  onLei,
+  depois,
+}: {
+  r: Resultado;
+  i?: number;
+  onLei?: () => void;
+  depois?: Variante;
+}) {
   const [glossario, setGlossario] = useState(false);
   const item = r.itens[i]!;
   if (item.erros.length) return <ErroItem r={r} i={i} />;
@@ -92,6 +128,7 @@ export function CartaoResultado({ r, i = 0, onLei }: { r: Resultado; i?: number;
           ) : null}
         </span>
       </div>
+      <LinhaEm2027 depois={depois} i={i} />
       <AvisoAno r={r} />
       {linhas.length > 0 && (
         <div className="composicao">
@@ -143,7 +180,7 @@ export function ErroItem({ r, i }: { r: Resultado; i: number }) {
 }
 
 /** Vários itens: onde está o peso dos tributos. */
-export function RaioX({ r, onEscolher }: { r: Resultado; onEscolher: (i: number) => void }) {
+export function RaioX({ r, onEscolher, depois }: { r: Resultado; onEscolher: (i: number) => void; depois?: Variante }) {
   const totais = r.itens.map((it) => Number(totalItem(it)));
   const max = Math.max(...totais, 0.0001);
   return (
@@ -166,6 +203,7 @@ export function RaioX({ r, onEscolher }: { r: Resultado; onEscolher: (i: number)
           ) : null}
         </span>
       </div>
+      <LinhaEm2027 depois={depois} />
       <AvisoAno r={r} />
       <CaixaRaioX r={r} />
       <div className="raiox-lista">

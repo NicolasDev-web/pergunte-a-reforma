@@ -13,11 +13,12 @@ import {
   IconeLocal,
   IconeSeta,
 } from "../Icones";
+import { EVENTO_INICIO } from "../Cabecalho";
 import { Rodape } from "../Rodape";
 import { ModalConfigIA, type ConfigIA } from "./ConfigIA";
 import { dataBR, em2027, hojeISO, porcento, reais, totalItem, cargaItem, type Resultado } from "./formatar";
 import { EXEMPLOS, Inicio, lerCidadeSalva } from "./Inicio";
-import { CartaoResultado, Painel, RaioX } from "./Resultado";
+import { CartaoResultado, Painel, RaioX, type Variante } from "./Resultado";
 
 interface Verificacao {
   ok: boolean;
@@ -192,12 +193,37 @@ export function App() {
     void sendMessage({ text: texto });
   }
 
+  // "Calcular" no menu (ou a marca), já na página inicial: volta ao começo.
+  useEffect(() => {
+    const voltar = () => {
+      setMessages([]);
+      setSelecao(undefined);
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener(EVENTO_INICIO, voltar);
+    return () => window.removeEventListener(EVENTO_INICIO, voltar);
+  }, [setMessages]);
+
+  // Todo resultado de 2026 ganha, sozinho, o mesmo cálculo em 2027 (simulação com o exemplo da Receita).
+  const pedidas = useRef(new Set<string>());
+  useEffect(() => {
+    for (const c of calculos)
+      if (c.entrada && c.r.data.startsWith("2026") && !pedidas.current.has(c.id)) {
+        pedidas.current.add(c.id);
+        void buscarVariante(c.id, c.entrada);
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [calculos]);
+
   async function verAno(a: "base" | "2027") {
     setAno(a);
     if (a !== "2027" || !atual?.entrada || variantes[atual.id]) return;
-    const id = atual.id;
+    await buscarVariante(atual.id, atual.entrada);
+  }
+
+  async function buscarVariante(id: string, base: CalcularTributosInput) {
     setVariantes((v) => ({ ...v, [id]: "carregando" }));
-    const entrada = { ...atual.entrada, data: em2027(atual.entrada.data.slice(0, 10)), cenario: "exemplo-receita-2027" as const };
+    const entrada = { ...base, data: em2027(base.data.slice(0, 10)), cenario: "exemplo-receita-2027" as const };
     const res = (await fetch("/api/calcular", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -282,6 +308,7 @@ export function App() {
 
   return (
     <div className="pagina-resposta">
+      <h1 className="vh">Resultado do cálculo</h1>
       {banner && <div className="banner-fora">{banner}</div>}
       <div className="resposta-grade">
         <section aria-label="Conversa" className="conversa" aria-live="polite">
@@ -306,6 +333,7 @@ export function App() {
                 onRapido={calcularRapido}
                 onCompartilhar={compartilhar}
                 onNovo={() => setMessages([])}
+                variantes={variantes}
               />
             ),
           )}
@@ -344,6 +372,7 @@ export function App() {
           variante2027={atual ? variantes[atual.id] : undefined}
         />
       </div>
+      <Rodape versao={atual?.r.versaoMotor} />
       {modalEl}
     </div>
   );
@@ -366,6 +395,7 @@ function MensagemAssistente(props: {
   onRapido: (e: CalcularTributosInput, fala: string) => void;
   onCompartilhar: (r: Resultado) => void;
   onNovo: () => void;
+  variantes: Record<string, Variante>;
 }) {
   const { m } = props;
   const [passosAbertos, setPassosAbertos] = useState(false);
@@ -385,9 +415,9 @@ function MensagemAssistente(props: {
         className={`selecionavel${props.selecionado === id ? " selecionado" : ""}`}
       >
         {r.itens.length === 1 ? (
-          <CartaoResultado r={r} onLei={() => props.onLei(id)} />
+          <CartaoResultado r={r} onLei={() => props.onLei(id)} depois={props.variantes[id]} />
         ) : (
-          <RaioX r={r} onEscolher={(i) => props.onSelecionar(id, i)} />
+          <RaioX r={r} onEscolher={(i) => props.onSelecionar(id, i)} depois={props.variantes[id]} />
         )}
       </div>
       <div className="acoes">

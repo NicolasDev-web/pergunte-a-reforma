@@ -1643,3 +1643,25 @@ code {
   font-size: 14px;
   color: var(--tinta-2);
 }
+/* O mesmo cálculo em 2027, ao lado do ano-teste (auditoria UX-005). Âmbar: é simulação. */
+.em-2027 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 10px 14px;
+  border-radius: var(--raio-p);
+  background: var(--ambar-fundo);
+  color: var(--ambar-texto);
+  font-size: 15px;
+}
+.em-2027 strong {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ambar-texto);
+}
+.em-2027-rotulo {
+  font-size: 13px;
+}
