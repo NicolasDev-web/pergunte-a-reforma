@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Newsreader } from "next/font/google";
 import { Cabecalho } from "@/componentes/Cabecalho";
+import { FundoFormas } from "@/componentes/FundoFormas";
 import "./globals.css";
 
 // Fontes servidas pelo próprio site (o next/font baixa no build): sem ida ao Google a cada visita.
@@ -26,6 +27,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
       <body>
+        <div className="fundo-formas" aria-hidden="true">
+          <FundoFormas />
+        </div>
         <Cabecalho />
         {children}
       </body>

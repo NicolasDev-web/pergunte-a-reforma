@@ -24,11 +24,13 @@ A ADR-005 trouxe a composição editorial: fios, seções numeradas, Newsreader 
   - erros usam `--perigo-*`;
   - sucesso e "alíquota zero" usam oliva;
   - o anel de foco é ocre (3 px), como no DSGov.
-- **Áreas de abertura** (topo da home, de "O que muda" e de "Como funciona", e a faixa de chamada):
-  - papel #F7F3EA com textura (SVG `feTurbulence`, 9%) e as formas chapadas do `FundoFormas`;
-  - nunca atrás de resultado, Raio-X, chat ou tabela;
-  - o conteúdo fica entre ~28% e ~78% da largura;
-  - no celular fica só uma seta pequena no canto.
+- **Papel e formas na página toda** (decisão do usuário em 18/11/2026, que trocou a faixa recortada só no topo):
+  - o papel #F7F3EA com textura é o fundo da página inteira; cartões, campos e painéis ficam brancos por cima;
+  - as formas chapadas (`FundoFormas`, uma vez no layout) ficam presas às bordas da janela e acompanham a rolagem;
+  - elas ocupam só a margem lateral, fora da coluna de conteúdo, então nunca ficam atrás de resultado, Raio-X, chat ou tabela;
+  - somem quando não sobra margem e no celular;
+  - a faixa de chamada mantém formas próprias no canto direito;
+  - motivo da troca: a faixa recortava a lista de sugestões da busca e o corte reto da arte ficou estranho.
 - **Não é governo:**
   - sem barra do gov.br, brasão, Rawline, nem #1351B4 com faixa #071D41;
   - o rodapé diz "Não é um site do governo. Usa a calculadora oficial da Receita Federal."

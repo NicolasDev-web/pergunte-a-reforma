@@ -45,8 +45,7 @@ export default function OQueMuda() {
   return (
     <>
       <main className="conteudo">
-        <section className="conteudo-topo faixa-abertura">
-          <FundoFormas seta="var(--terracota)" />
+        <section className="conteudo-topo">
           <div className="faixa-conteudo">
             <span className="sobretitulo">O que muda · em 3 minutos</span>
             <h1>Cinco impostos viram dois. E um terceiro para o que faz mal.</h1>

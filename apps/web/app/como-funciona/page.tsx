@@ -53,8 +53,7 @@ export default function ComoFunciona() {
   return (
     <>
       <main className="conteudo" style={{ gap: 64 }}>
-        <section className="conteudo-topo faixa-abertura">
-          <FundoFormas />
+        <section className="conteudo-topo">
           <div className="faixa-conteudo">
             <span className="sobretitulo">Como funciona · em 4 desenhos</span>
             <h1>Do caixa do mercado até o governo</h1>

@@ -1,12 +1,12 @@
 /**
- * Fundo das áreas de abertura (topo da home, de "O que muda", de "Como funciona" e a faixa de chamada).
+ * Formas do fundo da página e da faixa de chamada.
  * Formas chapadas com cantos levemente arredondados, sem gradiente nem sombra, inspiradas nos banners da
  * Reforma Tributária da Fazenda — só as formas e as cores, sem ícones, textos ou cores puras do governo.
  * As cores das formas não têm significado (as dos tributos valem só para dados).
  *
- * Nunca atrás de resultado, Raio-X, chat ou tabela: ali o fundo é branco ou areia lisa.
- * Dois SVGs ancorados nas bordas (em vez de um só esticado) para as formas ficarem coladas nelas em
- * qualquer largura, deixando livre a faixa central (≈28% a 78%) onde ficam o texto e os campos.
+ * Usado uma vez no layout, preso às bordas da janela (acompanha a página toda), e dentro da faixa de chamada.
+ * As formas só ocupam as margens laterais, nunca atrás de resultado, Raio-X, chat ou tabela.
+ * Dois SVGs que preenchem a margem (preserveAspectRatio="none"), sem recorte reto nas formas.
  */
 export function FundoFormas({
   variante = "abertura",
@@ -21,7 +21,7 @@ export function FundoFormas({
         <svg
           className="formas formas-esq"
           viewBox="0 0 400 520"
-          preserveAspectRatio="xMaxYMid slice"
+          preserveAspectRatio="none"
           aria-hidden="true"
           focusable="false"
         >
@@ -38,7 +38,7 @@ export function FundoFormas({
       <svg
         className="formas formas-dir"
         viewBox="0 0 400 520"
-        preserveAspectRatio="xMinYMid slice"
+        preserveAspectRatio="none"
         aria-hidden="true"
         focusable="false"
       >

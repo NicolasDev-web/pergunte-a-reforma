@@ -57,7 +57,7 @@ pnpm workspaces · TypeScript estrito · zod · SDK MCP + MCP Apps · Next.js + 
   - Base branca; azul ardósia #345D96 para ação, link e CBS; areia, terracota, ocre e oliva.
   - O fundo de simulação só aparece no selo e na faixa "Simulação"; o foco é ocre.
   - Tributos: CBS primária, IBS-UF terracota, IBS-Mun ocre, IS argila, sempre com rótulo.
-  - Papel com formas (`FundoFormas`) só nas aberturas, nunca atrás de resultado ou tabela.
+  - Papel texturizado na página toda; formas (`FundoFormas`, no layout) fixas nas margens laterais, nunca atrás de conteúdo.
   - Newsreader + IBM Plex via `next/font`; toda cor por token em `app/globals.css`.
   - Não parecer site do governo: nada de barra gov.br, brasão, Rawline ou #1351B4/#071D41.
 
