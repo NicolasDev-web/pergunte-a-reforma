@@ -12,6 +12,7 @@ import {
   reais,
   totalItem,
   motivo,
+  dataBR,
   type Resultado,
 } from "./formatar";
 
@@ -23,8 +24,6 @@ const ATALHOS = [
   { nome: "Escola", termo: "pré-escola" },
   { nome: "Saúde", termo: "consulta médica" },
   { nome: "Contas da casa", termo: "conta de luz" },
-  { nome: "Carro", termo: "gasolina comum" },
-  { nome: "Restaurante", termo: "refeição" },
 ];
 
 export const EXEMPLOS: CalcularTributosInput["itens"] = [
@@ -308,27 +307,6 @@ export function Inicio(props: {
             })}
           </div>
         </section>
-
-        <section aria-labelledby="passos" className="secao-larga">
-          <div className="secao-cab">
-            <h2 id="passos">Como a resposta é feita</h2>
-          </div>
-          <ol className="passos-como">
-            {[
-              ["Você pergunta", "Com as suas palavras, sem código nenhum."],
-              ["Achamos na tabela oficial", "Se houver dúvida sobre a situação, perguntamos antes."],
-              ["A Receita faz a conta", "Pela calculadora oficial. A IA só explica, nunca inventa número."],
-            ].map(([t, d], i) => (
-              <li key={t} className="passo-como">
-                <span className="passo-numero" aria-hidden="true">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <strong>{t}</strong>
-                <span>{d}</span>
-              </li>
-            ))}
-          </ol>
-        </section>
       </section>
     </main>
   );
@@ -354,6 +332,9 @@ function Ficha(props: {
   /** "Não sei": usamos a situação mais comum e dizemos isso (a pergunta continua sendo feita). */
   const [naoSei, setNaoSei] = useState(false);
   const [cidadeDestaque, setCidadeDestaque] = useState(-1);
+  /** Cidade e data ficam escondidas (cidade salva/padrão e hoje) até a pessoa pedir para trocar. */
+  const [trocarCidade, setTrocarCidade] = useState(false);
+  const [trocarData, setTrocarData] = useState(false);
   const primeiroCampo = useRef<HTMLDivElement>(null);
   const campoValor = useRef<HTMLInputElement>(null);
 
@@ -368,6 +349,7 @@ function Ficha(props: {
     setCidadeTexto(`${m.nome}/${m.uf}`);
     setCidades([]);
     setCidadeDestaque(-1);
+    setTrocarCidade(false);
   };
   const teclasCidade = (e: React.KeyboardEvent) => {
     if (!cidades.length) return;
@@ -501,48 +483,72 @@ function Ficha(props: {
             ref={campoValor}
           />
         </label>
-        <div className="campo">
-          <label htmlFor="cidade">Cidade</label>
-          <input
-            id="cidade"
-            value={cidadeTexto}
-            autoComplete="off"
-            role="combobox"
-            aria-autocomplete="list"
-            aria-expanded={cidades.length > 0}
-            aria-controls="lista-cidades"
-            aria-activedescendant={cidadeDestaque >= 0 ? `cidade-${cidadeDestaque}` : undefined}
-            onKeyDown={teclasCidade}
-            onChange={(e) => {
-              setCidadeTexto(e.target.value);
-              setCidade(undefined);
-              setCidadeDestaque(-1);
-            }}
-          />
-          {cidades.length > 0 && (
-            <div className="opcoes-cidade" id="lista-cidades" role="listbox" aria-label="Cidades">
-              {cidades.map((m, i) => (
-                <button
-                  key={m.codigo}
-                  id={`cidade-${i}`}
-                  type="button"
-                  role="option"
-                  tabIndex={-1}
-                  aria-selected={cidadeDestaque === i}
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => escolherCidade(m)}
-                >
-                  {m.nome}/{m.uf}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-        <label className="campo">
-          Data
-          <input type="date" value={data} min="2026-01-01" onChange={(e) => setData(e.target.value)} />
-        </label>
+        {(trocarCidade || !cidade) && (
+          <div className="campo">
+            <label htmlFor="cidade">Cidade</label>
+            <input
+              id="cidade"
+              autoFocus
+              value={cidadeTexto}
+              autoComplete="off"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={cidades.length > 0}
+              aria-controls="lista-cidades"
+              aria-activedescendant={cidadeDestaque >= 0 ? `cidade-${cidadeDestaque}` : undefined}
+              onKeyDown={teclasCidade}
+              onChange={(e) => {
+                setCidadeTexto(e.target.value);
+                setCidade(undefined);
+                setCidadeDestaque(-1);
+              }}
+            />
+            {cidades.length > 0 && (
+              <div className="opcoes-cidade" id="lista-cidades" role="listbox" aria-label="Cidades">
+                {cidades.map((m, i) => (
+                  <button
+                    key={m.codigo}
+                    id={`cidade-${i}`}
+                    type="button"
+                    role="option"
+                    tabIndex={-1}
+                    aria-selected={cidadeDestaque === i}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => escolherCidade(m)}
+                  >
+                    {m.nome}/{m.uf}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+        {trocarData && (
+          <label className="campo">
+            Data da compra
+            <input type="date" value={data} min="2026-01-01" onChange={(e) => setData(e.target.value)} />
+          </label>
+        )}
       </div>
+      <p className="ficha-contexto">
+        {cidade && !trocarCidade && (
+          <>
+            em {cidade.nome}/{cidade.uf} ·{" "}
+            <button type="button" className="link-btn" onClick={() => setTrocarCidade(true)}>
+              trocar cidade
+            </button>
+          </>
+        )}
+        {!trocarData && (
+          <>
+            {" "}
+            · {data === hojeISO() ? "hoje" : dataBR(data)} ·{" "}
+            <button type="button" className="link-btn" onClick={() => setTrocarData(true)}>
+              mudar data
+            </button>
+          </>
+        )}
+      </p>
       {erro && (
         <p className="alerta" role="alert">
           {erro}
