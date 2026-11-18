@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { IconeMarca } from "./Icones";
+import { Marca } from "./Marca";
 
 const ABAS = [
   { href: "/", nome: "Calcular" },
@@ -22,10 +22,7 @@ export function Cabecalho() {
     <header className="cab">
       <div className="cab-dentro">
         <Link href="/" className="marca" onClick={() => recomecar("/")}>
-          <span className="marca-icone">
-            <IconeMarca />
-          </span>
-          <span className="marca-nome">Pergunte à Reforma</span>
+          <Marca />
         </Link>
         <nav aria-label="Principal" className="nav">
           {ABAS.map((a) => (

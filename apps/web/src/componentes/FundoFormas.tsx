@@ -10,7 +10,7 @@
  */
 export function FundoFormas({
   variante = "abertura",
-  seta = "var(--forma-mostarda)",
+  seta = "var(--forma-seta)",
 }: {
   variante?: "abertura" | "cta";
   seta?: string;
@@ -30,18 +30,18 @@ export function FundoFormas({
         </svg>
       )}
       <svg className="formas formas-dir" viewBox="0 0 400 520" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        {/* Faixa inclinada azul, em cima; por cima dela, a faixa oliva vindo do canto de baixo. */}
+        {/* Faixa de cima (noite; areia na chamada, que já é noite) e a de baixo vindo do canto (areia escura; terracota na chamada). */}
         <polygon
           points="150,-60 520,-60 520,250 60,120"
-          fill="var(--forma-azul)"
-          stroke="var(--forma-azul)"
+          fill={variante === "cta" ? "var(--forma-baixo)" : "var(--forma-cima)"}
+          stroke={variante === "cta" ? "var(--forma-baixo)" : "var(--forma-cima)"}
           strokeWidth="18"
           strokeLinejoin="round"
         />
         <polygon
           points="520,170 520,600 110,600"
-          fill="var(--forma-oliva)"
-          stroke="var(--forma-oliva)"
+          fill={variante === "cta" ? "var(--forma-seta)" : "var(--forma-baixo)"}
+          stroke={variante === "cta" ? "var(--forma-seta)" : "var(--forma-baixo)"}
           strokeWidth="18"
           strokeLinejoin="round"
         />

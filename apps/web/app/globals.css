@@ -37,10 +37,13 @@
   --simulacao-fundo: #fef0c8; /* gold-vivid-5: só o selo e a faixa "Simulação" */
   --simulacao-texto: #5c410a; /* gold-vivid-70 */
 
-  /* Formas das áreas de abertura (sem significado; não confundir com as cores dos tributos) */
-  --forma-mostarda: #e5a000; /* gold-vivid-30 */
-  --forma-azul: #4a77b4; /* blue-warm-50 */
-  --forma-oliva: var(--oliva);
+  /* Marca (ADR-007) e formas das margens (sem significado; não confundir com as cores dos tributos) */
+  --terracota-clara: #f3966d; /* orange-warm-30: "Reforma" e item ativo sobre o noite (6,0:1) */
+  --terracota-viva: #e17141; /* orange-warm-40: bloco do IBS no símbolo (gráfico, 4,3:1 sobre o noite) */
+  --areia-escura: #dec69a; /* gold-20: faixa de baixo das formas */
+  --forma-seta: var(--terracota);
+  --forma-cima: var(--noite);
+  --forma-baixo: var(--areia-escura);
 
   /* Tributos: iguais em todo lugar, sempre com o rótulo escrito ao lado */
   --cbs: var(--primaria);
@@ -212,10 +215,6 @@ code {
   padding: 12px 0;
 }
 .marca-icone {
-  width: 30px;
-  height: 30px;
-  border-radius: var(--raio-p);
-  background: var(--azul);
   display: grid;
   place-items: center;
 }
@@ -1706,10 +1705,26 @@ body,
 .pagina-resposta {
   background: transparent;
 }
-/* Cabeçalho em areia (gold-10 do DSGov): tom terroso, texto 10,9:1, secundário e links 5,3:1. */
+/* Cabeçalho azul-noite (ADR-007): marca em branco e terracota clara; links em areia (10,8:1). */
 .cab {
-  background: var(--areia-2);
-  border-bottom-color: color-mix(in srgb, var(--areia-2), var(--tinta) 14%);
+  background: var(--noite);
+  border-bottom-color: var(--noite);
+}
+.cab .marca {
+  color: var(--fundo);
+}
+.marca-destaque {
+  color: var(--terracota-clara);
+}
+.cab .nav a {
+  color: var(--areia-2);
+}
+.cab .nav a:hover {
+  color: var(--fundo);
+}
+.cab .nav a[aria-current="page"] {
+  color: var(--fundo);
+  border-bottom-color: var(--terracota-clara);
 }
 /*
  * As formas ficam presas às bordas da janela e acompanham a rolagem. Ocupam só a margem lateral,

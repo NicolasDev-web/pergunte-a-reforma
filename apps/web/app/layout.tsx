@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     "Pergunte em português. A conta é feita pela calculadora oficial da Receita Federal (CBS, IBS e Imposto Seletivo), com a lei citada.",
 };
 
-export const viewport: Viewport = { themeColor: "#ffffff" };
+export const viewport: Viewport = { themeColor: "#252f3e" };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
